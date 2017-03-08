@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6C1CB7B6-CEBA-4CA3-9E05-9EC4671EB1B2}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MonkeyOthello</RootNamespace>
+    <AssemblyName>MonkeyOthello</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AI\BaseSolve.cs" />
+    <Compile Include="AI\EndSolve.cs" />
+    <Compile Include="AI\Engine.cs" />
+    <Compile Include="AI\Evalation.cs" />
+    <Compile Include="AI\MidSolve.cs" />
+    <Compile Include="AI\MTDSolve.cs" />
+    <Compile Include="AI\StaSolve.cs" />
+    <Compile Include="Core\Board.cs" />
+    <Compile Include="Core\Config.cs" />
+    <Compile Include="Core\Constants.cs" />
+    <Compile Include="Core\Utils.cs" />
+    <Compile Include="Presentation\DownStoneResult.cs" />
+    <Compile Include="Presentation\DrawBoard.cs" />
+    <Compile Include="Core\Empties.cs" />
+    <Compile Include="Core\Enums.cs" />
+    <Compile Include="Presentation\Game.cs" />
+    <Compile Include="Presentation\Utils.cs" />
+    <Compile Include="Test.cs" />
+    <Compile Include="IO\PlaySound.cs" />
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="me48.ico" />
+    <Content Include="Resources\background.jpg" />
+    <Content Include="Resources\BlackStone.png" />
+    <Content Include="Resources\CanputBlack.gif" />
+    <Content Include="Resources\CanputWhite.gif" />
+    <Content Include="Resources\Direct_Level.png" />
+    <Content Include="Resources\Direct_Ver.png" />
+    <Content Include="Resources\DownStone.wav" />
+    <Content Include="Resources\Empty.png" />
+    <Content Include="Resources\Exit2.png" />
+    <Content Include="Resources\Flip_1.png" />
+    <Content Include="Resources\Flip_10.png" />
+    <Content Include="Resources\Flip_2.png" />
+    <Content Include="Resources\Flip_3.png" />
+    <Content Include="Resources\Flip_4.png" />
+    <Content Include="Resources\Flip_5.png" />
+    <Content Include="Resources\Flip_6.png" />
+    <Content Include="Resources\Flip_7.png" />
+    <Content Include="Resources\Flip_8.png" />
+    <Content Include="Resources\Flip_9.png" />
+    <Content Include="Resources\help_16.png" />
+    <Content Include="Resources\IE2.png" />
+    <Content Include="Resources\Info_16.png" />
+    <Content Include="Resources\M0.png" />
+    <Content Include="Resources\M1.png" />
+    <Content Include="Resources\M2.png" />
+    <Content Include="Resources\M3.gif" />
+    <Content Include="Resources\M4.png" />
+    <Content Include="Resources\M5.png" />
+    <Content Include="Resources\Monkey.gif" />
+    <Content Include="Resources\Open.gif" />
+    <Content Include="Resources\Paint_16.png" />
+    <Content Include="Resources\reround.png" />
+    <Content Include="Resources\round.png" />
+    <Content Include="Resources\Save.gif" />
+    <Content Include="Resources\StartBoard1_16.png" />
+    <Content Include="Resources\StartBoard2_16.png" />
+    <Content Include="Resources\undo.png" />
+    <Content Include="Resources\WhiteStone.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
