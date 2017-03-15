@@ -1,0 +1,117 @@
+﻿
+2017/03/16--------------------------------------------------------
+-- array version --
+0 (empties=12 white=27 black=25  diff=12)
+bestmove: 9, score: -12,  timespan:00:00:00.0427060, nodes: 11863
+
+1 (empties=12 white=35 black=17  diff=12)
+bestmove: 4, score: -6,  timespan:00:00:00.0116410, nodes: 10793
+
+2 (empties=12 white=23 black=29  diff=12)
+bestmove: 59, score: 28,  timespan:00:00:00.0355793, nodes: 27733
+
+3 (empties=12 white=24 black=28  diff=12)
+bestmove: 48, score: -8,  timespan:00:00:00.1122918, nodes: 69781
+
+4 (empties=12 white=14 black=38  diff=12)
+bestmove: 55, score: -4,  timespan:00:00:00.0252359, nodes: 22718
+
+5 (empties=12 white=23 black=29  diff=12)
+bestmove: 5, score: -2,  timespan:00:00:00.0285642, nodes: 13306
+
+6 (empties=12 white=11 black=41  diff=12)
+bestmove: 31, score: 12,  timespan:00:00:00.0533002, nodes: 49252
+
+7 (empties=12 white=21 black=31  diff=12)
+bestmove: 56, score: -12,  timespan:00:00:00.0379806, nodes: 39238
+
+8 (empties=12 white=28 black=24  diff=12)
+bestmove: 54, score: 4,  timespan:00:00:00.0634575, nodes: 62826
+
+9 (empties=12 white=29 black=23  diff=12)
+bestmove: 14, score: -22,  timespan:00:00:00.0284513, nodes: 30148
+
+total: 00:00:00.4644467
+done!
+
+--bitboard version1--
+ (empties=12 white=27 black=25  diff=12)
+r1: Best Move:9, Score:-12.00, Nodes:26127, TimeSpan:00:00:00.1717268, Message:(9:-12)(48:-12)(49:-12)(57:-12)(58:-12), NPS:152141.936250275
+
+ (empties=12 white=35 black=17  diff=12)
+r1: Best Move:4, Score:-6.00, Nodes:32966, TimeSpan:00:00:00.1326193, Message:(4:-6)(39:-6)(55:-8)(62:-6)(63:-6), NPS:248574.313283864
+
+ (empties=12 white=23 black=29  diff=12)
+r1: Best Move:59, Score:28.00, Nodes:196274, TimeSpan:00:00:00.5673916, Message:(3:10)(6:10)(49:10)(58:10)(59:28)(60:28)(61:28), NPS:345922.734981034
+
+ (empties=12 white=24 black=28  diff=12)
+r1: Best Move:48, Score:-8.00, Nodes:29926, TimeSpan:00:00:00.0639453, Message:(8:-10)(16:-10)(24:-10)(32:-10)(40:-10)(48:-8)(49:-20)(57:-8), NPS:467986.41985541
+
+ (empties=12 white=14 black=38  diff=12)
+r1: Best Move:55, Score:-4.00, Nodes:28099, TimeSpan:00:00:00.0617624, Message:(8:-22)(55:-4), NPS:454945.809330445
+
+ (empties=12 white=23 black=29  diff=12)
+r1: Best Move:0, Score:-2.00, Nodes:61316, TimeSpan:00:00:00.1525050, Message:(0:-2)(1:-2)(5:-2)(8:-4)(54:-2)(63:-2), NPS:402056.312538523
+
+ (empties=12 white=11 black=41  diff=12)
+r1: Best Move:31, Score:12.00, Nodes:125441, TimeSpan:00:00:00.3179636, Message:(2:-22)(8:-22)(9:-14)(16:-8)(31:12)(40:12)(48:12)(49:12)(57:12), NPS:394512.470885124
+
+ (empties=12 white=21 black=31  diff=12)
+r1: Best Move:54, Score:-12.00, Nodes:661352, TimeSpan:00:00:00.9693567, Message:(1:-38)(8:-16)(9:-16)(16:-16)(40:-16)(48:-16)(54:-12)(55:-12)(56:-12), NPS:682257.952869204
+
+ (empties=12 white=28 black=24  diff=12)
+r1: Best Move:54, Score:4.00, Nodes:278297, TimeSpan:00:00:00.3993543, Message:(1:-14)(3:-14)(4:-8)(5:-4)(6:-4)(12:-4)(14:-4)(15:-4)(54:4), NPS:696865.673248859
+
+ (empties=12 white=29 black=23  diff=12)
+r1: Best Move:14, Score:-22.00, Nodes:54280, TimeSpan:00:00:00.0936509, Message:(1:-32)(3:-32)(5:-24)(10:-24)(14:-22)(56:-22)(57:-22), NPS:579593.152941905
+
+total: 00:00:02.9959540
+done!
+
+
+2017/03/16--------------------------------------------------------
+MonkeyEngine vs. AlphaBetaEngine
+ (empties=12 white=27 black=25  diff=12)
+r1: Best Move:9, Score:-12.00, Nodes:9842, TimeSpan:00:00:00.1247585, Message:(9:-12)(48:-12)(57:-14)(58:-12)(49:-12), NPS:78887.780088891
+r2: Best Move:9, Score:-12.00, Nodes:26122, TimeSpan:00:00:00.0535941, Message:(9:-12)(48:-12)(49:-12)(57:-12)(58:-12), NPS:487395.302928813
+
+ (empties=12 white=35 black=17  diff=12)
+r1: Best Move:4, Score:-6.00, Nodes:8920, TimeSpan:00:00:00.0525189, Message:(4:-6)(39:-8)(63:-6)(55:-6)(62:-10), NPS:169840.38431147
+r2: Best Move:4, Score:-6.00, Nodes:32961, TimeSpan:00:00:00.0426493, Message:(4:-6)(39:-6)(55:-8)(62:-6)(63:-6), NPS:772819.88637829
+
+ (empties=12 white=23 black=29  diff=12)
+r1: Best Move:59, Score:28.00, Nodes:43395, TimeSpan:00:00:00.1993600, Message:(3:10)(6:10)(49:10)(58:10)(59:28)(61:28)(60:24), NPS:217670.457110468
+r2: Best Move:59, Score:28.00, Nodes:196267, TimeSpan:00:00:00.2557717, Message:(3:10)(6:10)(49:10)(58:10)(59:28)(60:28)(61:28), NPS:767349.290991572
+
+ (empties=12 white=24 black=28  diff=12)
+r1: Best Move:48, Score:-8.00, Nodes:31584, TimeSpan:00:00:00.1554002, Message:(8:-10)(57:-10)(16:-10)(24:-10)(32:-10)(48:-8)(40:-8)(49:-18), NPS:203241.673809469
+r2: Best Move:48, Score:-8.00, Nodes:29918, TimeSpan:00:00:00.0385968, Message:(8:-10)(16:-10)(24:-10)(32:-10)(40:-10)(48:-8)(49:-20)(57:-8), NPS:775121.898139272
+
+ (empties=12 white=14 black=38  diff=12)
+r1: Best Move:55, Score:-4.00, Nodes:13497, TimeSpan:00:00:00.0766320, Message:(8:-22)(55:-4), NPS:176125.16800856
+r2: Best Move:55, Score:-4.00, Nodes:28097, TimeSpan:00:00:00.0396577, Message:(8:-22)(55:-4), NPS:708470.020449485
+
+ (empties=12 white=23 black=29  diff=12)
+r1: Best Move:5, Score:-2.00, Nodes:5360, TimeSpan:00:00:00.0296961, Message:(5:-2)(54:-18)(63:-2)(0:-2)(8:-4)(1:-2), NPS:180489.003976819
+r2: Best Move:0, Score:-2.00, Nodes:61310, TimeSpan:00:00:00.0824179, Message:(0:-2)(1:-2)(5:-2)(8:-4)(54:-2)(63:-2), NPS:743882.774460712
+
+ (empties=12 white=11 black=41  diff=12)
+r1: Best Move:31, Score:12.00, Nodes:31098, TimeSpan:00:00:00.1540700, Message:(31:12)(16:12)(48:12)(57:12)(2:2)(8:12)(9:12)(40:12)(49:12), NPS:201842.007905446
+r2: Best Move:31, Score:12.00, Nodes:125432, TimeSpan:00:00:00.1676033, Message:(2:-22)(8:-22)(9:-14)(16:-8)(31:12)(40:12)(48:12)(49:12)(57:12), NPS:748381.753928748
+
+ (empties=12 white=21 black=31  diff=12)
+r1: Best Move:54, Score:-12.00, Nodes:25156, TimeSpan:00:00:00.1315904, Message:(54:-12)(55:-14)(1:-12)(8:-12)(16:-12)(40:-12)(48:-12)(56:-12)(9:-12), NPS:191167.507907052
+r2: Best Move:54, Score:-12.00, Nodes:661343, TimeSpan:00:00:00.8408946, Message:(1:-38)(8:-16)(9:-16)(16:-16)(40:-16)(48:-16)(54:-12)(55:-12)(56:-12), NPS:786474.563548674
+
+ (empties=12 white=28 black=24  diff=12)
+r1: Best Move:54, Score:4.00, Nodes:33022, TimeSpan:00:00:00.2477854, Message:(15:-12)(54:4)(1:4)(3:4)(14:4)(5:4)(6:4)(12:4)(4:4), NPS:133268.008252269
+r2: Best Move:54, Score:4.00, Nodes:278288, TimeSpan:00:00:00.4100011, Message:(1:-14)(3:-14)(4:-8)(5:-4)(6:-4)(12:-4)(14:-4)(15:-4)(54:4), NPS:678747.742999365
+
+ (empties=12 white=29 black=23  diff=12)
+r1: Best Move:14, Score:-22.00, Nodes:8961, TimeSpan:00:00:00.0610291, Message:(14:-22)(5:-22)(1:-22)(56:-30)(57:-22)(3:-22)(10:-24), NPS:146829.187564825
+r2: Best Move:14, Score:-22.00, Nodes:54273, TimeSpan:00:00:00.0840683, Message:(1:-32)(3:-32)(5:-24)(10:-24)(14:-22)(56:-22)(57:-22), NPS:645574.54385846
+
+sub total: 00:00:01.2328406
+sub total: 00:00:02.0152548
+total: 00:00:03.4381786
+done!
