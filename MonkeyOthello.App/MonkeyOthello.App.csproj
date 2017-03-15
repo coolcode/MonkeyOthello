@@ -35,15 +35,10 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AI\BaseSolve.cs" />
@@ -57,13 +52,17 @@
     <Compile Include="Core\Config.cs" />
     <Compile Include="Core\Constants.cs" />
     <Compile Include="Core\Utils.cs" />
+    <Compile Include="IO\Serialiser.cs" />
     <Compile Include="Presentation\DownStoneResult.cs" />
     <Compile Include="Presentation\DrawBoard.cs" />
     <Compile Include="Core\Empties.cs" />
     <Compile Include="Core\Enums.cs" />
     <Compile Include="Presentation\Game.cs" />
+    <Compile Include="Presentation\GameManager.cs" />
+    <Compile Include="Presentation\Point.cs" />
+    <Compile Include="Presentation\SpacialObject.cs" />
+    <Compile Include="Presentation\Tile.cs" />
     <Compile Include="Presentation\Utils.cs" />
-    <Compile Include="Test.cs" />
     <Compile Include="IO\PlaySound.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -139,6 +138,12 @@
     <Content Include="Resources\StartBoard2_16.png" />
     <Content Include="Resources\undo.png" />
     <Content Include="Resources\WhiteStone.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MonkeyOthello.Core\MonkeyOthello.Core.csproj">
+      <Project>{e71c88c4-3ca7-45d7-aedd-1fa4b26b5fe4}</Project>
+      <Name>MonkeyOthello.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

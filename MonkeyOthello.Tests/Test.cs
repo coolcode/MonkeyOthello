@@ -1,36 +1,17 @@
+using MonkeyOthello.Core;
+using MonkeyOthello.Engines;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
-namespace MonkeyOthello
+namespace MonkeyOthello.Tests
 {
-    class TestEndSolve
+    class Test
     {
-        /// <summary>
-        /// 获取时间
-        /// </summary>
-        /// <returns></returns>
-        private double get_real_time()
-        {
-            long ticks = 0;
-            ticks = System.DateTime.Now.Ticks;
-            return ticks;
-        }
+        #region test data
 
-        /// <summary>
-        /// 测试
-        /// </summary>
-        /// <returns></returns>
-        public string Test()
-        {
-            const int FULLSOLVE = 2;
-            const int MAXTRIES = 1;
-            int  empties=0, white=0, black=0, i, j, k, x, y;
-            int discdiff=0;
-            double bestScore = 0;
-            int bestMove=0;
-            string str = "";
-            string[] bds = new string[112] {
+        private static readonly string[] bds = new string[112] {
 "..wwwww.b.wwbw..bbwbbwwwbwbbbwwwbbwbbwwwbbbwbwww..bbwbw....bbbbw",
 "wbbw.b...wwbwww.wwwwbwwwwwwbwbbbwwwwbwb.wwwwwbbb..wwbbb..wwwww..",
 "..w.bb.bw.wbbbbbwwwwbbbbwbwwwwbbwbbbwwbwwwbbbbbww.wbbbbw......bw",
@@ -147,50 +128,68 @@ namespace MonkeyOthello
 "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbwbbbbbbbwbbbbbwb.",
 "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwbwwwwwwwbwwwwbbb.",
             };
-            ChessType color = ChessType.WHITE;
-            ChessType[] board = new ChessType[91];
-            AI.EndSolve endSolve = new MonkeyOthello.AI.EndSolve();
-            double start_time = get_real_time();
-            int length;// = bds.Length;
-            length = 10;
-            for (i = 0; i < length; i++)
+        #endregion
+
+
+        public static void TestEndGameSearch()
+        {
+            var color = 'w';
+            var engine = new AlphaBetaEngine();
+            var sw = new Stopwatch();
+            var length = 10;// = bds.Length; 
+            for (var i = 0; i < length; i++)
             {
-                for (j = 0; j <= 90; j++)
-                    board[j] = ChessType.DUMMY;
-                white = black = empties = 0;
-                for (j = 0; j < 64; j++)
+                int empties = 0, white = 0, black = 0; 
+                var w = 0ul;
+                var b = 0ul;
+                for (var j = 0; j < 64; j++)
                 {
-                    x = j & 7;
-                    y = (j >> 3) & 7;
-                    k = x + 10 + 9 * y;
+                    var x = 1ul << j;
                     if (bds[i][j] == 'w')
-                    { board[k] = ChessType.WHITE; white++; }
+                    {
+                        w |= x;
+                        white++;
+                    }
                     else if (bds[i][j] == 'b')
-                    { board[k] = ChessType.BLACK; black++; }
+                    {
+                        b |= x;
+                        black++;
+                    }
                     else if (bds[i][j] == '.')
-                    { board[k] = ChessType.EMPTY; empties++; }
+                    {
+                        empties++;
+                    }
                 }
 
-                discdiff = (color == ChessType.BLACK ? black - white : white - black);
-                endSolve.PrepareToSolve(board);
-                if (empties >= 12)
-                    bestScore = endSolve.Solve(board, -1, 1, color, empties, discdiff, 1);
-                else if (empties > 0)
-                    bestScore = endSolve.Solve(board, -64, 64, color, empties, discdiff, 1);
-                else
-                    bestScore = endSolve.Solve(board, 0, 1, color, empties, discdiff, 1);
-                bestMove = endSolve.BestMove;
+                var discdiff = (color == 'b' ? black - white : white - black);
+                //if (empties >= 12)
+                //    bestScore = endSolve.Solve(board, -1, 1, color, empties, discdiff, 1);
+                //else if (empties > 0)
+                //    bestScore = endSolve.Solve(board, -64, 64, color, empties, discdiff, 1);
+                //else
+                //    bestScore = endSolve.Solve(board, 0, 1, color, empties, discdiff, 1);
+                //bestMove = endSolve.BestMove;
 
+                var board = (color == 'b' ? new BitBoard(b,w):new BitBoard(w,b));
 
-                str += String.Format("分值＝{0:F3}(空格={1:D2} 白子={2:D2} 黑子={3:D2}  差值={4})", bestScore, empties, white, black, discdiff);
-                str += "\t最好的位置：" + squareToString(bestMove);
-                str += String.Format("搜索时间: {0:F3}\n", (get_real_time() - start_time) / 10000000.0);
+                sw.Restart();
+
+                var r = engine.Search(board, empties);
+
+                sw.Stop();
+
+                var logText = "";
+                logText += $" (空格={empties:D2} 白子={white:D2} 黑子={black:D2}  差值={empties})\n";
+                logText += $"{r}\n";
+                logText += $"搜索时间: {sw.Elapsed}\n";
+
+                Console.WriteLine(logText);
             }
-            return str;
+             
         }
 
 
-        public static string squareToString(int square)
+        static string squareToString(int square)
         {
             int m = (square - 9) / 9;
             int n = (square - 9) % 9 - 1;
