@@ -21,6 +21,12 @@ namespace MonkeyOthello.Engines
         {
             searchResult = new SearchResult();
 
+            if (depth > 12)
+            {
+                searchResult.Message = "too depth...";
+                return searchResult;
+            }
+
             var clock = new Clock();
             clock.Start();
 
@@ -49,16 +55,17 @@ namespace MonkeyOthello.Engines
             var alpha = -highScore - 1;
             var beta = highScore + 1;
             var score = -highScore;
-            var eval = 0;
             var foundPv = false;
-
-            for (int i = 0; i < moves.Length; i++)
+             
+            for (var i = 0; i < moves.Length; i++)
             {
                 var pos = moves[i];
                 //move  
                 var oppBoard = Rule.MoveSwitch(board, pos);
 
-                searchResult.Nodes++;
+                //searchResult.Nodes++;
+
+                var eval = 0;
                 //check
                 if (foundPv)
                 {
@@ -148,7 +155,7 @@ namespace MonkeyOthello.Engines
 
                     var oppBoard = Rule.MoveSwitch(board, pos);
 
-                    searchResult.Nodes++;
+                    //searchResult.Nodes++;
                     //check
                     if (foundPv)
                     {

@@ -1,17 +1,21 @@
 using MonkeyOthello.Core;
 using MonkeyOthello.Engines;
+using MonkeyOthello.Tests.Engines;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Linq;
 
 namespace MonkeyOthello.Tests
 {
-    class Test
+    static class Test
     {
         #region test data
-
-        private static readonly string[] bds = new string[112] {
+        //113
+        private static readonly string[] bds = new string[] {
+//"........b.wwbw..bbwbbwwwbwbbbwwwbbwbbwwwbbbwbwww..bbwbw....bb...",
+//"........b.wwbw..bbwbbwwwbwbbbwwwbbwbbwwwbbbwbwww..bbwbw.........",
 "..wwwww.b.wwbw..bbwbbwwwbwbbbwwwbbwbbwwwbbbwbwww..bbwbw....bbbbw",
 "wbbw.b...wwbwww.wwwwbwwwwwwbwbbbwwwwbwb.wwwwwbbb..wwbbb..wwwww..",
 "..w.bb.bw.wbbbbbwwwwbbbbwbwwwwbbwbbbwwbwwwbbbbbww.wbbbbw......bw",
@@ -134,12 +138,18 @@ namespace MonkeyOthello.Tests
         public static void TestEndGameSearch()
         {
             var color = 'w';
-            var engine = new AlphaBetaEngine();
             var sw = new Stopwatch();
-            var length = 10;// = bds.Length; 
+            var engines = new IEngine[] {
+                    new MonkeyEngine(),
+                    new AlphaBetaEngine(),
+                };
+            Console.WriteLine(string.Join(" vs. ", engines.Select(c => c.Name)));
+            var ts = new TimeSpan[engines.Length];
+            sw.Start();
+            var length = 10;// bds.Length;// 10;// = bds.Length; 
             for (var i = 0; i < length; i++)
             {
-                int empties = 0, white = 0, black = 0; 
+                int empties = 0, white = 0, black = 0;
                 var w = 0ul;
                 var b = 0ul;
                 for (var j = 0; j < 64; j++)
@@ -162,40 +172,71 @@ namespace MonkeyOthello.Tests
                 }
 
                 var discdiff = (color == 'b' ? black - white : white - black);
-                //if (empties >= 12)
-                //    bestScore = endSolve.Solve(board, -1, 1, color, empties, discdiff, 1);
-                //else if (empties > 0)
-                //    bestScore = endSolve.Solve(board, -64, 64, color, empties, discdiff, 1);
-                //else
-                //    bestScore = endSolve.Solve(board, 0, 1, color, empties, discdiff, 1);
-                //bestMove = endSolve.BestMove;
 
-                var board = (color == 'b' ? new BitBoard(b,w):new BitBoard(w,b));
+                var board = (color == 'b' ? new BitBoard(b, w) : new BitBoard(w, b));
 
-                sw.Restart();
+                Console.WriteLine($" (empties={empties:D2} white={white:D2} black={black:D2}  diff={empties})");
 
-                var r = engine.Search(board, empties);
+                var index = 0;
+                while (index < engines.Length)
+                {
+                    var r = engines[index].Search(board, empties);
+                    Console.WriteLine($"r{index + 1}: {r}");
+                    ts[index] += r.TimeSpan;
+                    index++;
+                }
 
-                sw.Stop();
-
-                var logText = "";
-                logText += $" (空格={empties:D2} 白子={white:D2} 黑子={black:D2}  差值={empties})\n";
-                logText += $"{r}\n";
-                logText += $"搜索时间: {sw.Elapsed}\n";
-
-                Console.WriteLine(logText);
+                Console.WriteLine();
             }
-             
+
+            sw.Stop();
+
+
+            for (var i = 0; i < ts.Length; i++)
+            {
+                Console.WriteLine($"sub total: {ts[i]}");
+            }
+            Console.WriteLine($"total: {sw.Elapsed}");
         }
 
-
-        static string squareToString(int square)
+        public static void TestV2IndexToV3Index()
         {
-            int m = (square - 9) / 9;
-            int n = (square - 9) % 9 - 1;
-            int int_m = m + 1;
-            char str_n = Convert.ToChar(n + 65);
-            return int_m.ToString() + str_n.ToString();
+            int[] worst2best = new int[]
+           { 
+/*B2*/      20 , 25 , 65 , 70 ,
+/*B1*/      11 , 16 , 19 , 26 , 64 , 71 , 74 , 79 ,
+/*C2*/      21 , 24 , 29 , 34 , 56 , 61 , 66 , 69 ,
+/*D2*/      22 , 23 , 38 , 43 , 47 , 52 , 67 , 68 ,
+/*D3*/      31 , 32 , 39 , 42 , 48 , 51 , 58 , 59 ,
+/*D1*/      13 , 14 , 37 , 44 , 46 , 53 , 76 , 77 ,
+/*C3*/      30 , 33 , 57 , 60 ,
+/*C1*/      12 , 15 , 28 , 35 , 55 , 62 , 75 , 78 ,
+/*A1*/      10 , 17 , 73 , 80 , 
+/*D4*/      40 , 41 , 49 , 50
+          };
+
+            var v3indexList = worst2best.Reverse().Select(V2IndexToV3Index).ToArray();
+            var t = string.Join(",", v3indexList);
+            Console.WriteLine(t);
+            var t2 = string.Join(",", v3indexList.Select(SquareToString));
+            Console.WriteLine(t2);
         }
+
+        public static int V2IndexToV3Index(this int index)
+        {
+            var m = (index - 9) % 9 - 1;
+            var n = (index - 9) / 9;
+            return n * 8 + m;
+        }
+
+        public static string SquareToString(int square)
+        {
+            var m = square / 8;
+            var n = square % 8;
+            var y = m + 1;
+            var x = Convert.ToChar(n + 65);
+            return x.ToString() + y.ToString();
+        }
+
     }
 }

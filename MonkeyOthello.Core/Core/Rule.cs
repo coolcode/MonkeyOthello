@@ -60,6 +60,17 @@ namespace MonkeyOthello.Core
             return flippedPieces;
         }
 
+        public static int DiffMobility(BitBoard board)
+        {
+            var pm = ValidPlays(board.PlayerPieces, board.OpponentPieces, board.EmptyPieces);
+
+            var om = ValidPlays(board.OpponentPieces, board.PlayerPieces, board.EmptyPieces);
+             
+            var moves = pm.Indices().Count() - om.Indices().Count();
+
+            return moves ;
+        }
+
         public static ulong ValidPlays(ulong playerPieces, ulong opponentPieces, ulong emptySquares)
         {
 	        return   ValidateOneDirection(Up, playerPieces, opponentPieces, emptySquares)
@@ -118,12 +129,6 @@ namespace MonkeyOthello.Core
             return 0;            
         }
 
-        public static ulong PotentialMobilityOneDirection(Func<ulong, ulong> function, ulong playerPieces, ulong emptySquares)
-        {
-            var shift = function(playerPieces);
-            return shift & emptySquares;
-        }
-
         public static ulong PotentialMobility(ulong playerPieces, ulong emptySquares)
         {
             return PotentialMobilityOneDirection(Up, playerPieces, emptySquares)
@@ -135,6 +140,13 @@ namespace MonkeyOthello.Core
                    | PotentialMobilityOneDirection(Left, playerPieces, emptySquares)
                    | PotentialMobilityOneDirection(UpLeft, playerPieces, emptySquares);
         }
+
+        public static ulong PotentialMobilityOneDirection(Func<ulong, ulong> function, ulong playerPieces, ulong emptySquares)
+        {
+            var shift = function(playerPieces);
+            return shift & emptySquares;
+        }
+
 
         private static ulong _stabilityRequirement = (new List<string> { 
                                                      "a1", "a2", "b1",

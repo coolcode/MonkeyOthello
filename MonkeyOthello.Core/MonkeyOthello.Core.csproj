@@ -28,6 +28,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -40,6 +41,7 @@
     <Compile Include="Core\Clock.cs" />
     <Compile Include="Core\Constants.cs" />
     <Compile Include="Core\Point.cs" />
+    <Compile Include="Engines\MonkeyEngine.cs" />
     <Compile Include="Engines\AlphaBetaEngine.cs" />
     <Compile Include="Engines\BaseEngine.cs" />
     <Compile Include="Engines\EndGameEvaluation.cs" />

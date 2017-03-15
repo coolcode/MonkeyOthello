@@ -13,6 +13,7 @@ namespace MonkeyOthello.Tests
             try
             {
                 Test.TestEndGameSearch();
+                //Test.TestV2IndexToV3Index();
                 Console.WriteLine("done!");
             }
             catch(Exception e)
