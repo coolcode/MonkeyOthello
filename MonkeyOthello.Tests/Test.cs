@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Linq;
+using System.IO;
 
 namespace MonkeyOthello.Tests
 {
@@ -13,7 +14,7 @@ namespace MonkeyOthello.Tests
     {
         #region test data
         //113
-        private static readonly string[] bds = new string[] {
+        private static readonly string[] test_data = new string[] {
 //"........b.wwbw..bbwbbwwwbwbbbwwwbbwbbwwwbbbwbwww..bbwbw....bb...",
 //"........b.wwbw..bbwbbwwwbwbbbwwwbbwbbwwwbbbwbwww..bbwbw.........",
 "..wwwww.b.wwbw..bbwbbwwwbwbbbwwwbbwbbwwwbbbwbwww..bbwbw....bbbbw",
@@ -137,16 +138,19 @@ namespace MonkeyOthello.Tests
 
         public static void TestEndGameSearch()
         {
+            var bds = File.ReadAllLines("test-data.txt");
+
             var color = 'w';
             var sw = new Stopwatch();
             var engines = new IEngine[] {
                     new MonkeyEngine(),
-                    new AlphaBetaEngine(),
+                    //new EndGameEngine(),
+                    //new AlphaBetaEngine(),
                 };
             Console.WriteLine(string.Join(" vs. ", engines.Select(c => c.Name)));
             var ts = new TimeSpan[engines.Length];
             sw.Start();
-            var length = 10;// bds.Length;// 10;// = bds.Length; 
+            var length = bds.Length;// 10;// = bds.Length; 
             for (var i = 0; i < length; i++)
             {
                 int empties = 0, white = 0, black = 0;
@@ -175,13 +179,13 @@ namespace MonkeyOthello.Tests
 
                 var board = (color == 'b' ? new BitBoard(b, w) : new BitBoard(w, b));
 
-                Console.WriteLine($" (empties={empties:D2} white={white:D2} black={black:D2}  diff={empties})");
+                Console.WriteLine($"{i} (empties={empties:D2} white={white:D2} black={black:D2}  diff={empties})");
 
                 var index = 0;
                 while (index < engines.Length)
                 {
                     var r = engines[index].Search(board, empties);
-                    Console.WriteLine($"r{index + 1}: {r}");
+                    Console.WriteLine($"[{engines[index].Name}] r{index + 1}: {r}");
                     ts[index] += r.TimeSpan;
                     index++;
                 }
@@ -251,5 +255,43 @@ namespace MonkeyOthello.Tests
             return x.ToString() + y.ToString();
         }
 
+        public static void GenTestData()
+        {
+            var depth = 20;
+            var rand = new Random();
+            var lines = new List<string>();
+            for (var i = 0; i < 10; i++)
+            {
+                var board = BitBoard.NewGame();
+                while (board.EmptyPieces.CountBits() > depth)
+                {
+                    var moves = Rule.FindMoves(board);
+
+                    if (moves.Length == 0)
+                    {
+                        board = board.Switch();
+                        moves = Rule.FindMoves(board);
+                        if (moves.Length == 0)
+                        {
+                            break;
+                        }
+                    }
+                    var index = rand.Next(0, moves.Length);
+                    var pos = moves[index];
+                    board = Rule.MoveSwitch(board, pos);
+                }
+
+                if (board.EmptyPieces.CountBits() > depth)
+                {
+                    continue;
+                }
+                var btext = board.Draw();
+                lines.Add(btext);
+                Console.WriteLine(btext);
+            }
+
+            File.WriteAllLines("test-data.txt", lines);
+
+        }
     }
 }

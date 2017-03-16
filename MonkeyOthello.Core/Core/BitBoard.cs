@@ -99,15 +99,15 @@ namespace MonkeyOthello.Core
                 var pos = 1UL << i;
                 if ((PlayerPieces & pos) > 0)
                 {
-                    sb.Append("X");
+                    sb.Append("w");
                 }
                 else if ((OpponentPieces & pos) > 0)
                 {
-                    sb.Append("O");
+                    sb.Append("b");
                 }
                 else
                 {
-                    sb.Append("_");
+                    sb.Append(".");
                 }
             }
 

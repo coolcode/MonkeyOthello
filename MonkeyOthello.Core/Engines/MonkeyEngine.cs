@@ -44,7 +44,7 @@ namespace MonkeyOthello.Engines
 
             searchResult = new SearchResult();
 
-            if (depth > 14)
+            if (depth > Constants.MaxEndGameDepth)
             {
                 searchResult.Message = "too depth...";
                 return searchResult;
@@ -77,24 +77,22 @@ namespace MonkeyOthello.Engines
 
             var alpha = -highScore - 1;
             var beta = highScore + 1;
+
+            if (depth >= Constants.MaxEndGameDepth - 2)
+            {//make search window small
+                alpha = -1;
+                beta = 1;
+            }
+
             var score = -highScore;
             var foundPv = false;
 
-            //moves = moves.OrderBy(i => squareDict[i]).ToArray();
-            //for (var i = 0; i < moves.Length; i++)
-            //{
-            //    var oppBoard = Rule.MoveSwitch(board, moves[i]);
-            //    var diffmob = Rule.DiffMobility(oppBoard);
-
-            //}
             var orderedMoves = OrderMoves(moves, board);
 
             foreach (var pos in orderedMoves)
             {
                 //move  
                 var oppBoard = Rule.MoveSwitch(board, pos);
-
-                //searchResult.Nodes++;
 
                 var eval = 0;
                 //check
@@ -188,20 +186,38 @@ namespace MonkeyOthello.Engines
 
                 var oppBoard = Rule.MoveSwitch(board, pos);
 
-                //searchResult.Nodes++;
-                //check
-                if (foundPv)
+                if (depth <= Constants.ParityDepth)
                 {
-                    //zero window
-                    eval = -FastestFirstSolve(oppBoard, -alpha - 1, -alpha, depth - 1);
-                    if ((eval > alpha) && (eval < beta))
+                    //Parity Search
+                    if (foundPv)
                     {
-                        eval = -FastestFirstSolve(oppBoard, -beta, -eval, depth - 1);
+                        //zero window
+                        eval = -ParitySearch(oppBoard, -alpha - 1, -alpha, depth - 1);
+                        if ((eval > alpha) && (eval < beta))
+                        {
+                            eval = -ParitySearch(oppBoard, -beta, -eval, depth - 1);
+                        }
+                    }
+                    else
+                    {
+                        eval = -ParitySearch(oppBoard, -beta, -alpha, depth - 1);
                     }
                 }
                 else
                 {
-                    eval = -FastestFirstSolve(oppBoard, -beta, -alpha, depth - 1);
+                    if (foundPv)
+                    {
+                        //zero window
+                        eval = -FastestFirstSolve(oppBoard, -alpha - 1, -alpha, depth - 1);
+                        if ((eval > alpha) && (eval < beta))
+                        {
+                            eval = -FastestFirstSolve(oppBoard, -beta, -eval, depth - 1);
+                        }
+                    }
+                    else
+                    {
+                        eval = -FastestFirstSolve(oppBoard, -beta, -alpha, depth - 1);
+                    }
                 }
 
                 //reback?
@@ -228,9 +244,22 @@ namespace MonkeyOthello.Engines
         }
 
 
-        private int ParitySearch(BitBoard board, int alpha, int beta, int empties, bool prevmove = true)
+        private int ParitySearch(BitBoard board, int alpha, int beta, int depth, bool prevmove = true)
         {
             searchResult.Nodes++;
+
+            //game over
+            if (board.IsFull)
+            {
+                return EndGameEvaluation.Eval(board);
+            }
+
+            //leaf node
+            if (depth == 0)
+            {
+                return Evaluation.Eval(board);
+            }
+
             var moves = Rule.FindMoves(board);
 
             if (moves.Length == 0)
@@ -242,74 +271,73 @@ namespace MonkeyOthello.Engines
                 }
                 else
                 {
-                    return -NoParitySearch(board.Switch(), -beta, -alpha, empties, false);
+                    return -ParitySearch(board.Switch(), -beta, -alpha, depth, false);
                 }
             }
 
             var score = -highScore;
-            var diffCount = board.DiffCount();
+            var foundPv = false;
+
+            //moves = moves.OrderBy(i => squareDict[i]).ToArray();
+
+            //var orderedMoves = OrderMoves(moves, board);
 
             foreach (var pos in moves)
             {
                 var eval = 0;
 
-                var flips = Rule.FindFlips(board, pos);
-                var oppBoard = Rule.FlipSwitch(board, pos, flips);
-                var ownFlipsCount = flips.CountBits();
+                var oppBoard = Rule.MoveSwitch(board, pos);
 
-                if (empties == 2)
+                if (depth <= Constants.NoParityDepth)
                 {
-                    //the last move of opponent player
-                    var lastEmptySquare = oppBoard.EmptyPieces.Index();
-                    if (lastEmptySquare < 0)
+                    //Parity Search
+                    if (foundPv)
                     {
-                        throw new Exception($"invalid square index:{lastEmptySquare}");
-                    }
-
-                    var oppFlipsCount = Rule.CountFlips(oppBoard, lastEmptySquare);
-
-                    if (oppFlipsCount > 0)
-                    {
-                        //both done.
-                        eval = diffCount + 2 * (ownFlipsCount - oppFlipsCount);
+                        //zero window
+                        eval = -NoParitySearch(oppBoard, -alpha - 1, -alpha, depth - 1);
+                        if ((eval > alpha) && (eval < beta))
+                        {
+                            eval = -NoParitySearch(oppBoard, -beta, -eval, depth - 1);
+                        }
                     }
                     else
                     {
-                        //opp pass
-                        var ownLastFlipsCount = Rule.CountFlips(oppBoard, lastEmptySquare);
-
-                        if (ownLastFlipsCount > 0)
-                        {
-                            eval = diffCount + 2 * (ownFlipsCount + ownLastFlipsCount) + 2;
-                        }
-                        else
-                        {
-                            //all pass
-                            eval = diffCount + 2 * ownFlipsCount;
-                            //TODO: eval==0?
-                            if (eval >= 0)
-                            {
-                                eval += 2;
-                            }
-                        }
+                        eval = -NoParitySearch(oppBoard, -beta, -alpha, depth - 1);
                     }
                 }
                 else
                 {
-                    //empties!=2
-                    eval = -NoParitySearch(oppBoard, -beta, -alpha, empties - 1);
+                    if (foundPv)
+                    {
+                        //zero window
+                        eval = -ParitySearch(oppBoard, -alpha - 1, -alpha, depth - 1);
+                        if ((eval > alpha) && (eval < beta))
+                        {
+                            eval = -ParitySearch(oppBoard, -beta, -eval, depth - 1);
+                        }
+                    }
+                    else
+                    {
+                        eval = -ParitySearch(oppBoard, -beta, -alpha, depth - 1);
+                    }
                 }
+
+                //reback?
 
                 if (eval > score)
                 {
                     score = eval;
+
                     if (eval > alpha)
                     {
                         if (eval >= beta)
                         {
+                            //cut branch
                             return score;
                         }
+
                         alpha = eval;
+                        foundPv = true;
                     }
                 }
             }

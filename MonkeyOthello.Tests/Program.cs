@@ -12,9 +12,10 @@ namespace MonkeyOthello.Tests
         {
             try
             {
-                //Test.TestEndGameSearch();
+                //Test.GenTestData();
+                Test.TestEndGameSearch();
                 //Test.TestV2IndexToV3Index();
-                Test.TestFlips();
+                //Test.TestFlips();
                 Console.WriteLine("done!");
             }
             catch(Exception e)
