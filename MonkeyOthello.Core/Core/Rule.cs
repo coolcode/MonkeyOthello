@@ -18,7 +18,7 @@ namespace MonkeyOthello.Core
         public static Func<ulong, ulong> UpRight = x => (x >> 7) & RightMask;
         public static Func<ulong, ulong> DownRight = x => (x << 9) & RightMask;
         public static Func<ulong, ulong> DownLeft = x => (x << 7) & LeftMask;
-        
+
         public static int[] FindMoves(BitBoard board)
         {
             var bm = ValidPlays(board.PlayerPieces, board.OpponentPieces, board.EmptyPieces);
@@ -42,22 +42,40 @@ namespace MonkeyOthello.Core
             var flippedPieces = PlacePiece(placement, board.PlayerPieces, board.OpponentPieces);
 
             var playerPieces = board.PlayerPieces | flippedPieces | placement;
-            var opponentPieces = board.OpponentPieces^ flippedPieces;
+            var opponentPieces = board.OpponentPieces ^ flippedPieces;
 
             //switch
             return new BitBoard(opponentPieces, playerPieces);
         }
 
-        public static ulong MakeMove(BitBoard board, int index)
+        public static int CountFlips(BitBoard board, int index)
         {
             var placement = 1UL << index;
 
             var flippedPieces = PlacePiece(placement, board.PlayerPieces, board.OpponentPieces);
 
-            board.PlayerPieces |= flippedPieces | placement;
-            board.OpponentPieces ^= flippedPieces;
+            var count = (flippedPieces == 0 ? 0 : flippedPieces.CountBits());
+
+            return count;
+        }
+
+        public static ulong FindFlips(BitBoard board, int index)
+        {
+            var placement = 1UL << index;
+
+            var flippedPieces = PlacePiece(placement, board.PlayerPieces, board.OpponentPieces);
 
             return flippedPieces;
+        }
+
+        public static BitBoard FlipSwitch(BitBoard board, int index, ulong flippedPieces)
+        {
+            var placement = 1UL << index;
+            var playerPieces = board.PlayerPieces | flippedPieces | placement;
+            var opponentPieces = board.OpponentPieces ^ flippedPieces;
+
+            //switch
+            return new BitBoard(opponentPieces, playerPieces);
         }
 
         public static int DiffMobility(BitBoard board)
@@ -65,22 +83,35 @@ namespace MonkeyOthello.Core
             var pm = ValidPlays(board.PlayerPieces, board.OpponentPieces, board.EmptyPieces);
 
             var om = ValidPlays(board.OpponentPieces, board.PlayerPieces, board.EmptyPieces);
-             
-            var moves = pm.Indices().Count() - om.Indices().Count();
 
-            return moves ;
+            var moves = pm.CountBits() - om.CountBits();
+
+            return moves;
+        }
+
+
+        public static bool CanMove(ulong playerPieces, ulong opponentPieces, ulong emptySquares)
+        {
+            return CanMoveOneDirection(Up, playerPieces, opponentPieces, emptySquares)
+                   || CanMoveOneDirection(UpRight, playerPieces, opponentPieces, emptySquares)
+                   || CanMoveOneDirection(Right, playerPieces, opponentPieces, emptySquares)
+                   || CanMoveOneDirection(DownRight, playerPieces, opponentPieces, emptySquares)
+                   || CanMoveOneDirection(Down, playerPieces, opponentPieces, emptySquares)
+                   || CanMoveOneDirection(DownLeft, playerPieces, opponentPieces, emptySquares)
+                   || CanMoveOneDirection(Left, playerPieces, opponentPieces, emptySquares)
+                   || CanMoveOneDirection(UpLeft, playerPieces, opponentPieces, emptySquares);
         }
 
         public static ulong ValidPlays(ulong playerPieces, ulong opponentPieces, ulong emptySquares)
         {
-	        return   ValidateOneDirection(Up, playerPieces, opponentPieces, emptySquares)
-	               | ValidateOneDirection(UpRight, playerPieces, opponentPieces, emptySquares)
-	               | ValidateOneDirection(Right, playerPieces, opponentPieces, emptySquares)
-	               | ValidateOneDirection(DownRight, playerPieces, opponentPieces, emptySquares)
-	               | ValidateOneDirection(Down, playerPieces, opponentPieces, emptySquares)
-	               | ValidateOneDirection(DownLeft, playerPieces, opponentPieces, emptySquares)
-	               | ValidateOneDirection(Left, playerPieces, opponentPieces, emptySquares)
-	               | ValidateOneDirection(UpLeft, playerPieces, opponentPieces, emptySquares);
+            return ValidateOneDirection(Up, playerPieces, opponentPieces, emptySquares)
+                   | ValidateOneDirection(UpRight, playerPieces, opponentPieces, emptySquares)
+                   | ValidateOneDirection(Right, playerPieces, opponentPieces, emptySquares)
+                   | ValidateOneDirection(DownRight, playerPieces, opponentPieces, emptySquares)
+                   | ValidateOneDirection(Down, playerPieces, opponentPieces, emptySquares)
+                   | ValidateOneDirection(DownLeft, playerPieces, opponentPieces, emptySquares)
+                   | ValidateOneDirection(Left, playerPieces, opponentPieces, emptySquares)
+                   | ValidateOneDirection(UpLeft, playerPieces, opponentPieces, emptySquares);
         }
 
         public static ulong ValidateOneDirection(Func<ulong, ulong> function, ulong playerPieces, ulong opponentPieces, ulong emptySquares)
@@ -98,14 +129,32 @@ namespace MonkeyOthello.Core
             return validPlays;
         }
 
+        public static bool CanMoveOneDirection(Func<ulong, ulong> function, ulong playerPieces, ulong opponentPieces, ulong emptySquares)
+        {
+            var shift = function(playerPieces);
+            var potential = shift & opponentPieces;
+
+            while (potential != 0)
+            {
+                potential = function(potential);
+                if ((potential & emptySquares) != 0)
+                {
+                    return true;
+                }
+                potential &= opponentPieces;
+            }
+            return false;
+        }
+
+
         public static ulong PlacePiece(ulong placement, ulong playerPieces, ulong opponentPieces)
         {
-            return   PlaceOneDirection(Up, placement, playerPieces, opponentPieces)
+            return PlaceOneDirection(Up, placement, playerPieces, opponentPieces)
                    | PlaceOneDirection(UpRight, placement, playerPieces, opponentPieces)
                    | PlaceOneDirection(Right, placement, playerPieces, opponentPieces)
                    | PlaceOneDirection(DownRight, placement, playerPieces, opponentPieces)
                    | PlaceOneDirection(Down, placement, playerPieces, opponentPieces)
-                   | PlaceOneDirection(DownLeft, placement, playerPieces, opponentPieces) 
+                   | PlaceOneDirection(DownLeft, placement, playerPieces, opponentPieces)
                    | PlaceOneDirection(Left, placement, playerPieces, opponentPieces)
                    | PlaceOneDirection(UpLeft, placement, playerPieces, opponentPieces);
         }
@@ -126,7 +175,7 @@ namespace MonkeyOthello.Core
             }
             while (potential > 0);
 
-            return 0;            
+            return 0;
         }
 
         public static ulong PotentialMobility(ulong playerPieces, ulong emptySquares)
@@ -148,7 +197,7 @@ namespace MonkeyOthello.Core
         }
 
 
-        private static ulong _stabilityRequirement = (new List<string> { 
+        private static ulong _stabilityRequirement = (new List<string> {
                                                      "a1", "a2", "b1",
                                                      "g1", "h1", "h2",
                                                      "a7", "a8", "b8",
@@ -161,8 +210,8 @@ namespace MonkeyOthello.Core
             // See: http://pressibus.org/ataxx/autre/minimax/node3.html
             if ((playerPieces & _stabilityRequirement) == 0UL)
                 return 0UL;
-            
-            
+
+
             return 0UL;
         }
     }

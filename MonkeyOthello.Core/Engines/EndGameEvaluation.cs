@@ -11,7 +11,7 @@ namespace MonkeyOthello.Engines
     {
         public int Eval(BitBoard board)
         {
-            return board.Diff();
+            return board.EndDiffCount();
         }
     }
 }

@@ -37,7 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\BitBoard.cs" />
-    <Compile Include="Core\BitUtils.cs" />
+    <Compile Include="Core\BitExtensions.cs" />
     <Compile Include="Core\Clock.cs" />
     <Compile Include="Core\Constants.cs" />
     <Compile Include="Core\Point.cs" />

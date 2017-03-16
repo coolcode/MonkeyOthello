@@ -199,6 +199,19 @@ namespace MonkeyOthello.Tests
             Console.WriteLine($"total: {sw.Elapsed}");
         }
 
+        public static void TestFlips()
+        {
+            var board = new BitBoard(9246146104748420220UL, 8659321588746490112UL);
+            var moves = Rule.FindMoves(board);
+            var empties = board.EmptyPieces.Indices();
+            var invalidMoves = empties.Except(moves);
+            foreach (var im in invalidMoves)
+            {
+                var flipBits = Rule.FindFlips(board, im);
+                Console.WriteLine(flipBits);
+            }
+        }
+
         public static void TestV2IndexToV3Index()
         {
             int[] worst2best = new int[]

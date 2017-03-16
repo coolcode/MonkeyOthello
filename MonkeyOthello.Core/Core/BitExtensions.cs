@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MonkeyOthello.Core
 {
-    public static class BitUtils
+    public static class BitExtensions
     {
         // From http://chessprogramming.wikispaces.com/Population+Count#SWAR-Popcount-The%20PopCount%20routine
         public static int CountBits(this ulong x)
@@ -20,21 +20,31 @@ namespace MonkeyOthello.Core
             x = (x + (x >> 4)) & k4;        /* put count of each 8 bits into those 8 bits */
             x = (x * kf) >> 56;             /* returns 8 most significant bits of x + (x<<8) + (x<<16) + (x<<24) + ...  */
 
-            return (int)x; 
+            return (int)x;
         }
 
         // Uses the BitScanForward method to get the indices of bits containing ones.
-		// From http://chessprogramming.wikispaces.com/Bitboard+Serialization
+        // From http://chessprogramming.wikispaces.com/Bitboard+Serialization
         public static IEnumerable<int> Indices(this ulong x)
-        { 
-			if (x > 0)
-			{
-				do 
-				{
-					var index = BitScanForward(x); 	// square index from 0..63
-					yield return index;
-				} while ((x &= x - 1) > 0); 			// reset LS1B
-			}             
+        {
+            if (x > 0)
+            {
+                do
+                {
+                    var index = BitScanForward(x);  // square index from 0..63
+                    yield return index;
+                } while ((x &= x - 1) > 0);             // reset LS1B
+            }
+        }
+
+        /// <summary>
+        /// only one index
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        public static int Index(this ulong x)
+        {
+            return (x > 0) ? BitScanForward(x) : -1;  // square index from 0..63  
         }
 
         // http://code.google.com/p/vajolet/source/browse/vajolet/chesslib/bitboard.cs?spec=svn47&r=47
@@ -56,7 +66,7 @@ namespace MonkeyOthello.Core
 
         const long Debruijn64 = 0x07EDD5E59A4E28C2;
 
-        public static Func<ulong,ulong>[] Rotations = new Func<ulong, ulong>[] {x => x, x => x.Rotate90Clockwise(), x => x.Rotate180(), x => x.Rotate90AntiClockwise() };
+        public static Func<ulong, ulong>[] Rotations = new Func<ulong, ulong>[] { x => x, x => x.Rotate90Clockwise(), x => x.Rotate180(), x => x.Rotate90AntiClockwise() };
 
         public static ulong Rotate90Clockwise(this ulong x)
         {

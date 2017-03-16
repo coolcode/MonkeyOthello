@@ -146,90 +146,265 @@ namespace MonkeyOthello.Engines
 
         private int FastestFirstSolve(BitBoard board, int alpha, int beta, int depth, bool prevmove = true)
         {
-            lock (this)
-            {
-                searchResult.Nodes++;
+            searchResult.Nodes++;
 
-                //game over
-                if (board.IsFull)
+            //game over
+            if (board.IsFull)
+            {
+                return EndGameEvaluation.Eval(board);
+            }
+
+            //leaf node
+            if (depth == 0)
+            {
+                return Evaluation.Eval(board);
+            }
+
+            var moves = Rule.FindMoves(board);
+
+            if (moves.Length == 0)
+            {
+                if (!prevmove)
                 {
+                    //END
                     return EndGameEvaluation.Eval(board);
                 }
-
-                //leaf node
-                if (depth == 0)
+                else
                 {
-                    return Evaluation.Eval(board);
+                    return -FastestFirstSolve(board.Switch(), -beta, -alpha, depth, false);
                 }
-
-                var moves = Rule.FindMoves(board);
-
-                if (moves.Length == 0)
-                {
-                    if (!prevmove)
-                    {
-                        //END
-                        return EndGameEvaluation.Eval(board);
-                    }
-                    else
-                    {
-                        return -FastestFirstSolve(board.Switch(), -beta, -alpha, depth, false);
-                    }
-                }
-
-                var score = -highScore;
-                var foundPv = false;
-
-                //moves = moves.OrderBy(i => squareDict[i]).ToArray();
-
-                var orderedMoves = OrderMoves(moves, board);
-
-                foreach (var pos in orderedMoves)
-                {
-                    var eval = 0; 
-
-                    var oppBoard = Rule.MoveSwitch(board, pos);
-
-                    //searchResult.Nodes++;
-                    //check
-                    if (foundPv)
-                    {
-                        //zero window
-                        eval = -FastestFirstSolve(oppBoard, -alpha - 1, -alpha, depth - 1);
-                        if ((eval > alpha) && (eval < beta))
-                        {
-                            eval = -FastestFirstSolve(oppBoard, -beta, -eval, depth - 1);
-                        }
-                    }
-                    else
-                    {
-                        eval = -FastestFirstSolve(oppBoard, -beta, -alpha, depth - 1);
-                    }
-
-                    //reback?
-
-                    if (eval > score)
-                    {
-                        score = eval;
-
-                        if (eval > alpha)
-                        {
-                            if (eval >= beta)
-                            {
-                                //cut branch
-                                return score;
-                            }
-
-                            alpha = eval;
-                            foundPv = true;
-                        }
-                    }
-                }
-
-                return score;
             }
+
+            var score = -highScore;
+            var foundPv = false;
+
+            //moves = moves.OrderBy(i => squareDict[i]).ToArray();
+
+            var orderedMoves = OrderMoves(moves, board);
+
+            foreach (var pos in orderedMoves)
+            {
+                var eval = 0;
+
+                var oppBoard = Rule.MoveSwitch(board, pos);
+
+                //searchResult.Nodes++;
+                //check
+                if (foundPv)
+                {
+                    //zero window
+                    eval = -FastestFirstSolve(oppBoard, -alpha - 1, -alpha, depth - 1);
+                    if ((eval > alpha) && (eval < beta))
+                    {
+                        eval = -FastestFirstSolve(oppBoard, -beta, -eval, depth - 1);
+                    }
+                }
+                else
+                {
+                    eval = -FastestFirstSolve(oppBoard, -beta, -alpha, depth - 1);
+                }
+
+                //reback?
+
+                if (eval > score)
+                {
+                    score = eval;
+
+                    if (eval > alpha)
+                    {
+                        if (eval >= beta)
+                        {
+                            //cut branch
+                            return score;
+                        }
+
+                        alpha = eval;
+                        foundPv = true;
+                    }
+                }
+            }
+
+            return score;
         }
 
+
+        private int ParitySearch(BitBoard board, int alpha, int beta, int empties, bool prevmove = true)
+        {
+            searchResult.Nodes++;
+            var moves = Rule.FindMoves(board);
+
+            if (moves.Length == 0)
+            {
+                if (!prevmove)
+                {
+                    //END
+                    return EndGameEvaluation.Eval(board);
+                }
+                else
+                {
+                    return -NoParitySearch(board.Switch(), -beta, -alpha, empties, false);
+                }
+            }
+
+            var score = -highScore;
+            var diffCount = board.DiffCount();
+
+            foreach (var pos in moves)
+            {
+                var eval = 0;
+
+                var flips = Rule.FindFlips(board, pos);
+                var oppBoard = Rule.FlipSwitch(board, pos, flips);
+                var ownFlipsCount = flips.CountBits();
+
+                if (empties == 2)
+                {
+                    //the last move of opponent player
+                    var lastEmptySquare = oppBoard.EmptyPieces.Index();
+                    if (lastEmptySquare < 0)
+                    {
+                        throw new Exception($"invalid square index:{lastEmptySquare}");
+                    }
+
+                    var oppFlipsCount = Rule.CountFlips(oppBoard, lastEmptySquare);
+
+                    if (oppFlipsCount > 0)
+                    {
+                        //both done.
+                        eval = diffCount + 2 * (ownFlipsCount - oppFlipsCount);
+                    }
+                    else
+                    {
+                        //opp pass
+                        var ownLastFlipsCount = Rule.CountFlips(oppBoard, lastEmptySquare);
+
+                        if (ownLastFlipsCount > 0)
+                        {
+                            eval = diffCount + 2 * (ownFlipsCount + ownLastFlipsCount) + 2;
+                        }
+                        else
+                        {
+                            //all pass
+                            eval = diffCount + 2 * ownFlipsCount;
+                            //TODO: eval==0?
+                            if (eval >= 0)
+                            {
+                                eval += 2;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    //empties!=2
+                    eval = -NoParitySearch(oppBoard, -beta, -alpha, empties - 1);
+                }
+
+                if (eval > score)
+                {
+                    score = eval;
+                    if (eval > alpha)
+                    {
+                        if (eval >= beta)
+                        {
+                            return score;
+                        }
+                        alpha = eval;
+                    }
+                }
+            }
+
+            return score;
+        }
+
+        private int NoParitySearch(BitBoard board, int alpha, int beta, int empties, bool prevmove = true)
+        {
+            searchResult.Nodes++;
+            var moves = Rule.FindMoves(board);
+
+            if (moves.Length == 0)
+            {
+                if (!prevmove)
+                {
+                    //END
+                    return EndGameEvaluation.Eval(board);
+                }
+                else
+                {
+                    return -NoParitySearch(board.Switch(), -beta, -alpha, empties, false);
+                }
+            }
+
+            var score = -highScore;
+            var diffCount = board.DiffCount();
+
+            foreach (var pos in moves)
+            {
+                var eval = 0;
+
+                var flips = Rule.FindFlips(board, pos);
+                var oppBoard = Rule.FlipSwitch(board, pos, flips);
+                var ownFlipsCount = flips.CountBits();
+
+                if (empties == 2)
+                {
+                    //the last move of opponent player
+                    var lastEmptySquare = oppBoard.EmptyPieces.Index();
+                    if (lastEmptySquare < 0)
+                    {
+                        throw new Exception($"invalid square index:{lastEmptySquare}");
+                    }
+
+                    var oppFlipsCount = Rule.CountFlips(oppBoard, lastEmptySquare);
+
+                    if (oppFlipsCount > 0)
+                    {
+                        //both done.
+                        eval = diffCount + 2 * (ownFlipsCount - oppFlipsCount);
+                    }
+                    else
+                    {
+                        //opp pass
+                        var ownLastFlipsCount = Rule.CountFlips(oppBoard, lastEmptySquare);
+
+                        if (ownLastFlipsCount > 0)
+                        {
+                            eval = diffCount + 2 * (ownFlipsCount + ownLastFlipsCount) + 2;
+                        }
+                        else
+                        {
+                            //all pass
+                            eval = diffCount + 2 * ownFlipsCount;
+                            //TODO: eval==0?
+                            if (eval >= 0)
+                            {
+                                eval += 2;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    //empties!=2
+                    eval = -NoParitySearch(oppBoard, -beta, -alpha, empties - 1);
+                }
+
+                if (eval > score)
+                {
+                    score = eval;
+                    if (eval > alpha)
+                    {
+                        if (eval >= beta)
+                        {
+                            return score;
+                        }
+                        alpha = eval;
+                    }
+                }
+            }
+
+            return score;
+        }
 
         private IEnumerable<int> OrderMoves(IEnumerable<int> moves, BitBoard board)
         {

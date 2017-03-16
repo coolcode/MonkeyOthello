@@ -53,9 +53,32 @@ namespace MonkeyOthello.Core
             return new BitBoard(PlayerPieces, OpponentPieces);
         }
 
-        public int Diff()
+        public int DiffCount()
         {
             return PlayerPieces.CountBits() - OpponentPieces.CountBits();
+        }
+
+        /// <summary>
+        /// winner got all empty pieces when game is over
+        /// </summary>
+        /// <returns></returns>
+        public int EndDiffCount()
+        {
+            var ownCount = PlayerPieces.CountBits();
+            var oppCount = OpponentPieces.CountBits();
+            var emptyCount = Constants.StonesCount - (ownCount + oppCount);
+            var diffCount = ownCount - oppCount;
+
+            if (diffCount > 0)
+            {
+                return diffCount + emptyCount;
+            }
+            else if (diffCount < 0)
+            {
+                return diffCount - emptyCount;
+            } 
+
+            return 0;
         }
 
         public override string ToString()

@@ -15,5 +15,6 @@ namespace MonkeyOthello.Core
         public static readonly int MaxEndGameDepth = Math.Min((StonesCount - 4), 20);
         public const ulong FullBoard = ulong.MaxValue;
 
+        public const int ParityDepth = 4;
     }
 }
