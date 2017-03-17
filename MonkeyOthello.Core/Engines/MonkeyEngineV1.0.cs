@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MonkeyOthello.Engines
 {
-    public class MonkeyEngineV1 : BaseEngine
+    public class MonkeyEngineV10 : BaseEngine
     {
         private const int highScore = Constants.HighestScore;
 

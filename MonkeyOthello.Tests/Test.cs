@@ -146,7 +146,7 @@ namespace MonkeyOthello.Tests
             var color = 'w';
             var sw = new Stopwatch();
             var engines = new IEngine[] {
-                    new MonkeyEngineV1(),
+                    new MonkeyEngineV10(),
                     new MonkeyEngine(),
                     //new EndGameEngine(),
                     //new AlphaBetaEngine(),
@@ -189,6 +189,8 @@ namespace MonkeyOthello.Tests
                 while (index < engines.Length)
                 {
                     var r = engines[index].Search(board, empties);
+                    //Console.WriteLine($"--cache info: {Rule.CacheInfo()}");
+                    //Rule.ClearCache();
                     Console.WriteLine($"[{engines[index].Name}] r{index + 1}: {r}");
                     ts[index] += r.TimeSpan;
                     index++;
@@ -218,6 +220,22 @@ namespace MonkeyOthello.Tests
                 var flipBits = Rule.FindFlips(board, im);
                 Console.WriteLine(flipBits);
             }
+        }
+
+        public static void TestBitBoard()
+        {
+            var board1 = new BitBoard(9246146104748420220UL, 8659321588746490112UL);
+            var board2 = new BitBoard(8659321588746490112UL, 9246146104748420220UL );
+            var board3 = new BitBoard(9246146104748420220UL, 8659321588746490112UL);
+            Console.WriteLine($"b1 hash: {board1.GetHashCode()}");
+            Console.WriteLine($"b2 hash: {board2.GetHashCode()}");
+            Console.WriteLine($"b1==b2? {board1 == board2}");
+            Console.WriteLine($"b1==b3? {board1 == board2}");
+
+            var dict = new Dictionary<BitBoard, int>();
+            dict.Add(board1, 1);
+            dict.Add(board2, 2);
+            dict.Add(board3, 3);
         }
 
         public static void TestV2IndexToV3Index()

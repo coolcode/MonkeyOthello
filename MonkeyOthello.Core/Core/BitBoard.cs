@@ -80,6 +80,17 @@ namespace MonkeyOthello.Core
 
             return 0;
         }
+        
+        public override bool Equals(object obj)
+        {
+            var comparedGameState = (BitBoard)obj;
+            return (PlayerPieces == comparedGameState.PlayerPieces) && (OpponentPieces == comparedGameState.OpponentPieces);
+        }
+
+        public override int GetHashCode()
+        {
+            return (PlayerPieces | OpponentPieces).GetHashCode();
+        }
 
         public override string ToString()
         {

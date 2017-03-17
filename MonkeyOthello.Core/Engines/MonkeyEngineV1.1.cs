@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections;
 
 namespace MonkeyOthello.Engines
 {
-    public class MonkeyEngine : BaseEngine
+    public class MonkeyEngine11 : BaseEngine
     {
         private const int highScore = Constants.HighestScore;
 
@@ -23,24 +24,18 @@ namespace MonkeyOthello.Engines
             //E5,D5,E4,D4,H8,A8,H1,A1,F8,C8,H6,A6,H3,A3,F1,C1,F6,C6,F3,C3,E8,D8,H5,A5,H4,A4,E1,D1,E6,D6,F5,C5,F4,C4,E3,D3,E7,D7,G5,B5,G4,B4,E2,D2,F7,C7,G6,B6,G3,B3,F2,C2,G8,B8,H7,A7,H2,A2,G1,B1,G7,B7,G2,B2
         };
 
-        // private Queue<int> squareQueue = new Queue<int>();
+        private Link link = new Link();
 
         private Dictionary<int, int> squareDict = new Dictionary<int, int>(64);
 
-        private readonly Dictionary<BitBoard, int> EvalCache = new Dictionary<BitBoard, int>(1 << 10);
-        private int hits = 0;
-
         private void PrepareSearch(BitBoard board)
         {
-            //EvalCache.Clear();
-            hits = 0;
-            //squareQueue.Clear();
-            //var squares = board.EmptyPieces.Indices().ToList();
+            var squares = board.EmptyPieces.Indices().ToList();
             squareDict = orderedSquares.Select((c, i) => new { K = c, V = i }).ToDictionary(kv => kv.K, kv => kv.V);
 
-            //squares = squares.OrderBy(i => squareDict[i]).ToList();
+            squares = squares.OrderBy(i => squareDict[i]).ToList();
 
-            //squares.ForEach(squareQueue.Enqueue);
+            link = new Link(squares);
         }
 
         public override SearchResult Search(BitBoard board, int depth)
@@ -92,12 +87,14 @@ namespace MonkeyOthello.Engines
             var score = -highScore;
             var foundPv = false;
 
-            var orderedMoves = OrderMovesByMobility(moves, board);
+            var orderedMoves = FindOrderedMoves(board); //OrderMoves(moves, board);
 
-            foreach (var pos in orderedMoves)
+            foreach (var m in orderedMoves)
             {
                 //move  
+                var pos = m.Index;
                 var oppBoard = Rule.MoveSwitch(board, pos);
+                m.Out();
 
                 var eval = 0;
                 //check
@@ -116,6 +113,7 @@ namespace MonkeyOthello.Engines
                 }
 
                 //reback? 
+                m.In();
 
                 searchResult.EvalList.Add(new EvalItem { Move = pos, Score = eval });
 
@@ -131,7 +129,7 @@ namespace MonkeyOthello.Engines
                     {
                         if (eval >= beta)
                         {
-                            //cut branch
+                            //purning
                             break;
                         }
                         alpha = eval;
@@ -143,7 +141,6 @@ namespace MonkeyOthello.Engines
             clock.Stop();
 
             searchResult.TimeSpan = clock.Elapsed;
-            searchResult.Message += $" (hits: {hits}, cache items:{EvalCache.Count})";
 
             return searchResult;
         }
@@ -164,34 +161,36 @@ namespace MonkeyOthello.Engines
                 return Evaluation.Eval(board);
             }
 
-            var moves = Rule.FindMoves(board);
+            //var moves = Rule.FindMoves(board);
 
-            if (moves.Length == 0)
-            {
-                if (!prevmove)
-                {
-                    //END
-                    return EndGameEvaluation.Eval(board);
-                }
-                else
-                {
-                    var oppBoard = board.Switch();
-                    return GetCachedScore(oppBoard,()=> -FastestFirstSolve(oppBoard, -beta, -alpha, depth, false));
-                }
-            }
+            //if (moves.Length == 0)
+            //{
+            //    if (!prevmove)
+            //    {
+            //        //END
+            //        return EndGameEvaluation.Eval(board);
+            //    }
+            //    else
+            //    {
+            //        return -FastestFirstSolve(board.Switch(), -beta, -alpha, depth, false);
+            //    }
+            //}
 
             var score = -highScore;
             var foundPv = false;
+            var hasMoves = false;
+            //var orderedMoves = OrderMoves(moves, board); 
 
-            //moves = moves.OrderBy(i => squareDict[i]).ToArray();
+            var orderedMoves = FindOrderedMoves(board);
 
-            var orderedMoves = OrderMovesByMobility(moves, board);
-
-            foreach (var pos in orderedMoves)
+            foreach (var m in orderedMoves)
             {
+                var pos = m.Index;
+                var oppBoard = Rule.FlipSwitch(board, pos, m.Flips);
                 var eval = 0;
 
-                var oppBoard = Rule.MoveSwitch(board, pos);
+                hasMoves = true;
+                m.Out();
 
                 if (depth <= Constants.ParityDepth)
                 {
@@ -199,7 +198,7 @@ namespace MonkeyOthello.Engines
                     if (foundPv)
                     {
                         //zero window
-                        eval = GetCachedScore(oppBoard, () => -ParitySearch(oppBoard, -alpha - 1, -alpha, depth - 1));
+                        eval = -ParitySearch(oppBoard, -alpha - 1, -alpha, depth - 1);
                         if ((eval > alpha) && (eval < beta))
                         {
                             eval = -ParitySearch(oppBoard, -beta, -eval, depth - 1);
@@ -207,7 +206,7 @@ namespace MonkeyOthello.Engines
                     }
                     else
                     {
-                        eval = GetCachedScore(oppBoard, () => -ParitySearch(oppBoard, -beta, -alpha, depth - 1));
+                        eval = -ParitySearch(oppBoard, -beta, -alpha, depth - 1);
                     }
                 }
                 else
@@ -215,7 +214,7 @@ namespace MonkeyOthello.Engines
                     if (foundPv)
                     {
                         //zero window
-                        eval = GetCachedScore(oppBoard, () => -FastestFirstSolve(oppBoard, -alpha - 1, -alpha, depth - 1));
+                        eval = -FastestFirstSolve(oppBoard, -alpha - 1, -alpha, depth - 1);
                         if ((eval > alpha) && (eval < beta))
                         {
                             eval = -FastestFirstSolve(oppBoard, -beta, -eval, depth - 1);
@@ -223,11 +222,12 @@ namespace MonkeyOthello.Engines
                     }
                     else
                     {
-                        eval = GetCachedScore(oppBoard, () => -FastestFirstSolve(oppBoard, -beta, -alpha, depth - 1));
+                        eval = -FastestFirstSolve(oppBoard, -beta, -alpha, depth - 1);
                     }
                 }
 
-                //reback?
+                //reback
+                m.In();
 
                 if (eval > score)
                 {
@@ -237,13 +237,26 @@ namespace MonkeyOthello.Engines
                     {
                         if (eval >= beta)
                         {
-                            //cut branch
+                            //purning
                             return score;
                         }
 
                         alpha = eval;
                         foundPv = true;
                     }
+                }
+            }
+
+            if (!hasMoves)
+            {
+                if (!prevmove)
+                {
+                    //END
+                    return EndGameEvaluation.Eval(board);
+                }
+                else
+                {
+                    return -FastestFirstSolve(board.Switch(), -beta, -alpha, depth, false);
                 }
             }
 
@@ -267,7 +280,7 @@ namespace MonkeyOthello.Engines
                 return Evaluation.Eval(board);
             }
 
-            var moves = Rule.FindMoves(board);
+            var moves = FindMoves(board).ToArray();// Rule.FindMoves(board);
 
             if (moves.Length == 0)
             {
@@ -285,15 +298,13 @@ namespace MonkeyOthello.Engines
             var score = -highScore;
             var foundPv = false;
 
-            //moves = moves.OrderBy(i => squareDict[i]).ToArray();
-
-            var orderedMoves = OrderMovesBySquares(moves);
-
-            foreach (var pos in orderedMoves)
+            foreach (var m in moves)
             {
                 var eval = 0;
-
-                var oppBoard = Rule.MoveSwitch(board, pos);
+                var pos = m.Index;
+                var oppBoard = Rule.FlipSwitch(board, pos, m.Flips);
+                //remove node
+                m.Out();
 
                 if (depth <= Constants.NoParityDepth)
                 {
@@ -329,7 +340,8 @@ namespace MonkeyOthello.Engines
                     }
                 }
 
-                //reback?
+                //reback
+                m.In();
 
                 if (eval > score)
                 {
@@ -339,7 +351,7 @@ namespace MonkeyOthello.Engines
                     {
                         if (eval >= beta)
                         {
-                            //cut branch
+                            //purning
                             return score;
                         }
 
@@ -441,32 +453,173 @@ namespace MonkeyOthello.Engines
             return score;
         }
 
-        private IEnumerable<int> OrderMovesBySquares(IEnumerable<int> moves)
+        private IEnumerable<int> OrderMoves(IEnumerable<int> moves, BitBoard board)
         {
-            return moves.OrderBy(i => squareDict[i]);
-        }
-
-        private IEnumerable<int> OrderMovesByMobility(IEnumerable<int> moves, BitBoard board)
-        {
-            //moves = moves.OrderBy(i => squareDict[i]).ToArray();
             return moves.OrderBy(m => Rule.DiffMobility(Rule.MoveSwitch(board, m)));
         }
 
-        private int GetCachedScore(BitBoard board, Func<int> func)
+        private IEnumerable<Move> FindMoves(BitBoard board)
         {
-            if (EvalCache.ContainsKey(board))
+            var moves = from node in link
+                        let flips = Rule.FindFlips(board, node.Value)
+                        where flips != 0
+                        select new Move { Flips = flips, Node = node };
+
+            //check move
+            //foreach (var m in moves)
+            //{
+            //    if (((1UL << m.Index) & board.EmptyPieces) == 0)
+            //    {
+            //        throw new Exception($"invalid move: {m}");
+            //    }
+            //}
+
+            return moves;
+        }
+
+        private IEnumerable<Move> FindOrderedMoves(BitBoard board)
+        {
+            var moves = FindMoves(board);
+
+            var orderedMoves = moves.OrderBy(m => Rule.DiffMobility(Rule.MoveSwitch(board, m.Index)));
+
+            return orderedMoves;
+        }
+
+        class Move
+        {
+            public int Index { get { return Node.Value; } }
+            //public int FlipsCount { get { return Flips.CountBits(); } }
+            public ulong Flips { get; set; }
+
+            public LinkNode Node { get; set; }
+
+            public void Out()
             {
-                hits++;
-                return EvalCache[board];
-            }
-            else
-            {
-                var score = func();
-                EvalCache[board] = score;
-                return score;
+                Node.Pre.Next = Node.Next;
+                if (Node.Next != null)
+                {
+                    Node.Next.Pre = Node.Pre;
+                }
             }
 
-            //return null;
+            public void In()
+            {
+                Node.Pre.Next = Node;
+                if (Node.Next != null)
+                {
+                    Node.Next.Pre = Node;
+                }
+            }
+
+            public override string ToString()
+            {
+                return $"{Index}";
+            }
+        }
+
+        class Link : IEnumerable<LinkNode>
+        {
+            public LinkNode Head { get; private set; }
+            public List<LinkNode> Origin { get; private set; } = new List<LinkNode>();
+
+            public Link()
+            {
+
+            }
+
+            public Link(IEnumerable<int> items)
+            {
+                Head = new LinkNode { Value = -1 };
+                var pre = Head;
+                foreach (var item in items)
+                {
+                    var current = new LinkNode { Value = item, Pre = pre };
+                    pre.Next = current;
+                    pre = current;
+                }
+
+                Origin.AddRange(this.ToArray());
+            }
+
+            public IEnumerator<LinkNode> GetEnumerator()
+            {
+                for (var current = Head.Next; current != null; current = current.Next)
+                {
+                    yield return current;
+                }
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return this.GetEnumerator();
+            }
+
+            public void Do(Action<int> action)
+            {
+                for (LinkNode pre = Head, current = pre.Next; current != null; pre = current, current = current.Next)
+                {
+                    pre.Next = current.Next;
+                    action(current.Value);
+                    pre.Next = current;
+                }
+            }
+
+            public void Add(LinkNode current)
+            {
+                var pre = current.Pre;
+                var next = current.Next;
+                if (pre == null)
+                {
+                    Head = current;
+                }
+                else
+                {
+                    pre.Next = current;
+                }
+
+                if (next == null)
+                {
+                    //  Last = current;
+                }
+                else
+                {
+                    next.Pre = current;
+                }
+            }
+
+            public void Remove(LinkNode current)
+            {
+                var pre = current.Pre;
+
+                if (pre == null)
+                {
+                    //first node
+                    Head = current.Next;
+                }
+                else
+                {
+                    pre.Next = current.Next;
+                }
+            }
+
+
+            public override string ToString()
+            {
+                return $"{string.Join(",", this)} (origin:{string.Join(",", Origin)})";
+            }
+        }
+
+        class LinkNode
+        {
+            public LinkNode Pre { get; set; }
+            public LinkNode Next { get; set; }
+            public int Value { get; set; }
+
+            public override string ToString()
+            {
+                return Value.ToString();
+            }
         }
     }
 }

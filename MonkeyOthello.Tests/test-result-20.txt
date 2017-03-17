@@ -1,0 +1,66 @@
+﻿2017/03/17----------------------------------------------------
+MonkeyEngineV10 vs. MonkeyEngine
+0 (empties=20 white=19 black=25  diff=20)
+
+[MonkeyEngineV10] r1: Best Move:39, Score:2.00, Nodes:10279, TimeSpan:00:00:00.0953665, Message:(39:2), NPS:107783.04978111
+
+[MonkeyEngine] r2: Best Move:39, Score:2.00, Nodes:6510, TimeSpan:00:00:00.0560024, Message:(39:2) (hits: 9), NPS:116242.942392783
+
+1 (empties=20 white=21 black=23  diff=20)
+
+[MonkeyEngineV10] r1: Best Move:11, Score:-2.00, Nodes:1741367, TimeSpan:00:00:04.0374370, Message:(11:-2)(53:-2)(6:-2)(55:-2)(22:-2)(7:-2)(30:-2)(39:-2)(31:-2)(15:-2)(47:-2), NPS:431304.951308231
+
+[MonkeyEngine] r2: Best Move:11, Score:-2.00, Nodes:1389054, TimeSpan:00:00:11.9435697, Message:(11:-2)(53:-2)(6:-2)(55:-2)(22:-2)(7:-2)(30:-2)(39:-2)(31:-2)(15:-2)(47:-4) (hits: 6430), NPS:116301.400551847
+
+2 (empties=20 white=24 black=20  diff=20)
+
+[MonkeyEngineV10] r1: Best Move:19, Score:2.00, Nodes:2865191, TimeSpan:00:00:06.4822908, Message:(14:-2)(19:2), NPS:442002.780559801
+
+[MonkeyEngine] r2: Best Move:19, Score:2.00, Nodes:1500125, TimeSpan:00:00:04.6001110, Message:(14:-2)(19:2) (hits: 13221), NPS:326106.190457971
+
+3 (empties=20 white=22 black=22  diff=20)
+
+[MonkeyEngineV10] r1: Best Move:4, Score:-2.00, Nodes:5990074, TimeSpan:00:00:13.9666700, Message:(4:-2)(53:-2)(43:-2)(58:-2)(61:-2), NPS:428883.446885804
+
+[MonkeyEngine] r2: Best Move:4, Score:-2.00, Nodes:3865092, TimeSpan:00:00:08.3780621, Message:(4:-2)(53:-2)(43:-2)(58:-2)(61:-2) (hits: 8177), NPS:461334.792286298
+
+4 (empties=20 white=15 black=29  diff=20)
+
+[MonkeyEngineV10] r1: Best Move:39, Score:10.00, Nodes:226, TimeSpan:00:00:00.0017029, Message:(39:10), NPS:132636.891836375
+
+[MonkeyEngine] r2: Best Move:39, Score:12.00, Nodes:230, TimeSpan:00:00:00.0013502, Message:(39:12) (hits: 1), NPS:170219.064535228
+
+5 (empties=20 white=20 black=24  diff=20)
+
+[MonkeyEngineV10] r1: Best Move:62, Score:-2.00, Nodes:3930486, TimeSpan:00:00:06.7571707, Message:(62:-2)(16:-2)(13:-2)(47:-2)(1:-2)(9:-2)(22:-2)(50:-2), NPS:581676.206333487
+
+[MonkeyEngine] r2: Best Move:62, Score:-2.00, Nodes:2282113, TimeSpan:00:00:08.6730260, Message:(62:-2)(16:-2)(13:-2)(47:-2)(1:-2)(9:-2)(22:-2)(50:-2) (hits: 9257), NPS:263127.625453028
+
+6 (empties=20 white=16 black=28  diff=20)
+
+[MonkeyEngineV10] r1: Best Move:33, Score:-2.00, Nodes:30572039, TimeSpan:00:01:12.4399752, Message:(33:-2)(50:-2)(55:-2)(58:-2)(1:-2)(4:-2)(57:-2)(54:-2)(59:-2)(8:-2)(9:-2)(24:-2), NPS:422032.703539182
+
+[MonkeyEngine] r2: Best Move:33, Score:-2.00, Nodes:17930005, TimeSpan:00:01:14.6465925, Message:(33:-2)(50:-2)(55:-2)(58:-2)(1:-2)(4:-2)(57:-2)(54:-2)(59:-2)(8:-2)(9:-2)(24:-2) (hits: 61103), NPS:240198.569811495
+
+7 (empties=20 white=18 black=26  diff=20)
+
+[MonkeyEngineV10] r1: Best Move:63, Score:-2.00, Nodes:24233438, TimeSpan:00:00:42.1156583, Message:(63:-2)(8:-2)(40:-2)(42:-2)(60:-2)(2:-2)(3:-2)(55:-2)(10:-2)(0:-2)(16:-2)(1:-2), NPS:575402.080907232
+
+[MonkeyEngine] r2: Best Move:63, Score:-2.00, Nodes:10621534, TimeSpan:00:00:42.4591728, Message:(63:-2)(8:-2)(40:-2)(42:-2)(60:-2)(2:-2)(3:-2)(55:-2)(10:-2)(0:-2)(16:-2)(1:-2) (hits: 45833), NPS:250158.753677868
+
+8 (empties=20 white=25 black=19  diff=20)
+
+[MonkeyEngineV10] r1: Best Move:14, Score:-2.00, Nodes:155005, TimeSpan:00:00:00.2630040, Message:(14:-2)(7:-2)(46:-2)(62:-2)(4:-2)(1:-2)(2:-2)(9:-20), NPS:589361.41898443
+
+[MonkeyEngine] r2: Best Move:14, Score:-2.00, Nodes:111848, TimeSpan:00:00:00.2761715, Message:(14:-2)(7:-2)(46:-2)(62:-2)(4:-2)(1:-2)(2:-2)(9:-20) (hits: 754), NPS:404993.256026578
+
+9 (empties=20 white=22 black=22  diff=20)
+
+[MonkeyEngineV10] r1: Best Move:23, Score:-2.00, Nodes:41757, TimeSpan:00:00:00.0868173, Message:(54:-12)(23:-2)(49:-2)(33:-16)(48:-2), NPS:480970.025904677
+
+[MonkeyEngine] r2: Best Move:23, Score:-2.00, Nodes:33451, TimeSpan:00:00:00.0673848, Message:(54:-32)(23:-2)(49:-2)(33:-24)(48:-2) (hits: 93), NPS:496410.222925305
+
+[MonkeyEngineV10]total (exclude console's time): 00:02:26.2460927
+[MonkeyEngine]total (exclude console's time): 00:02:31.1014430
+total: 00:04:57.8373101
+done!

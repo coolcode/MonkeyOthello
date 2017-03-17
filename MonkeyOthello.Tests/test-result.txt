@@ -223,3 +223,268 @@ sub total: 00:00:00.6196267
 sub total: 00:00:02.5820075
 total: 00:00:03.9275957
 done!
+
+
+
+
+2017/03/16: +) add OrderMovesBySquares on parity search----------------------------------------------------
+MonkeyEngineV10 vs. MonkeyEngine
+0 (empties=12 white=27 black=25  diff=12)
+[MonkeyEngineV10] r1: Best Move:9, Score:-12.00, Nodes:5402, TimeSpan:00:00:00.0796011, Message:(9:-12)(48:-12)(57:-12)(58:-12)(49:-14), NPS:67862.5312648787
+[MonkeyEngine] r2: Best Move:9, Score:-12.00, Nodes:5592, TimeSpan:00:00:00.0414587, Message:(9:-12)(48:-12)(57:-12)(58:-12)(49:-12), NPS:134877.96583188
+
+1 (empties=12 white=35 black=17  diff=12)
+[MonkeyEngineV10] r1: Best Move:4, Score:-6.00, Nodes:8506, TimeSpan:00:00:00.0354976, Message:(4:-6)(39:-6)(63:-6)(55:-6)(62:-6), NPS:239615.08341174
+[MonkeyEngine] r2: Best Move:4, Score:-6.00, Nodes:6116, TimeSpan:00:00:00.0289850, Message:(4:-6)(39:-6)(63:-6)(55:-6)(62:-6), NPS:210998.413026979
+
+2 (empties=12 white=23 black=29  diff=12)
+[MonkeyEngineV10] r1: Best Move:59, Score:20.00, Nodes:32924, TimeSpan:00:00:00.1264553, Message:(3:10)(6:10)(49:4)(58:10)(59:20)(61:20)(60:20), NPS:260358.716805727
+[MonkeyEngine] r2: Best Move:59, Score:20.00, Nodes:20871, TimeSpan:00:00:00.0764493, Message:(3:10)(6:10)(49:10)(58:10)(59:20)(61:20)(60:12), NPS:273000.890774791
+
+3 (empties=12 white=24 black=28  diff=12)
+[MonkeyEngineV10] r1: Best Move:57, Score:-8.00, Nodes:11388, TimeSpan:00:00:00.0423981, Message:(8:-10)(57:-8)(16:-8)(24:-8)(32:-8)(48:-8)(40:-8)(49:-18), NPS:268590.606876089
+[MonkeyEngine] r2: Best Move:57, Score:-8.00, Nodes:14040, TimeSpan:00:00:00.0525177, Message:(8:-10)(57:-8)(16:-8)(24:-8)(32:-8)(48:-8)(40:-8)(49:-10), NPS:267333.349835392
+
+4 (empties=12 white=14 black=38  diff=12)
+[MonkeyEngineV10] r1: Best Move:55, Score:-8.00, Nodes:9030, TimeSpan:00:00:00.0354220, Message:(8:-22)(55:-8), NPS:254919.120345538
+[MonkeyEngine] r2: Best Move:55, Score:-8.00, Nodes:7967, TimeSpan:00:00:00.0341136, Message:(8:-22)(55:-8), NPS:233536.374455512
+
+5 (empties=12 white=23 black=29  diff=12)
+[MonkeyEngineV10] r1: Best Move:5, Score:-2.00, Nodes:4712, TimeSpan:00:00:00.0170911, Message:(5:-2)(54:-6)(63:-2)(0:-2)(8:-4)(1:-2), NPS:275682.917839236
+[MonkeyEngine] r2: Best Move:5, Score:-2.00, Nodes:3955, TimeSpan:00:00:00.0177718, Message:(5:-2)(54:-2)(63:-2)(0:-2)(8:-2)(1:-2), NPS:222531.058696435
+
+6 (empties=12 white=11 black=41  diff=12)
+[MonkeyEngineV10] r1: Best Move:31, Score:10.00, Nodes:22761, TimeSpan:00:00:00.1149493, Message:(31:10)(16:8)(48:10)(57:10)(2:6)(8:10)(9:10)(40:2)(49:10), NPS:198007.312725587
+[MonkeyEngine] r2: Best Move:31, Score:10.00, Nodes:19865, TimeSpan:00:00:00.0761110, Message:(31:10)(16:8)(48:6)(57:8)(2:8)(8:6)(9:10)(40:2)(49:8), NPS:260996.951860416
+
+7 (empties=12 white=21 black=31  diff=12)
+[MonkeyEngineV10] r1: Best Move:54, Score:-12.00, Nodes:24615, TimeSpan:00:00:00.0905011, Message:(54:-12)(55:-12)(1:-12)(8:-12)(16:-12)(40:-12)(48:-12)(56:-12)(9:-12), NPS:271982.639076883
+[MonkeyEngine] r2: Best Move:54, Score:-12.00, Nodes:22261, TimeSpan:00:00:00.0834644, Message:(54:-12)(55:-12)(1:-12)(8:-12)(16:-12)(40:-12)(48:-12)(56:-12)(9:-12), NPS:266709.319071136
+
+8 (empties=12 white=28 black=24  diff=12)
+[MonkeyEngineV10] r1: Best Move:54, Score:4.00, Nodes:27865, TimeSpan:00:00:00.1044286, Message:(15:-12)(54:4)(1:4)(3:4)(14:4)(5:4)(6:4)(12:2)(4:4), NPS:266830.477182715
+[MonkeyEngine] r2: Best Move:54, Score:4.00, Nodes:30152, TimeSpan:00:00:00.1208045, Message:(15:-12)(54:4)(1:4)(3:2)(14:4)(5:4)(6:4)(12:2)(4:4), NPS:249591.285164997
+
+9 (empties=12 white=29 black=23  diff=12)
+[MonkeyEngineV10] r1: Best Move:14, Score:-22.00, Nodes:8473, TimeSpan:00:00:00.0327572, Message:(14:-22)(5:-22)(1:-22)(56:-22)(57:-22)(3:-32)(10:-22), NPS:258652.795330635
+[MonkeyEngine] r2: Best Move:14, Score:-22.00, Nodes:6712, TimeSpan:00:00:00.0324722, Message:(14:-22)(5:-22)(1:-22)(56:-22)(57:-22)(3:-22)(10:-22), NPS:206693.519579222
+
+10 (empties=12 white=20 black=32  diff=12)
+[MonkeyEngineV10] r1: Best Move:9, Score:-20.00, Nodes:18922, TimeSpan:00:00:00.0711512, Message:(9:-20)(55:-20)(1:-20)(4:-20)(2:-20)(6:-20)(5:-22), NPS:265936.963298394
+[MonkeyEngine] r2: Best Move:9, Score:-20.00, Nodes:18408, TimeSpan:00:00:00.0789783, Message:(9:-20)(55:-20)(1:-20)(4:-20)(2:-20)(6:-20)(5:-20), NPS:233073.729445564
+
+11 (empties=12 white=33 black=19  diff=12)
+[MonkeyEngineV10] r1: Best Move:4, Score:8.00, Nodes:6396, TimeSpan:00:00:00.0293246, Message:(4:8)(14:6)(56:8)(57:8)(22:0), NPS:218102.954415255
+[MonkeyEngine] r2: Best Move:4, Score:8.00, Nodes:5027, TimeSpan:00:00:00.0230773, Message:(4:8)(14:8)(56:8)(57:8)(22:-2), NPS:217823.669854365
+
+12 (empties=12 white=26 black=26  diff=12)
+[MonkeyEngineV10] r1: Best Move:49, Score:-8.00, Nodes:8576, TimeSpan:00:00:00.0361852, Message:(49:-8)(9:-8)(24:-8)(48:-8)(8:-8)(40:-8), NPS:236996.424051158
+[MonkeyEngine] r2: Best Move:49, Score:-8.00, Nodes:7906, TimeSpan:00:00:00.0343049, Message:(49:-8)(9:-8)(24:-8)(48:-8)(8:-8)(40:-8), NPS:230455.985705083
+
+13 (empties=12 white=29 black=23  diff=12)
+[MonkeyEngineV10] r1: Best Move:14, Score:-22.00, Nodes:8473, TimeSpan:00:00:00.0351819, Message:(14:-22)(5:-22)(1:-22)(56:-22)(57:-22)(3:-32)(10:-22), NPS:240827.220041554
+[MonkeyEngine] r2: Best Move:14, Score:-22.00, Nodes:6712, TimeSpan:00:00:00.0327087, Message:(14:-22)(5:-22)(1:-22)(56:-22)(57:-22)(3:-22)(10:-22), NPS:205199.069389203
+
+14 (empties=12 white=26 black=26  diff=12)
+[MonkeyEngineV10] r1: Best Move:49, Score:-8.00, Nodes:8576, TimeSpan:00:00:00.0340344, Message:(49:-8)(9:-8)(24:-8)(48:-8)(8:-8)(40:-8), NPS:251972.945815239
+[MonkeyEngine] r2: Best Move:49, Score:-8.00, Nodes:7906, TimeSpan:00:00:00.0340475, Message:(49:-8)(9:-8)(24:-8)(48:-8)(8:-8)(40:-8), NPS:232198.187879055
+
+15 (empties=12 white=16 black=36  diff=12)
+[MonkeyEngineV10] r1: Best Move:57, Score:-16.00, Nodes:24679, TimeSpan:00:00:00.0995784, Message:(5:-24)(55:-22)(57:-16)(59:-16)(1:-16)(2:-16)(4:-16), NPS:247832.38300291
+[MonkeyEngine] r2: Best Move:57, Score:-16.00, Nodes:22349, TimeSpan:00:00:00.0997307, Message:(5:-24)(55:-22)(57:-16)(59:-16)(1:-18)(2:-18)(4:-18), NPS:224091.236788303
+
+16 (empties=12 white=20 black=32  diff=12)
+[MonkeyEngineV10] r1: Best Move:9, Score:-20.00, Nodes:18922, TimeSpan:00:00:00.0677601, Message:(9:-20)(55:-20)(1:-20)(4:-20)(2:-20)(6:-20)(5:-22), NPS:279245.761948965
+[MonkeyEngine] r2: Best Move:9, Score:-20.00, Nodes:18408, TimeSpan:00:00:00.0680105, Message:(9:-20)(55:-20)(1:-20)(4:-20)(2:-20)(6:-20)(5:-20), NPS:270660.108952163
+
+17 (empties=12 white=21 black=31  diff=12)
+[MonkeyEngineV10] r1: Best Move:56, Score:14.00, Nodes:12158, TimeSpan:00:00:00.0459817, Message:(2:10)(1:10)(56:14)(8:14)(48:14)(9:14), NPS:264403.786641498
+[MonkeyEngine] r2: Best Move:56, Score:14.00, Nodes:8557, TimeSpan:00:00:00.0335651, Message:(2:10)(1:10)(56:14)(8:12)(48:-2)(9:12), NPS:254929.825031803
+
+18 (empties=12 white=29 black=23  diff=12)
+[MonkeyEngineV10] r1: Best Move:5, Score:-8.00, Nodes:11393, TimeSpan:00:00:00.0360781, Message:(5:-8)(40:-8)(49:-8)(1:-8)(9:-8), NPS:315778.386933155
+[MonkeyEngine] r2: Best Move:5, Score:-8.00, Nodes:9452, TimeSpan:00:00:00.0385282, Message:(5:-8)(40:-8)(49:-8)(1:-8)(9:-8), NPS:245320.432295506
+
+19 (empties=12 white=24 black=28  diff=12)
+[MonkeyEngineV10] r1: Best Move:1, Score:8.00, Nodes:31932, TimeSpan:00:00:00.1099545, Message:(15:-18)(41:4)(7:4)(1:8)(2:8), NPS:290408.392486051
+[MonkeyEngine] r2: Best Move:1, Score:8.00, Nodes:22916, TimeSpan:00:00:00.0884090, Message:(15:-18)(41:4)(7:4)(1:8)(2:8), NPS:259201.447800023
+
+[MonkeyEngineV10]total (exclude console's time): 00:00:01.2443315
+[MonkeyEngine]total (exclude console's time): 00:00:01.0955084
+total: 00:00:02.6771573
+done!
+
+2017/03/17: depth=20------------------------------------------------------------
+MonkeyEngineV10 vs. MonkeyEngine
+0 (empties=20 white=19 black=25  diff=20)
+[MonkeyEngineV10] r1: Best Move:39, Score:2.00, Nodes:10279, TimeSpan:00:00:00.1158668, Message:(39:2), NPS:88713.1713901533
+[MonkeyEngine] r2: Best Move:39, Score:2.00, Nodes:7264, TimeSpan:00:00:00.0715527, Message:(39:2), NPS:101518.16048646
+
+1 (empties=20 white=21 black=23  diff=20)
+[MonkeyEngineV10] r1: Best Move:11, Score:-2.00, Nodes:1741367, TimeSpan:00:00:07.9279065, Message:(11:-2)(53:-2)(6:-2)(55:-2)(22:-2)(7:-2)(30:-2)(39:-2)(31:-2)(15:-2)(47:-2), NPS:219650.267110205
+[MonkeyEngine] r2: Best Move:11, Score:-2.00, Nodes:2578680, TimeSpan:00:00:11.9593734, Message:(11:-2)(53:-2)(6:-2)(55:-2)(22:-2)(7:-2)(30:-2)(39:-2)(31:-2)(15:-2)(47:-4), NPS:215619.974235442
+
+2 (empties=20 white=24 black=20  diff=20)
+[MonkeyEngineV10] r1: Best Move:19, Score:2.00, Nodes:2865191, TimeSpan:00:00:10.0999778, Message:(14:-2)(19:2), NPS:283682.872680881
+[MonkeyEngine] r2: Best Move:19, Score:2.00, Nodes:2863314, TimeSpan:00:00:09.2300337, Message:(14:-2)(19:2), NPS:310217.035262067
+
+3 (empties=20 white=22 black=22  diff=20)
+[MonkeyEngineV10] r1: Best Move:4, Score:-2.00, Nodes:5990074, TimeSpan:00:00:15.0198237, Message:(4:-2)(53:-2)(43:-2)(58:-2)(61:-2), NPS:398811.179201046
+[MonkeyEngine] r2: Best Move:4, Score:-2.00, Nodes:5752688, TimeSpan:00:00:19.7333507, Message:(4:-2)(53:-2)(43:-2)(58:-2)(61:-2), NPS:291521.080020076
+
+4 (empties=20 white=15 black=29  diff=20)
+[MonkeyEngineV10] r1: Best Move:39, Score:10.00, Nodes:226, TimeSpan:00:00:00.0035996, Message:(39:10), NPS:62767.3165583514
+[MonkeyEngine] r2: Best Move:39, Score:12.00, Nodes:246, TimeSpan:00:00:00.0045435, Message:(39:12), NPS:54131.3675871933
+
+5 (empties=20 white=20 black=24  diff=20)
+[MonkeyEngineV10] r1: Best Move:62, Score:-2.00, Nodes:3930486, TimeSpan:00:00:14.3583911, Message:(62:-2)(16:-2)(13:-2)(47:-2)(1:-2)(9:-2)(22:-2)(50:-2), NPS:273741.375261649
+[MonkeyEngine] r2: Best Move:62, Score:-2.00, Nodes:4092207, TimeSpan:00:00:16.1327391, Message:(62:-2)(16:-2)(13:-2)(47:-2)(1:-2)(9:-2)(22:-2)(50:-2), NPS:253658.521406416
+
+6 (empties=20 white=16 black=28  diff=20)
+[MonkeyEngineV10] r1: Best Move:33, Score:-2.00, Nodes:30572039, TimeSpan:00:01:27.0505499, Message:(33:-2)(50:-2)(55:-2)(58:-2)(1:-2)(4:-2)(57:-2)(54:-2)(59:-2)(8:-2)(9:-2)(24:-2), NPS:351198.684947093
+[MonkeyEngine] r2: Best Move:33, Score:-2.00, Nodes:28848067, TimeSpan:00:01:47.6784966, Message:(33:-2)(50:-2)(55:-2)(58:-2)(1:-2)(4:-2)(57:-2)(54:-2)(59:-2)(8:-2)(9:-2)(24:-2), NPS:267909.263622564
+
+7 (empties=20 white=18 black=26  diff=20)
+[MonkeyEngineV10] r1: Best Move:63, Score:-2.00, Nodes:24233438, TimeSpan:00:01:16.4291835, Message:(63:-2)(8:-2)(40:-2)(42:-2)(60:-2)(2:-2)(3:-2)(55:-2)(10:-2)(0:-2)(16:-2)(1:-2), NPS:317070.477181397
+[MonkeyEngine] r2: Best Move:63, Score:-2.00, Nodes:20367490, TimeSpan:00:01:09.3455138, Message:(63:-2)(8:-2)(40:-2)(42:-2)(60:-2)(2:-2)(3:-2)(55:-2)(10:-2)(0:-2)(16:-2)(1:-2), NPS:293710.271799727
+
+8 (empties=20 white=25 black=19  diff=20)
+[MonkeyEngineV10] r1: Best Move:14, Score:-2.00, Nodes:155005, TimeSpan:00:00:00.7212863, Message:(14:-2)(7:-2)(46:-2)(62:-2)(4:-2)(1:-2)(2:-2)(9:-20), NPS:214900.498040101
+[MonkeyEngine] r2: Best Move:14, Score:-2.00, Nodes:157529, TimeSpan:00:00:00.8276412, Message:(14:-2)(7:-2)(46:-2)(62:-2)(4:-2)(1:-2)(2:-2)(9:-20), NPS:190334.663940529
+
+9 (empties=20 white=22 black=22  diff=20)
+[MonkeyEngineV10] r1: Best Move:23, Score:-2.00, Nodes:41757, TimeSpan:00:00:00.1822578, Message:(54:-12)(23:-2)(49:-2)(33:-16)(48:-2), NPS:229108.278996679
+[MonkeyEngine] r2: Best Move:23, Score:-2.00, Nodes:39329, TimeSpan:00:00:00.2083506, Message:(54:-32)(23:-2)(49:-2)(33:-24)(48:-2), NPS:188762.64929091
+
+[MonkeyEngineV10]total (exclude console's time): 00:03:31.9088430
+[MonkeyEngine]total (exclude console's time): 00:03:55.1915953
+total: 00:07:27.3135391
+done!
+
+
+2017/03/17 +)cache moves------------------------------------------------------
+MonkeyEngineV10 vs. MonkeyEngine
+0 (empties=12 white=27 black=25  diff=12)
+--cache info: hits:2308, cache items: 3973
+[MonkeyEngineV10] r1: Best Move:9, Score:-12.00, Nodes:5402, TimeSpan:00:00:00.1439052, Message:(9:-12)(48:-12)(57:-12)(58:-12)(49:-14), NPS:37538.3409470891
+--cache info: hits:2508, cache items: 3963
+[MonkeyEngine] r2: Best Move:9, Score:-12.00, Nodes:5592, TimeSpan:00:00:00.0519018, Message:(9:-12)(48:-12)(57:-12)(58:-12)(49:-12), NPS:107739.852185239
+
+1 (empties=12 white=35 black=17  diff=12)
+--cache info: hits:2956, cache items: 6413
+[MonkeyEngineV10] r1: Best Move:4, Score:-6.00, Nodes:8506, TimeSpan:00:00:00.0539579, Message:(4:-6)(39:-6)(63:-6)(55:-6)(62:-6), NPS:157638.498931594
+--cache info: hits:2083, cache items: 4896
+[MonkeyEngine] r2: Best Move:4, Score:-6.00, Nodes:6116, TimeSpan:00:00:00.0295717, Message:(4:-6)(39:-6)(63:-6)(55:-6)(62:-6), NPS:206812.364106084
+
+2 (empties=12 white=23 black=29  diff=12)
+--cache info: hits:13074, cache items: 23223
+[MonkeyEngineV10] r1: Best Move:59, Score:20.00, Nodes:32924, TimeSpan:00:00:00.2160401, Message:(3:10)(6:10)(49:4)(58:10)(59:20)(61:20)(60:20), NPS:152396.928177092
+--cache info: hits:8240, cache items: 16004
+[MonkeyEngine] r2: Best Move:59, Score:20.00, Nodes:20871, TimeSpan:00:00:00.1309804, Message:(3:10)(6:10)(49:10)(58:10)(59:20)(61:20)(60:12), NPS:159343.234993671
+
+3 (empties=12 white=24 black=28  diff=12)
+--cache info: hits:3474, cache items: 9825
+[MonkeyEngineV10] r1: Best Move:57, Score:-8.00, Nodes:11388, TimeSpan:00:00:00.0960616, Message:(8:-10)(57:-8)(16:-8)(24:-8)(32:-8)(48:-8)(40:-8)(49:-18), NPS:118547.697022567
+--cache info: hits:3929, cache items: 12022
+[MonkeyEngine] r2: Best Move:57, Score:-8.00, Nodes:14040, TimeSpan:00:00:00.1174142, Message:(8:-10)(57:-8)(16:-8)(24:-8)(32:-8)(48:-8)(40:-8)(49:-10), NPS:119575.659710157
+
+4 (empties=12 white=14 black=38  diff=12)
+--cache info: hits:5492, cache items: 5201
+[MonkeyEngineV10] r1: Best Move:55, Score:-8.00, Nodes:9030, TimeSpan:00:00:00.0289313, Message:(8:-22)(55:-8), NPS:312107.920905009
+--cache info: hits:5269, cache items: 4361
+[MonkeyEngine] r2: Best Move:55, Score:-8.00, Nodes:7967, TimeSpan:00:00:00.0250680, Message:(8:-22)(55:-8), NPS:317802.864095098
+
+5 (empties=12 white=23 black=29  diff=12)
+--cache info: hits:1634, cache items: 4027
+[MonkeyEngineV10] r1: Best Move:5, Score:-2.00, Nodes:4712, TimeSpan:00:00:00.0235248, Message:(5:-2)(54:-6)(63:-2)(0:-2)(8:-4)(1:-2), NPS:200290.744629301
+--cache info: hits:1492, cache items: 3412
+[MonkeyEngine] r2: Best Move:5, Score:-2.00, Nodes:3955, TimeSpan:00:00:00.0146532, Message:(5:-2)(54:-2)(63:-2)(0:-2)(8:-2)(1:-2), NPS:269888.496130802
+
+6 (empties=12 white=11 black=41  diff=12)
+--cache info: hits:8819, cache items: 15905
+[MonkeyEngineV10] r1: Best Move:31, Score:10.00, Nodes:22761, TimeSpan:00:00:00.1808845, Message:(31:10)(16:8)(48:10)(57:10)(2:6)(8:10)(9:10)(40:2)(49:10), NPS:125830.981477233
+--cache info: hits:7970, cache items: 13858
+[MonkeyEngine] r2: Best Move:31, Score:10.00, Nodes:19865, TimeSpan:00:00:00.1476950, Message:(31:10)(16:8)(48:6)(57:8)(2:8)(8:6)(9:10)(40:2)(49:8), NPS:134499.241685625
+
+7 (empties=12 white=21 black=31  diff=12)
+--cache info: hits:10627, cache items: 16739
+[MonkeyEngineV10] r1: Best Move:54, Score:-12.00, Nodes:24615, TimeSpan:00:00:00.2470172, Message:(54:-12)(55:-12)(1:-12)(8:-12)(16:-12)(40:-12)(48:-12)(56:-12)(9:-12), NPS:99648.5279222341
+--cache info: hits:11372, cache items: 13640
+[MonkeyEngine] r2: Best Move:54, Score:-12.00, Nodes:22261, TimeSpan:00:00:00.1798770, Message:(54:-12)(55:-12)(1:-12)(8:-12)(16:-12)(40:-12)(48:-12)(56:-12)(9:-12), NPS:123756.101357587
+
+8 (empties=12 white=28 black=24  diff=12)
+--cache info: hits:8160, cache items: 23224
+[MonkeyEngineV10] r1: Best Move:54, Score:4.00, Nodes:27865, TimeSpan:00:00:00.1821166, Message:(15:-12)(54:4)(1:4)(3:4)(14:4)(5:4)(6:4)(12:2)(4:4), NPS:153005.530492385
+--cache info: hits:9451, cache items: 24220
+[MonkeyEngine] r2: Best Move:54, Score:4.00, Nodes:30152, TimeSpan:00:00:00.1945755, Message:(15:-12)(54:4)(1:4)(3:2)(14:4)(5:4)(6:4)(12:2)(4:4), NPS:154962.187108926
+
+9 (empties=12 white=29 black=23  diff=12)
+--cache info: hits:2172, cache items: 7618
+[MonkeyEngineV10] r1: Best Move:14, Score:-22.00, Nodes:8473, TimeSpan:00:00:00.0446199, Message:(14:-22)(5:-22)(1:-22)(56:-22)(57:-22)(3:-32)(10:-22), NPS:189888.59480647
+--cache info: hits:1788, cache items: 6241
+[MonkeyEngine] r2: Best Move:14, Score:-22.00, Nodes:6712, TimeSpan:00:00:00.0325634, Message:(14:-22)(5:-22)(1:-22)(56:-22)(57:-22)(3:-22)(10:-22), NPS:206114.652811045
+
+10 (empties=12 white=20 black=32  diff=12)
+--cache info: hits:10105, cache items: 10900
+[MonkeyEngineV10] r1: Best Move:9, Score:-20.00, Nodes:18922, TimeSpan:00:00:00.0991173, Message:(9:-20)(55:-20)(1:-20)(4:-20)(2:-20)(6:-20)(5:-22), NPS:190903.193456708
+--cache info: hits:9843, cache items: 10648
+[MonkeyEngine] r2: Best Move:9, Score:-20.00, Nodes:18408, TimeSpan:00:00:00.0864474, Message:(9:-20)(55:-20)(1:-20)(4:-20)(2:-20)(6:-20)(5:-20), NPS:212936.271810699
+
+11 (empties=12 white=33 black=19  diff=12)
+--cache info: hits:1461, cache items: 5988
+[MonkeyEngineV10] r1: Best Move:4, Score:8.00, Nodes:6396, TimeSpan:00:00:00.0545938, Message:(4:8)(14:6)(56:8)(57:8)(22:0), NPS:117154.014668064
+--cache info: hits:1225, cache items: 4855
+[MonkeyEngine] r2: Best Move:4, Score:8.00, Nodes:5027, TimeSpan:00:00:00.0272427, Message:(4:8)(14:8)(56:8)(57:8)(22:-2), NPS:184519.723826059
+
+12 (empties=12 white=26 black=26  diff=12)
+--cache info: hits:3864, cache items: 5955
+[MonkeyEngineV10] r1: Best Move:49, Score:-8.00, Nodes:8576, TimeSpan:00:00:00.0384884, Message:(49:-8)(9:-8)(24:-8)(48:-8)(8:-8)(40:-8), NPS:222814.593108752
+--cache info: hits:3964, cache items: 5185
+[MonkeyEngine] r2: Best Move:49, Score:-8.00, Nodes:7906, TimeSpan:00:00:00.0450896, Message:(49:-8)(9:-8)(24:-8)(48:-8)(8:-8)(40:-8), NPS:175335.879318528
+
+13 (empties=12 white=29 black=23  diff=12)
+--cache info: hits:2172, cache items: 7618
+[MonkeyEngineV10] r1: Best Move:14, Score:-22.00, Nodes:8473, TimeSpan:00:00:00.0539152, Message:(14:-22)(5:-22)(1:-22)(56:-22)(57:-22)(3:-32)(10:-22), NPS:157151.282916823
+--cache info: hits:1788, cache items: 6241
+[MonkeyEngine] r2: Best Move:14, Score:-22.00, Nodes:6712, TimeSpan:00:00:00.0307459, Message:(14:-22)(5:-22)(1:-22)(56:-22)(57:-22)(3:-22)(10:-22), NPS:218298.430085635
+
+14 (empties=12 white=26 black=26  diff=12)
+--cache info: hits:3864, cache items: 5955
+[MonkeyEngineV10] r1: Best Move:49, Score:-8.00, Nodes:8576, TimeSpan:00:00:00.0540289, Message:(49:-8)(9:-8)(24:-8)(48:-8)(8:-8)(40:-8), NPS:158726.927127387
+--cache info: hits:3964, cache items: 5185
+[MonkeyEngine] r2: Best Move:49, Score:-8.00, Nodes:7906, TimeSpan:00:00:00.0306859, Message:(49:-8)(9:-8)(24:-8)(48:-8)(8:-8)(40:-8), NPS:257634.365152557
+
+15 (empties=12 white=16 black=36  diff=12)
+--cache info: hits:17115, cache items: 11035
+[MonkeyEngineV10] r1: Best Move:57, Score:-16.00, Nodes:24679, TimeSpan:00:00:00.0983196, Message:(5:-24)(55:-22)(57:-16)(59:-16)(1:-16)(2:-16)(4:-16), NPS:251005.384426051
+--cache info: hits:15602, cache items: 10228
+[MonkeyEngine] r2: Best Move:57, Score:-16.00, Nodes:22349, TimeSpan:00:00:00.0825944, Message:(5:-24)(55:-22)(57:-16)(59:-16)(1:-18)(2:-18)(4:-18), NPS:270584.076110776
+
+16 (empties=12 white=20 black=32  diff=12)
+--cache info: hits:10105, cache items: 10900
+[MonkeyEngineV10] r1: Best Move:9, Score:-20.00, Nodes:18922, TimeSpan:00:00:00.0980758, Message:(9:-20)(55:-20)(1:-20)(4:-20)(2:-20)(6:-20)(5:-22), NPS:192930.438187217
+--cache info: hits:9843, cache items: 10648
+[MonkeyEngine] r2: Best Move:9, Score:-20.00, Nodes:18408, TimeSpan:00:00:00.0859190, Message:(9:-20)(55:-20)(1:-20)(4:-20)(2:-20)(6:-20)(5:-20), NPS:214245.810055866
+
+17 (empties=12 white=21 black=31  diff=12)
+--cache info: hits:6947, cache items: 7130
+[MonkeyEngineV10] r1: Best Move:56, Score:14.00, Nodes:12158, TimeSpan:00:00:00.0584435, Message:(2:10)(1:10)(56:14)(8:14)(48:14)(9:14), NPS:208026.418225838
+--cache info: hits:5211, cache items: 5253
+[MonkeyEngine] r2: Best Move:56, Score:14.00, Nodes:8557, TimeSpan:00:00:00.0401220, Message:(2:10)(1:10)(56:14)(8:12)(48:-2)(9:12), NPS:213269.197218553
+
+18 (empties=12 white=29 black=23  diff=12)
+--cache info: hits:4705, cache items: 8143
+[MonkeyEngineV10] r1: Best Move:5, Score:-8.00, Nodes:11393, TimeSpan:00:00:00.0527049, Message:(5:-8)(40:-8)(49:-8)(1:-8)(9:-8), NPS:216161.757981554
+--cache info: hits:4116, cache items: 6791
+[MonkeyEngine] r2: Best Move:5, Score:-8.00, Nodes:9452, TimeSpan:00:00:00.0441404, Message:(5:-8)(40:-8)(49:-8)(1:-8)(9:-8), NPS:214130.045716719
+
+19 (empties=12 white=24 black=28  diff=12)
+--cache info: hits:17973, cache items: 17488
+[MonkeyEngineV10] r1: Best Move:1, Score:8.00, Nodes:31932, TimeSpan:00:00:00.2951051, Message:(15:-18)(41:4)(7:4)(1:8)(2:8), NPS:108205.150622098
+--cache info: hits:12566, cache items: 13879
+[MonkeyEngine] r2: Best Move:1, Score:8.00, Nodes:22916, TimeSpan:00:00:00.1296674, Message:(15:-18)(41:4)(7:4)(1:8)(2:8), NPS:176727.714693788
+
+[MonkeyEngineV10]total (exclude console's time): 00:00:02.1198516
+[MonkeyEngine]total (exclude console's time): 00:00:01.5269549
+total: 00:00:03.9763787
+done!

@@ -56,6 +56,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="test-result-20.txt" />
     <Content Include="test-result.txt" />
   </ItemGroup>
   <ItemGroup>

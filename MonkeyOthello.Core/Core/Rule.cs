@@ -7,17 +7,32 @@ namespace MonkeyOthello.Core
 {
     public static class Rule
     {
-        public const ulong LeftMask = 0x7F7F7F7F7F7F7F7F;
-        public const ulong RightMask = 0xFEFEFEFEFEFEFEFE;
+        private const ulong LeftMask = 0x7F7F7F7F7F7F7F7F;
+        private const ulong RightMask = 0xFEFEFEFEFEFEFEFE;
 
-        public static Func<ulong, ulong> Left = x => (x >> 1) & LeftMask;
-        public static Func<ulong, ulong> Right = x => (x << 1) & RightMask;
-        public static Func<ulong, ulong> Up = x => (x >> 8);
-        public static Func<ulong, ulong> Down = x => (x << 8);
-        public static Func<ulong, ulong> UpLeft = x => (x >> 9) & LeftMask;
-        public static Func<ulong, ulong> UpRight = x => (x >> 7) & RightMask;
-        public static Func<ulong, ulong> DownRight = x => (x << 9) & RightMask;
-        public static Func<ulong, ulong> DownLeft = x => (x << 7) & LeftMask;
+        private static Func<ulong, ulong> Left = x => (x >> 1) & LeftMask;
+        private static Func<ulong, ulong> Right = x => (x << 1) & RightMask;
+        private static Func<ulong, ulong> Up = x => (x >> 8);
+        private static Func<ulong, ulong> Down = x => (x << 8);
+        private static Func<ulong, ulong> UpLeft = x => (x >> 9) & LeftMask;
+        private static Func<ulong, ulong> UpRight = x => (x >> 7) & RightMask;
+        private static Func<ulong, ulong> DownRight = x => (x << 9) & RightMask;
+        private static Func<ulong, ulong> DownLeft = x => (x << 7) & LeftMask;
+        /*
+        private static readonly Dictionary<BitBoard, ulong> MovesCache = new Dictionary<BitBoard, ulong>(1 << 10);
+        private static int hits = 0;
+
+        public static void ClearCache()
+        {
+            hits = 0;
+            MovesCache.Clear();
+            GC.Collect();
+        }
+
+        public static string CacheInfo()
+        {
+            return $"hits:{hits}, cache items: {MovesCache.Count}";
+        }*/
 
         public static int[] FindMoves(BitBoard board)
         {
@@ -131,7 +146,15 @@ namespace MonkeyOthello.Core
 
         public static ulong ValidPlays(ulong playerPieces, ulong opponentPieces, ulong emptySquares)
         {
-            return ValidateOneDirection(Up, playerPieces, opponentPieces, emptySquares)
+            //var bb = new BitBoard(playerPieces, opponentPieces);
+            //ulong v;
+            //if (MovesCache.TryGetValue(bb, out v))
+            //{
+            //    hits++;
+            //    return v;
+            //}
+
+            var v = ValidateOneDirection(Up, playerPieces, opponentPieces, emptySquares)
                    | ValidateOneDirection(UpRight, playerPieces, opponentPieces, emptySquares)
                    | ValidateOneDirection(Right, playerPieces, opponentPieces, emptySquares)
                    | ValidateOneDirection(DownRight, playerPieces, opponentPieces, emptySquares)
@@ -139,6 +162,10 @@ namespace MonkeyOthello.Core
                    | ValidateOneDirection(DownLeft, playerPieces, opponentPieces, emptySquares)
                    | ValidateOneDirection(Left, playerPieces, opponentPieces, emptySquares)
                    | ValidateOneDirection(UpLeft, playerPieces, opponentPieces, emptySquares);
+
+            //MovesCache.Add(bb, v);
+
+            return v;
         }
 
         public static ulong ValidateOneDirection(Func<ulong, ulong> function, ulong playerPieces, ulong opponentPieces, ulong emptySquares)

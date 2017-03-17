@@ -41,8 +41,9 @@
     <Compile Include="Core\Clock.cs" />
     <Compile Include="Core\Constants.cs" />
     <Compile Include="Core\Point.cs" />
-    <Compile Include="Engines\MonkeyEngineV1.cs" />
     <Compile Include="Engines\MonkeyEngine.cs" />
+    <Compile Include="Engines\MonkeyEngineV1.0.cs" />
+    <Compile Include="Engines\MonkeyEngineV1.1.cs" />
     <Compile Include="Engines\AlphaBetaEngine.cs" />
     <Compile Include="Engines\BaseEngine.cs" />
     <Compile Include="Engines\EndGameEvaluation.cs" />
