@@ -27,7 +27,10 @@ namespace MonkeyOthello.Engines
 
         private Dictionary<int, int> squareDict = new Dictionary<int, int>(64);
 
-        private readonly Dictionary<BitBoard, int> EvalCache = new Dictionary<BitBoard, int>(1 << 10);
+        //private readonly Dictionary<BitBoard, int> EvalCache = new Dictionary<BitBoard, int>(1 << 19);
+
+        private readonly Dictionary<BitBoard, int>[] EvalCaches = new Dictionary<BitBoard, int>[22];
+
         private int hits = 0;
 
         private void PrepareSearch(BitBoard board)
@@ -38,6 +41,10 @@ namespace MonkeyOthello.Engines
             //var squares = board.EmptyPieces.Indices().ToList();
             squareDict = orderedSquares.Select((c, i) => new { K = c, V = i }).ToDictionary(kv => kv.K, kv => kv.V);
 
+            for (var i = 0; i < EvalCaches.Length; i++)
+            {
+                EvalCaches[i] = new Dictionary<BitBoard, int>(1 << 19);//
+            }
             //squares = squares.OrderBy(i => squareDict[i]).ToList();
 
             //squares.ForEach(squareQueue.Enqueue);
@@ -143,7 +150,13 @@ namespace MonkeyOthello.Engines
             clock.Stop();
 
             searchResult.TimeSpan = clock.Elapsed;
-            searchResult.Message += $" (hits: {hits}, cache items:{EvalCache.Count})";
+
+            var s = from q in EvalCaches.Select((e, i) => new { e.Count, Index = i })
+                    where q.Count > 0
+                    select new { q.Count, q.Index };
+
+            var cacheInfo = string.Join(",", s.Select(c => $"({c.Index}:{c.Count})"));
+            searchResult.Message += $" (hits: {hits}, cache info:{cacheInfo})";
 
             return searchResult;
         }
@@ -176,7 +189,7 @@ namespace MonkeyOthello.Engines
                 else
                 {
                     var oppBoard = board.Switch();
-                    return GetCachedScore(oppBoard,()=> -FastestFirstSolve(oppBoard, -beta, -alpha, depth, false));
+                    return GetCachedScore(oppBoard, depth, () => -FastestFirstSolve(oppBoard, -beta, -alpha, depth, false));
                 }
             }
 
@@ -199,7 +212,7 @@ namespace MonkeyOthello.Engines
                     if (foundPv)
                     {
                         //zero window
-                        eval = GetCachedScore(oppBoard, () => -ParitySearch(oppBoard, -alpha - 1, -alpha, depth - 1));
+                        eval = GetCachedScore(oppBoard, depth, () => -ParitySearch(oppBoard, -alpha - 1, -alpha, depth - 1));
                         if ((eval > alpha) && (eval < beta))
                         {
                             eval = -ParitySearch(oppBoard, -beta, -eval, depth - 1);
@@ -207,7 +220,7 @@ namespace MonkeyOthello.Engines
                     }
                     else
                     {
-                        eval = GetCachedScore(oppBoard, () => -ParitySearch(oppBoard, -beta, -alpha, depth - 1));
+                        eval = GetCachedScore(oppBoard, depth, () => -ParitySearch(oppBoard, -beta, -alpha, depth - 1));
                     }
                 }
                 else
@@ -215,7 +228,7 @@ namespace MonkeyOthello.Engines
                     if (foundPv)
                     {
                         //zero window
-                        eval = GetCachedScore(oppBoard, () => -FastestFirstSolve(oppBoard, -alpha - 1, -alpha, depth - 1));
+                        eval = GetCachedScore(oppBoard, depth, () => -FastestFirstSolve(oppBoard, -alpha - 1, -alpha, depth - 1));
                         if ((eval > alpha) && (eval < beta))
                         {
                             eval = -FastestFirstSolve(oppBoard, -beta, -eval, depth - 1);
@@ -223,7 +236,7 @@ namespace MonkeyOthello.Engines
                     }
                     else
                     {
-                        eval = GetCachedScore(oppBoard, () => -FastestFirstSolve(oppBoard, -beta, -alpha, depth - 1));
+                        eval = GetCachedScore(oppBoard, depth, () => -FastestFirstSolve(oppBoard, -beta, -alpha, depth - 1));
                     }
                 }
 
@@ -452,8 +465,32 @@ namespace MonkeyOthello.Engines
             return moves.OrderBy(m => Rule.DiffMobility(Rule.MoveSwitch(board, m)));
         }
 
-        private int GetCachedScore(BitBoard board, Func<int> func)
+        private int GetCachedScore(BitBoard board, int depth, Func<int> func)
         {
+            var cache = EvalCaches[depth];
+
+            //var pos = cache.InitOrGetPosition(board);
+            //var curr = cache.GetAtPosition(pos);
+            //cache.StoreAtPosition(pos, curr);
+
+            //return curr;
+
+            int score;
+            if (cache.TryGetValue(board, out score))
+            {
+                hits++;
+            }
+            else
+            {
+                score = func();
+                cache[board] = score;
+            }
+            return score;
+        }
+
+        /*
+        private int GetCachedScore(BitBoard board, Func<int> func)
+        { 
             if (EvalCache.ContainsKey(board))
             {
                 hits++;
@@ -465,8 +502,7 @@ namespace MonkeyOthello.Engines
                 EvalCache[board] = score;
                 return score;
             }
-
-            //return null;
-        }
+             
+        }*/
     }
 }

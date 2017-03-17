@@ -76,11 +76,11 @@ namespace MonkeyOthello.Core
             else if (diffCount < 0)
             {
                 return diffCount - emptyCount;
-            } 
+            }
 
             return 0;
         }
-        
+
         public override bool Equals(object obj)
         {
             var comparedGameState = (BitBoard)obj;
@@ -88,8 +88,9 @@ namespace MonkeyOthello.Core
         }
 
         public override int GetHashCode()
-        {
-            return (PlayerPieces | OpponentPieces).GetHashCode();
+        { 
+           // return PlayerPieces.GetHashCode() | OpponentPieces.GetHashCode();//same speed
+           return PlayerPieces.GetHashCode() ^ (int) (OpponentPieces>>33) ; 
         }
 
         public override string ToString()
