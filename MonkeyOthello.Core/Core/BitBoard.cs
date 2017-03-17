@@ -35,14 +35,7 @@ namespace MonkeyOthello.Core
         {
             return new BitBoard(1UL << 28 | 1UL << 35, 1UL << 27 | 1UL << 36);
         }
-
-        /*public void Switch()
-        {
-            var t = PlayerPieces;
-            PlayerPieces = OpponentPieces;
-            OpponentPieces = t;
-        }*/
-
+        
         public BitBoard Switch()
         {
             return new BitBoard(OpponentPieces, PlayerPieces);

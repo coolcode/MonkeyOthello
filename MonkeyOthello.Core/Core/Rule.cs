@@ -168,12 +168,13 @@ namespace MonkeyOthello.Core
             return v;
         }
 
+        /*
         public static ulong ValidateOneDirection(Func<ulong, ulong> function, ulong playerPieces, ulong opponentPieces, ulong emptySquares)
         {
             var shift = function(playerPieces);
             var potential = shift & opponentPieces;
             ulong validPlays = 0;
-
+            
             while (potential > 0)
             {
                 potential = function(potential);
@@ -181,7 +182,89 @@ namespace MonkeyOthello.Core
                 potential = potential & opponentPieces;
             }
             return validPlays;
+        }*/
+
+        public static ulong ValidateOneDirection(Func<ulong, ulong> function, ulong playerPieces, ulong opponentPieces, ulong emptySquares)
+        {
+            var shift = function(playerPieces);
+            var potential = shift & opponentPieces;
+            ulong validPlays = 0;
+
+            if (potential == 0)
+            {
+                return validPlays;
+            }
+
+            potential = function(potential);
+            validPlays |= potential & emptySquares;
+            potential = potential & opponentPieces;
+
+            if (potential == 0)
+            {
+                return validPlays;
+            }
+
+            potential = function(potential);
+            validPlays |= potential & emptySquares;
+            potential = potential & opponentPieces;
+
+            if (potential == 0)
+            {
+                return validPlays;
+            }
+
+            potential = function(potential);
+            validPlays |= potential & emptySquares;
+            potential = potential & opponentPieces;
+
+            if (potential == 0)
+            {
+                return validPlays;
+            }
+
+            potential = function(potential);
+            validPlays |= potential & emptySquares;
+            potential = potential & opponentPieces;
+
+            if (potential == 0)
+            {
+                return validPlays;
+            }
+
+            potential = function(potential);
+            validPlays |= potential & emptySquares;
+            potential = potential & opponentPieces;
+
+            if (potential == 0)
+            {
+                return validPlays;
+            }
+
+            potential = function(potential);
+            validPlays |= potential & emptySquares;
+            potential = potential & opponentPieces;
+
+            if (potential == 0)
+            {
+                return validPlays;
+            }
+
+            potential = function(potential);
+            validPlays |= potential & emptySquares;
+            potential = potential & opponentPieces;
+
+            if (potential == 0)
+            {
+                return validPlays;
+            }
+
+            potential = function(potential);
+            validPlays |= potential & emptySquares;
+            potential = potential & opponentPieces;
+
+            return validPlays;
         }
+
 
         public static bool CanMoveOneDirection(Func<ulong, ulong> function, ulong playerPieces, ulong opponentPieces, ulong emptySquares)
         {
