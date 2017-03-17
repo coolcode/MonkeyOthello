@@ -34,6 +34,33 @@ namespace MonkeyOthello.Core
         /// </summary>
         /// <param name="board"></param>
         /// <param name="index"></param>
+        /// <param name="oppBoard">a new board after moving and switching</param>
+        /// <returns>valid move or not</returns>
+        public static bool TryMoveSwitch(BitBoard board, int index, out BitBoard oppBoard)
+        {
+            var placement = 1UL << index;
+
+            var flippedPieces = PlacePiece(placement, board.PlayerPieces, board.OpponentPieces);
+
+            if (flippedPieces != 0)
+            {
+                var playerPieces = board.PlayerPieces | flippedPieces | placement;
+                var opponentPieces = board.OpponentPieces ^ flippedPieces;
+
+                //switch
+                oppBoard = new BitBoard(opponentPieces, playerPieces);
+
+                return true;
+            }
+            oppBoard = null;
+            return false;
+        }
+
+        /// <summary>
+        /// make move and switch board
+        /// </summary>
+        /// <param name="board"></param>
+        /// <param name="index"></param>
         /// <returns>a new board after moving and switching</returns>
         public static BitBoard MoveSwitch(BitBoard board, int index)
         {

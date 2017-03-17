@@ -12,6 +12,7 @@ namespace MonkeyOthello.Tests
         {
             try
             {
+                //Test.TestLinkedList();
                 //Test.GenTestData();
                 Test.TestEndGameSearch();
                 //Test.TestV2IndexToV3Index();

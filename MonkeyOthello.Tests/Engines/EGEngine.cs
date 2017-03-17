@@ -14,7 +14,7 @@ namespace MonkeyOthello.Tests.Engines
     {
         public override SearchResult Search(BitBoard bb, int depth)
         {
-            EGEngine.MyDllAI_SetDepth(6, 22, 20);
+            EGEngine.MyDllAI_SetDepth(6, 20, 18);
 
             var board = new int[91];
             for (var j = 0; j < board.Length; j++)
