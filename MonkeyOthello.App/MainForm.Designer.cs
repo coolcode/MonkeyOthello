@@ -243,13 +243,13 @@
             // typeTwoToolStripMenuItem
             // 
             this.typeTwoToolStripMenuItem.Name = "typeTwoToolStripMenuItem";
-            this.typeTwoToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
+            this.typeTwoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.typeTwoToolStripMenuItem.Text = "模式 2";
             // 
             // typeOneToolStripMenuItem
             // 
             this.typeOneToolStripMenuItem.Name = "typeOneToolStripMenuItem";
-            this.typeOneToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
+            this.typeOneToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.typeOneToolStripMenuItem.Text = "模式 1";
             // 
             // boardModeToolStripMenuItem
@@ -426,20 +426,20 @@
             // homeMToolStripMenuItem
             // 
             this.homeMToolStripMenuItem.Name = "homeMToolStripMenuItem";
-            this.homeMToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.homeMToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.homeMToolStripMenuItem.Text = "主页(&M)";
             // 
             // aboutAToolStripMenuItem
             // 
             this.aboutAToolStripMenuItem.Name = "aboutAToolStripMenuItem";
-            this.aboutAToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutAToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.aboutAToolStripMenuItem.Text = "关于(&A)";
             // 
             // contentCToolStripMenuItem
             // 
             this.contentCToolStripMenuItem.Name = "contentCToolStripMenuItem";
             this.contentCToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.contentCToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.contentCToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.contentCToolStripMenuItem.Text = "内容(&C)";
             // 
             // helpHToolStripMenuItem
@@ -594,42 +594,42 @@
             // 
             this.grandMasterToolStripMenuItem.Name = "grandMasterToolStripMenuItem";
             this.grandMasterToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D6)));
-            this.grandMasterToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.grandMasterToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.grandMasterToolStripMenuItem.Text = "大圣";
             // 
             // masterToolStripMenuItem
             // 
             this.masterToolStripMenuItem.Name = "masterToolStripMenuItem";
             this.masterToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D5)));
-            this.masterToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.masterToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.masterToolStripMenuItem.Text = "猴王";
             // 
             // expertToolStripMenuItem
             // 
             this.expertToolStripMenuItem.Name = "expertToolStripMenuItem";
             this.expertToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D4)));
-            this.expertToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.expertToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.expertToolStripMenuItem.Text = "顽猴";
             // 
             // amateurToolStripMenuItem
             // 
             this.amateurToolStripMenuItem.Name = "amateurToolStripMenuItem";
             this.amateurToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D3)));
-            this.amateurToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.amateurToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.amateurToolStripMenuItem.Text = "馋猴";
             // 
             // childToolStripMenuItem
             // 
             this.childToolStripMenuItem.Name = "childToolStripMenuItem";
             this.childToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D2)));
-            this.childToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.childToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.childToolStripMenuItem.Text = "小猴";
             // 
             // babyToolStripMenuItem
             // 
             this.babyToolStripMenuItem.Name = "babyToolStripMenuItem";
             this.babyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D1)));
-            this.babyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.babyToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.babyToolStripMenuItem.Text = "猴婴";
             // 
             // levelLToolStripMenuItem
@@ -668,6 +668,7 @@
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
             this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.saveAsToolStripMenuItem.Text = "存为图片";
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // saveSToolStripMenuItem
             // 
@@ -752,7 +753,7 @@
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Monkey Othello V3.0";
+            this.Text = "Monkey Othello V3.0 (Buce Lee)";
             this.sts_Main.ResumeLayout(false);
             this.sts_Main.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pic_Monkey)).EndInit();

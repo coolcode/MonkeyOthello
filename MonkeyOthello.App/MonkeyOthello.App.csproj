@@ -36,34 +36,26 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AI\BaseSolve.cs" />
-    <Compile Include="AI\EndSolve.cs" />
-    <Compile Include="AI\Engine.cs" />
-    <Compile Include="AI\Evalation.cs" />
-    <Compile Include="AI\MidSolve.cs" />
-    <Compile Include="AI\MTDSolve.cs" />
-    <Compile Include="AI\StaSolve.cs" />
-    <Compile Include="Core\Board.cs" />
-    <Compile Include="Core\Config.cs" />
-    <Compile Include="Core\Constants.cs" />
-    <Compile Include="Core\Utils.cs" />
-    <Compile Include="IO\Serialiser.cs" />
-    <Compile Include="Presentation\DownStoneResult.cs" />
-    <Compile Include="Presentation\DrawBoard.cs" />
-    <Compile Include="Core\Empties.cs" />
-    <Compile Include="Core\Enums.cs" />
+    <Compile Include="Presentation\Board.cs" />
+    <Compile Include="Presentation\Config.cs" />
+    <Compile Include="Presentation\StoneType.cs" />
+    <Compile Include="Presentation\BoardPainter.cs" />
     <Compile Include="Presentation\Game.cs" />
-    <Compile Include="Presentation\GameManager.cs" />
-    <Compile Include="Presentation\Point.cs" />
-    <Compile Include="Presentation\SpacialObject.cs" />
-    <Compile Include="Presentation\Tile.cs" />
+    <Compile Include="Presentation\GameMode.cs" />
+    <Compile Include="Presentation\BufferBoard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentation\BufferBoard.Designer.cs">
+      <DependentUpon>BufferBoard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Stone.cs" />
     <Compile Include="Presentation\Utils.cs" />
-    <Compile Include="IO\PlaySound.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

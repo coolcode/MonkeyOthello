@@ -1,7 +1,19 @@
 using System;
+using System.Drawing;
 
 namespace MonkeyOthello.Presentation
 {
+    static class Utils
+    {
+        public static Point ToPoint(this int index)
+        {
+            var x = index % 8;
+            var y = index / 8;
+            return new Point(x, y);
+        }
+        
+    }
+
     /*
     static class  Utils
     {

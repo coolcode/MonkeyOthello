@@ -349,5 +349,11 @@ namespace MonkeyOthello.Tests
                 //Console.WriteLine(current.Value);
             }
         }
+
+        public static void TestThorFiles()
+        {
+            var thor = new Thor.ThorFileProcessor();
+            thor.Load();
+        }
     }
 }

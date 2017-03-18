@@ -5,13 +5,22 @@ using System.Text;
 
 namespace MonkeyOthello.Core
 {
-	public static class NotationHelper
-	{
+    public static class NotationHelper
+    {
+        public static string ToNotation(this int square)
+        {
+            var m = square / 8;
+            var n = square % 8;
+            var column = Convert.ToChar(n + 65);
+
+            return column.ToString() + (m + 1);
+        }
+
         public static int? ToIndex(this string algebraicNotation)
         {
-			if (string.IsNullOrEmpty(algebraicNotation))
-				return null;
-			
+            if (string.IsNullOrEmpty(algebraicNotation))
+                return null;
+
             var charArray = algebraicNotation.ToCharArray();
             var column = int.Parse(((char)(charArray[0] - 48)).ToString());
             var row = int.Parse(charArray[1].ToString());
@@ -42,9 +51,9 @@ namespace MonkeyOthello.Core
 
         public static string ToAlgebraicNotation(this int? playIndex)
         {
-			if (playIndex == null)
-				return "";
-				
+            if (playIndex == null)
+                return "";
+
             if (playIndex < 0 || playIndex > 63)
                 throw new Exception();
 
@@ -53,34 +62,27 @@ namespace MonkeyOthello.Core
 
             return ((char)(row + 96)).ToString() + column;
         }
-		
+
         public static string ToAlgebraicNotation(this int playIndex)
         {
-            return ((int?) playIndex).ToAlgebraicNotation();
+            return ((int?)playIndex).ToAlgebraicNotation();
         }
- 
+
         public static List<string> ToAlgebraicNotationList(this ulong bitBoard)
         {
             return bitBoard.Indices().Select(x => x.ToAlgebraicNotation()).ToList();
-        } 
-
-		public static Point ToCartesianCoordinate(this int index)
-		{
-			var x = index % 8;
-            var y = index / 8;
-			return new Point(x, y);
-		}
-
+        }
+        
         public static string ToAlgebraicNotation(this byte play)
         {
             var chars = play.ToString().ToCharArray();
             return ((char)(chars[0] + 48)).ToString() + chars[1];
         }
-		
-		public static char ToChar(this int index)
-		{
-			return ((char)(index + 48));
-		}
+
+        public static char ToChar(this int index)
+        {
+            return ((char)(index + 48));
+        }
 
         public static int ToIndex(this char character)
         {
@@ -90,14 +92,14 @@ namespace MonkeyOthello.Core
         public static double RoundToSignificantDigits(this double d, int digits)
         {
             if (d == 0)
-				return 0;
-			if (d < 0)
+                return 0;
+            if (d < 0)
                 throw new Exception("Number cannot be less than zero.");
 
             var scale = Math.Pow(10, Math.Floor(Math.Log10(d)) + 1);
             return scale * Math.Round(d / scale, digits);
         }
- 
+
         public static string ToChars(this ICollection<int?> plays)
         {
             if (plays.Count == 0)
@@ -116,5 +118,5 @@ namespace MonkeyOthello.Core
             list.ForEach(x => board |= x.ToBitBoard());
             return board;
         }
-	}
+    }
 }

@@ -17,5 +17,7 @@ namespace MonkeyOthello.Core
 
         public const int ParityDepth = 8;
         public const int NoParityDepth = 5;
+
+        public const int MaxOpeningDepth = 10;
     }
 }

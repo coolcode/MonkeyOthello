@@ -97,7 +97,7 @@ namespace MonkeyOthello.Engines
                     {
                         if (eval >= beta)
                         {
-                            //cut branch
+                            //pruning
                             break;
                         }
                         alpha = eval;
@@ -179,7 +179,7 @@ namespace MonkeyOthello.Engines
                     {
                         if (eval >= beta)
                         {
-                            //cut branch
+                            //pruning
                             return score;
                         }
 

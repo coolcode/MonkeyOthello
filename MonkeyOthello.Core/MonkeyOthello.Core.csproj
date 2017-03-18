@@ -41,7 +41,6 @@
     <Compile Include="Core\Clock.cs" />
     <Compile Include="Core\Constants.cs" />
     <Compile Include="Core\RawDictionary.cs" />
-    <Compile Include="Core\Point.cs" />
     <Compile Include="Engines\MonkeyEngine.cs" />
     <Compile Include="Engines\MonkeyEngineV1.0.cs" />
     <Compile Include="Engines\MonkeyEngineV1.1.cs" />
@@ -50,10 +49,12 @@
     <Compile Include="Engines\EndGameEvaluation.cs" />
     <Compile Include="Engines\IEngine.cs" />
     <Compile Include="Engines\IEvaluation.cs" />
+    <Compile Include="Engines\MonkeyOpeningEngine.cs" />
     <Compile Include="Engines\RandomEngine.cs" />
     <Compile Include="Engines\SimpleEvaluation.cs" />
     <Compile Include="Core\NotationHelper.cs" />
     <Compile Include="Core\Rule.cs" />
+    <Compile Include="Engines\StateEvaluation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

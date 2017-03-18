@@ -101,6 +101,14 @@ namespace MonkeyOthello.Core
             return count;
         }
 
+        public static BitBoard MoveSwitch(BitBoard board, int index, out int[] flips)
+        {
+            var flipsPieces = FindFlips(board, index);
+            flips = flipsPieces.Indices().ToArray();
+
+            return FlipSwitch(board, index, flipsPieces);
+        }
+
         public static ulong FindFlips(BitBoard board, int index)
         {
             var placement = 1UL << index;
@@ -131,6 +139,24 @@ namespace MonkeyOthello.Core
             return moves;
         }
 
+        public static int Mobility(BitBoard board)
+        {
+            var bm = ValidPlays(board.PlayerPieces, board.OpponentPieces, board.EmptyPieces);
+
+            return bm.CountBits();
+        }
+
+        public static int PotentialMobility(BitBoard board)
+        {
+            var pm = PotentialMobility(board.PlayerPieces, board.OpponentPieces);
+
+            return pm.CountBits();
+        }
+
+        public static bool CanMove(BitBoard board)
+        {
+            return CanMove(board.PlayerPieces, board.OpponentPieces, board.EmptyPieces);
+        }
 
         public static bool CanMove(ulong playerPieces, ulong opponentPieces, ulong emptySquares)
         {
@@ -327,29 +353,135 @@ namespace MonkeyOthello.Core
                    | PotentialMobilityOneDirection(UpLeft, playerPieces, emptySquares);
         }
 
-        public static ulong PotentialMobilityOneDirection(Func<ulong, ulong> function, ulong playerPieces, ulong emptySquares)
+        private static ulong PotentialMobilityOneDirection(Func<ulong, ulong> function, ulong playerPieces, ulong emptySquares)
         {
             var shift = function(playerPieces);
             return shift & emptySquares;
         }
 
 
-        private static ulong _stabilityRequirement = (new List<string> {
-                                                     "a1", "a2", "b1",
-                                                     "g1", "h1", "h2",
-                                                     "a7", "a8", "b8",
-                                                     "g8", "h8", "h7" }).ToBitBoard();
+        private readonly static ulong centerMask = (new[] { "d4", "d5", "e4", "e5" }).ToBitBoard();
 
-        // I haven't figured out how to do stability as yet.
-        public static ulong StablePieces(ulong playerPieces, ulong opponentPieces)
+        private readonly static ulong edgeMask = (new[] { "a1", "h1", "a8", "h8" }).ToBitBoard();
+
+        private readonly static ulong unstableMask = (new[] { "a2", "a7", "h2", "h7",
+                                                              "b1", "g1", "b8", "g8"
+                                                        }).ToBitBoard();
+
+        private readonly static ulong bit_line_a = (new[] { "a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8" }).ToBitBoard();
+        private readonly static ulong bit_line_h = (new[] { "h1", "h2", "h3", "h4", "h5", "h6", "h7", "h8" }).ToBitBoard();
+        private readonly static ulong bit_line_1 = (new[] { "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1" }).ToBitBoard();
+        private readonly static ulong bit_line_8 = (new[] { "a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8" }).ToBitBoard();
+
+        // edge 
+        private readonly static ulong bit_a1 = "a1".ToBitBoard();
+        private readonly static ulong bit_h1 = "h1".ToBitBoard();
+        private readonly static ulong bit_a8 = "a8".ToBitBoard();
+        private readonly static ulong bit_h8 = "h8".ToBitBoard();
+
+        // unstable
+        private readonly static ulong bit_a2 = "a2".ToBitBoard();
+        private readonly static ulong bit_a7 = "a7".ToBitBoard();
+        private readonly static ulong bit_h2 = "h2".ToBitBoard();
+        private readonly static ulong bit_h7 = "h7".ToBitBoard();
+        private readonly static ulong bit_b1 = "b1".ToBitBoard();
+        private readonly static ulong bit_g1 = "g1".ToBitBoard();
+        private readonly static ulong bit_b8 = "b8".ToBitBoard();
+        private readonly static ulong bit_g8 = "g8".ToBitBoard();
+
+        public static int Unstable(BitBoard board)
         {
-            // If no corners or edges adjacent to corners contain a piece, there can not be any stable pieces on the board
-            // See: http://pressibus.org/ataxx/autre/minimax/node3.html
-            if ((playerPieces & _stabilityRequirement) == 0UL)
-                return 0UL;
+            var allPieces = board.AllPieces;
+            var playerPieces = board.PlayerPieces;
+            var count = 0;
+            if (IsUnstable(playerPieces, allPieces, bit_a2, bit_line_a))
+            {
+                count++;
+            }
 
+            if (IsUnstable(playerPieces, allPieces, bit_a7, bit_line_a))
+            {
+                count++;
+            }
 
-            return 0UL;
+            if (IsUnstable(playerPieces, allPieces, bit_h2, bit_line_h))
+            {
+                count++;
+            }
+
+            if (IsUnstable(playerPieces, allPieces, bit_h7, bit_line_h))
+            {
+                count++;
+            }
+
+            if (IsUnstable(playerPieces, allPieces, bit_b1, bit_line_1))
+            {
+                count++;
+            }
+
+            if (IsUnstable(playerPieces, allPieces, bit_g1, bit_line_1))
+            {
+                count++;
+            }
+
+            if (IsUnstable(playerPieces, allPieces, bit_b8, bit_line_8))
+            {
+                count++;
+            }
+
+            if (IsUnstable(playerPieces, allPieces, bit_g8, bit_line_8))
+            {
+                count++;
+            }
+
+            return count;
         }
+
+        private static bool IsUnstable(ulong playerPieces, ulong allPieces, ulong unstableSquare, ulong lineSquares)
+        {
+            return ((playerPieces & unstableSquare) != 0) && ((allPieces & lineSquares) != lineSquares);
+        }
+
+        public static int Edge(BitBoard board)
+        {
+            return EdgePieces(board).CountBits();
+        }
+
+        public static ulong EdgePieces(BitBoard board)
+        {
+            return (board.PlayerPieces & edgeMask);
+        }
+
+        public static int CenterPiecesCount(BitBoard board)
+        {
+            return (board.PlayerPieces & centerMask).CountBits();
+        }
+
+        /*
+       public static ulong StableOneDirection(Func<ulong, ulong> function, ulong playerPieces, ulong opponentPieces, ulong emptySquares)
+       {
+           var shift = function(playerPieces);
+           var allPieces = playerPieces | opponentPieces;
+           var potential = shift & allPieces;
+
+           while (potential != 0)
+           {
+               potential = function(potential);
+               if ((potential & emptySquares) != 0)
+               {
+                   return true;
+               }
+               potential &= allPieces;
+           }
+           return false;
+       }*/
+
+        /*
+    private readonly static ulong stabilityMask = (new List<string> {
+                                                 "a1", "a2", "b1",
+                                                 "g1", "h1", "h2",
+                                                 "a7", "a8", "b8",
+                                                 "g8", "h8", "h7" }).ToBitBoard();*/
+
     }
 }
