@@ -15,10 +15,9 @@ namespace MonkeyOthello.Tests
                 //Test.TestBitBoard();
                 //Test.TestLinkedList();
                 //Test.GenTestData();
-                //Test.TestEndGameSearch();
+                Test.TestEndGameSearch();
                 //Test.TestV2IndexToV3Index();
                 //Test.TestFlips();
-                Test.TestThorFiles();
                 Console.WriteLine("done!");
             }
             catch(Exception e)

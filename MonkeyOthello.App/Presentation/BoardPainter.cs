@@ -47,7 +47,7 @@ namespace MonkeyOthello.Presentation
 
         private void BufferBoard_Paint(object sender, PaintEventArgs e)
         {
-           // Paint();
+            Paint();
         }
 
         private void InitBoard(Board b)

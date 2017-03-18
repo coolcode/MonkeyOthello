@@ -19,8 +19,9 @@ namespace MonkeyOthello.Presentation
         public UpdateResult UpdateResult;
         private bool turnToComputerPlayer = false;
 
-        public Game()
+        public Game(Board board)
         {
+            this.Board = board;
         }
 
         public void NewGame()

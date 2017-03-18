@@ -18,7 +18,7 @@ namespace MonkeyOthello
         private Board board = new Board();
         private BoardPainter boardPainter;
         private Point currentLoaction = new Point();
-        private Game game = new Game();
+        private Game game ;
         private GameMode gameMode = GameMode.HumanVsComputer;
         private BufferBoard bufferBoard;
 
@@ -34,6 +34,7 @@ namespace MonkeyOthello
             bufferBoard.MouseDown += new MouseEventHandler(OthelloBoard_MouseDown);
             Controls.Add(bufferBoard);
 
+            game = new Game(board);
             boardPainter = new BoardPainter(board, bufferBoard);
             this.Load += MainForm_Load;
 
@@ -70,19 +71,18 @@ namespace MonkeyOthello
         private void PlayGame()
         {
             UpdatePiecesCount();
+            SafeUpdateUI(BeforeThink);
             pnl_OthelloBoard.Cursor = Cursors.WaitCursor;
             BeforeThink();
             game.PlayGame();
             pnl_OthelloBoard.Cursor = Cursors.Hand;
-            FinishThink();
+            SafeUpdateUI(FinishThink);
         }
 
         private void BeforeThink()
         {
-            ;
             for (int i = 0; i < mns_Main.Items.Count; i++)
                 mns_Main.Items[i].Enabled = false;
-
         }
 
         private void FinishThink()
