@@ -17,8 +17,7 @@ namespace MonkeyOthello
         private Random rand = new Random();
         private Board board = new Board();
         private BoardPainter boardPainter;
-        private Point currentLoaction = new Point();
-        private Game game ;
+        private Game game;
         private GameMode gameMode = GameMode.HumanVsComputer;
         private BufferBoard bufferBoard;
 
@@ -36,6 +35,37 @@ namespace MonkeyOthello
 
             game = new Game(board);
             boardPainter = new BoardPainter(board, bufferBoard);
+            game.UpdatePlay = (x, g) =>
+             {
+                 Safe(() =>
+                 {
+                     bufferBoard.Invalidate();
+                     bufferBoard.Update();
+                     bufferBoard.Refresh();
+                 });
+             };
+
+            game.UpdateResult = r =>
+            {
+                Safe(() =>
+                {
+                    var speed = r.Nodes / r.TimeSpan.TotalSeconds;
+                    lblSquare.Text = r.Move.ToNotation();
+                    lblEval.Text = string.Format("{0:F2}", r.Score);
+                    lblNodes.Text = string.Format("{0}", (r.Nodes > 1000 ? Math.Round(r.Nodes / 1000.0) + " K" : r.Nodes.ToString()));
+                    lblSpendTime.Text = string.Format("{0:F1}s", r.TimeSpan.TotalSeconds);
+                    lblSpeed.Text = string.Format("{0}", (speed < 10000000 ? ((int)(speed / 1000) + " kn/s") : "+∞"));
+                    lblMessage.Text = $"{string.Join(",", r.EvalList)}";
+                    statMain.Invalidate();
+                });
+            };
+
+            game.UpdateMessage = msg =>
+            {
+                lblMessage.Text = $"{msg}";
+                lblMessage.Invalidate();
+            };
+
             this.Load += MainForm_Load;
 
         }
@@ -50,52 +80,81 @@ namespace MonkeyOthello
             try
             {
                 if (e.Button == MouseButtons.Left && gameMode != GameMode.ComputerVsComputer)
-                    if (game.HumanPlay(e.Location))
+                {
+                    var square = boardPainter.PointToSquare(e.Location);
+                    if (square != null && game.HumanPlay(square.Value))
                     {
                         undoUToolStripMenuItem.Enabled = true;
 
-                        var thread = new Thread(new ThreadStart(PlayGame));
-                        thread.Priority = ThreadPriority.Normal;
-                        thread.Start();
+                        if (game.IsGameOver())
+                        {
+                            MessageBox.Show("Game over!");
+                            return;
+                        }
+
+                        if (game.TurnNext() == PlayerType.Computer)
+                        {
+                            var thread = new Thread(new ThreadStart(ComputerPlay));
+                            thread.Priority = ThreadPriority.Normal;
+                            thread.Start();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Pass, your turn.");
+                        }
                     }
                     else
                     {
                         ShowMessage("Invalid move!");
                     }
+                }
             }
-            catch
+            catch (Exception ex)
             {
+                ShowMessage(ex.Message);
             }
         }
 
-        private void PlayGame()
+        private void ComputerPlay()
         {
-            UpdatePiecesCount();
-            SafeUpdateUI(BeforeThink);
-            pnl_OthelloBoard.Cursor = Cursors.WaitCursor;
-            BeforeThink();
-            game.PlayGame();
-            pnl_OthelloBoard.Cursor = Cursors.Hand;
-            SafeUpdateUI(FinishThink);
+            Safe(UpdatePiecesCount, BeforeThink);
+            pnlOthelloBoard.Cursor = Cursors.WaitCursor;
+            game.ComputerPlay();
+            pnlOthelloBoard.Cursor = Cursors.Hand;
+            Safe(pnlOthelloBoard.Refresh, UpdatePiecesCount, FinishThink);
+
+            if (game.IsGameOver())
+            {
+                MessageBox.Show("Game over!");
+                return;
+            }
+
+            if (game.TurnNext() == PlayerType.Computer)
+            {
+                MessageBox.Show("Pass, computer's turn.");
+                var thread = new Thread(new ThreadStart(ComputerPlay));
+                thread.Priority = ThreadPriority.Normal;
+                thread.Start();
+            }
         }
 
         private void BeforeThink()
         {
-            for (int i = 0; i < mns_Main.Items.Count; i++)
-                mns_Main.Items[i].Enabled = false;
+            for (int i = 0; i < menuMain.Items.Count; i++)
+                menuMain.Items[i].Enabled = false;
         }
 
         private void FinishThink()
         {
-            for (int i = 0; i < mns_Main.Items.Count; i++)
-                mns_Main.Items[i].Enabled = true;
+            for (int i = 0; i < menuMain.Items.Count; i++)
+                menuMain.Items[i].Enabled = true;
         }
 
         private void newNToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!game.IsGameOver())
             {
-                DialogResult result = MessageBox.Show("Start a new game?", "New Game", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                var result = MessageBox.Show("Start a new game?", "New Game", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result != DialogResult.Yes)
                     return;
             }
@@ -110,59 +169,73 @@ namespace MonkeyOthello
 
         private void NewGame()
         {
-            lsv_Moves.Items.Clear();
+            lsvMoves.Items.Clear();
             undoUToolStripMenuItem.Enabled = false;
-            lbl_Nodes.Text = "0";
-            lbl_Eval.Text = "0";
-            lbl_Speed.Text = "  ";
-            lbl_SpendTime.Text = "  ";
-            lbl_Square.Text = "  ";
-            ShowMessage("balabala...");
+            lblNodes.Text = "0";
+            lblEval.Text = "0";
+            lblSpeed.Text = "  ";
+            lblSpendTime.Text = "  ";
+            lblSquare.Text = "  ";
+            ShowMessage("New game");
             game.NewGame();
+            pnlOthelloBoard.Refresh();
             UpdatePiecesCount();
         }
 
         private void ShowMessage(string msg)
         {
-            lbl_Message.Text = msg;
+            lblMessage.Text = msg;
         }
 
         private void UpdateMessage(int square, double score, int nodes, double time, double speed)
         {
-            SafeUpdateUI(() =>
-            {
-                lbl_Square.Text = square.ToNotation();
-                lbl_Eval.Text = string.Format("{0:F2}", score);
-                lbl_Nodes.Text = string.Format("{0}", (nodes > 1000 ? Math.Round(nodes / 1000.0) + " K" : nodes.ToString()));
-                lbl_SpendTime.Text = string.Format("{0:F2}秒", time);
-                lbl_Speed.Text = string.Format("{0}", (speed < 10000000 ? ((int)(speed / 1000) + " kn/s") : "+∞"));
-            });
-
-            UpdatePiecesCount();
+            lblSquare.Text = square.ToNotation();
+            lblEval.Text = string.Format("{0:F2}", score);
+            lblNodes.Text = string.Format("{0}", (nodes > 1000 ? Math.Round(nodes / 1000.0) + " K" : nodes.ToString()));
+            lblSpendTime.Text = string.Format("{0:F2}s", time);
+            lblSpeed.Text = string.Format("{0}", (speed < 10000000 ? ((int)(speed / 1000) + " kn/s") : "+∞"));
         }
 
         private void UpdatePiecesCount()
         {
-            SafeUpdateUI(() =>
-            {
-                lbl_blackNum.Text = board.Count(StoneType.Black).ToString();
-                lbl_whiteNum.Text = board.Count(StoneType.White).ToString();
-                lbl_Empties.Text = board.Count(StoneType.Empty).ToString();
-                lbl_blackNum.Refresh();
-                lbl_whiteNum.Refresh();
-            });
+            lblblackNum.Text = board.Count(StoneType.Black).ToString();
+            lblwhiteNum.Text = board.Count(StoneType.White).ToString();
+            lblEmpties.Text = board.Count(StoneType.Empty).ToString();
+            lblblackNum.Refresh();
+            lblwhiteNum.Refresh();
         }
 
-        private void SafeUpdateUI(MethodInvoker updateUI)
+        private void Safe(params MethodInvoker[] updateUIMethods)
         {
             if (InvokeRequired)
             {
-                this.Invoke(updateUI);
+                foreach (var updateUI in updateUIMethods)
+                {
+                    Invoke(updateUI);
+                }
             }
             else
             {
-                updateUI();
+                foreach (var updateUI in updateUIMethods)
+                {
+                    updateUI();
+                }
             }
+        }
+
+        private void aboutAToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/coolcode/monkeyothello");
+        }
+
+        private void undoUToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void exitEToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

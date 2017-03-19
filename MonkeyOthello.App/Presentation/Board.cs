@@ -89,10 +89,10 @@ namespace MonkeyOthello.Presentation
 
             var flipsStartIndex = (Constants.Line / 2 - 1) * (Constants.Line + 1);
 
-            stones[flipsStartIndex].Type = StoneType.Black;
-            stones[flipsStartIndex + 1].Type = StoneType.White;
-            stones[flipsStartIndex + Constants.Line].Type = StoneType.White;
-            stones[flipsStartIndex + Constants.Line + 1].Type = StoneType.Black;
+            stones[flipsStartIndex].Type = StoneType.White;
+            stones[flipsStartIndex + 1].Type = StoneType.Black;
+            stones[flipsStartIndex + Constants.Line].Type = StoneType.Black;
+            stones[flipsStartIndex + Constants.Line + 1].Type =StoneType.White; 
         }
 
         #region IEnumerable<Stone> Members
@@ -160,10 +160,16 @@ namespace MonkeyOthello.Presentation
         {
             LastColor = Color;
             LastMove = pos;
+
             var bb = ToBitBoard();
+            boardsHistory.Push(new BoardHistItem { BitBoard = bb, Color = Color, Pos = pos });
+            
             int[] flips;
             var oppBoard = Rule.MoveSwitch(bb, pos, out flips);
-            boardsHistory.Push(new BoardHistItem { BitBoard = bb, Color = Color, Pos = pos });
+
+            SwitchPlayer();
+            FillStones(oppBoard, Color);
+
             return flips;
         }
 
@@ -209,12 +215,10 @@ namespace MonkeyOthello.Presentation
             {
                 for (var i = 0; i < Constants.StonesCount; i++)
                 {
-                    if ((b & 1) == 1)
+                    if ((b & (1UL<<i)) !=0)
                     {
-                        stones[i].Type = color;
+                        stones[i].Type = c;
                     }
-
-                    b = b >> 1;
                 }
             };
 
@@ -226,6 +230,11 @@ namespace MonkeyOthello.Presentation
         public void SwitchPlayer()
         {
             Color = Color.Opp();
+        }
+
+        public bool ValidMove(int square)
+        {
+            return Rule.FindMoves(ToBitBoard()).Contains(square);
         }
 
         public bool CanMove()

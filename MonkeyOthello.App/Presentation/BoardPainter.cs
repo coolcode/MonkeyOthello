@@ -6,73 +6,39 @@ using MonkeyOthello.Core;
 
 namespace MonkeyOthello.Presentation
 {
+    public class BufferBoard : UserControl
+    {
+
+    }
+
     public class BoardPainter
     {
-        private BufferBoard bufferBoard;
         private Image blackStone, blackHint;
         private Image whiteStone, whiteHint;
         private Image empty;
         private Image background;
 
-        private PointF boardBound = new PointF(24.4f, 24);
-        private SizeF chessboundSize = new SizeF(44.5f, 44.5f);
-        private Size chessSize = new Size(44, 44);
-        private const int rowsNum = Constants.Line;
-        private const int count = Constants.StonesCount;
-        private const int flipsNum = 12;
+        private readonly PointF boardBound = new PointF(24.4f, 24);
+        private readonly SizeF chessboundSize = new SizeF(44.5f, 44.5f);
+        private readonly Size chessSize = new Size(44, 44);
         private Board board = new Board();
+        private BufferBoard bufferBoard;
         private Graphics painter;
-        private List<int> hintMoves = new List<int>();
-        private List<int> flips = new List<int>();
-
-        public StoneType Color { get { return board.Color; } }
-
-        public int BlackPieces { get; private set; }
-        public int WhitePieces { get; private set; }
-        public int Empties { get; private set; }
-
-        public Bitmap Buffer
-        {
-            get; private set;
-        } = new Bitmap(400, 400);
+        private Bitmap buffer = new Bitmap(400, 400);
 
         public BoardPainter(Board board, BufferBoard bufferBoard)
         {
             InitialResources();
-            InitBoard(board);
+            this.board = board;
             this.bufferBoard = bufferBoard;
+            painter = Graphics.FromImage(buffer);
             bufferBoard.Paint += BufferBoard_Paint;
-            painter = Graphics.FromImage(Buffer);
+           
         }
 
         private void BufferBoard_Paint(object sender, PaintEventArgs e)
         {
             Paint();
-        }
-
-        private void InitBoard(Board b)
-        {
-            board = b;
-            BlackPieces = 0;
-            WhitePieces = 0;
-            Empties = 0;
-            foreach (var s in board)
-            {
-                switch (s.Type)
-                {
-                    case StoneType.Black:
-                        BlackPieces++;
-                        break;
-                    case StoneType.White:
-                        WhitePieces++;
-                        break;
-                    case StoneType.Empty:
-                        Empties++;
-                        break;
-                    default:
-                        break;
-                }
-            }
         }
 
         private void InitialResources()
@@ -100,7 +66,7 @@ namespace MonkeyOthello.Presentation
 
         public void Paint(Graphics boardGraphics)
         {
-            boardGraphics.DrawImage(Buffer, 0, 0);
+            boardGraphics.DrawImage(buffer, 0, 0);
         }
 
         public void Paint()
@@ -120,14 +86,14 @@ namespace MonkeyOthello.Presentation
             for (int i = 0; i < hintMoves.Length; i++)
             {
                 var sqnum = hintMoves[i];
-                if (Color == StoneType.Black)
+                if (board.Color == StoneType.Black)
                     painter.DrawImage(blackHint, SquareToRectangle(sqnum));
                 else
                     painter.DrawImage(whiteHint, SquareToRectangle(sqnum));
             }
 
             //draw current move 
-            if (board.LastMove!=null)
+            if (board.LastMove != null)
             {
                 var lastMove = board.LastMove.Value;
                 if (board.LastColor == StoneType.Black)
@@ -141,7 +107,8 @@ namespace MonkeyOthello.Presentation
                     painter.DrawImage(whiteHint, SquareToRectangle(lastMove));
                 }
             }
-            bufferBoard.BackgroundImage = Buffer;
+            bufferBoard.BackgroundImage = buffer;
+            
         }
 
         private RectangleF SquareToRectangle(int index)
@@ -160,7 +127,7 @@ namespace MonkeyOthello.Presentation
         {
             var m = (int)((point.Y - boardBound.Y) / chessSize.Height);
             var n = (int)((point.X - boardBound.X) / chessSize.Width);
-            if (m >= 0 && n >= 0 && m < rowsNum && n < rowsNum)
+            if (m >= 0 && n >= 0 && m < Constants.Line && n < Constants.Line)
             {
                 return 8 * m + n;
             }

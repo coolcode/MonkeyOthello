@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MonkeyOthello.Core
 {
-    public static class NotationHelper
+    public static class Extensions
     {
         public static string ToNotation(this int square)
         {
@@ -72,7 +72,7 @@ namespace MonkeyOthello.Core
         {
             return bitBoard.Indices().Select(x => x.ToAlgebraicNotation()).ToList();
         }
-        
+
         public static string ToAlgebraicNotation(this byte play)
         {
             var chars = play.ToString().ToCharArray();
@@ -117,6 +117,11 @@ namespace MonkeyOthello.Core
             ulong board = 0;
             list.ForEach(x => board |= x.ToBitBoard());
             return board;
+        }
+
+        public static bool InRange(this int value, int from, int to)
+        {
+            return value >= from && value <= to;
         }
     }
 }

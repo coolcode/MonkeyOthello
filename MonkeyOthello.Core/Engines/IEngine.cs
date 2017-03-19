@@ -39,5 +39,10 @@ namespace MonkeyOthello.Engines
     {
         public int Move { get; set; }
         public int Score { get; set; }
+
+        public override string ToString()
+        {
+            return $"({Move}:{Score})";
+        }
     }
 }

@@ -9,15 +9,24 @@ using System.Drawing;
 namespace MonkeyOthello.Presentation
 {
     public delegate void UpdateResult(SearchResult result);
+    public delegate void UpdatePlay(PlayerType player, int square);
+    public delegate void UpdateMessage(string message);
+
+    public enum PlayerType
+    {
+        Human,
+        Computer
+    }
 
     public class Game
     {
         public Board Board { get; set; }
-        //public BoardPainter Painter { get; set; }
         public bool Busy { get; set; }
-        private GameMode Mode { get; set; }
+        private GameMode Mode { get; set; } = GameMode.HumanVsComputer;
         public UpdateResult UpdateResult;
-        private bool turnToComputerPlayer = false;
+        public UpdatePlay UpdatePlay;
+        public UpdateMessage UpdateMessage;
+        private PlayerType currentPlayer = PlayerType.Human;
 
         public Game(Board board)
         {
@@ -26,6 +35,7 @@ namespace MonkeyOthello.Presentation
 
         public void NewGame()
         {
+            currentPlayer = PlayerType.Human;
             Board.NewGame();
             Busy = false;
             if (Mode == GameMode.ComputerVsComputer)
@@ -36,108 +46,81 @@ namespace MonkeyOthello.Presentation
 
         private void ComputervsComputer()
         {
-            do
-            {
-                PlayGame();
-            } while (!IsGameOver());
+            //do
+            //{
+            //   // PlayGame();
+            //} while (!IsGameOver());
 
         }
-
-        public bool PlayGame()
-        {
-            return false;
-            //if (turnToComputerPlayer)
-            //{
-            //    ComputerPlay();
-            //    if (turn == TurnTo.YOU)
-            //    {
-            //        MessageBox.Show("电脑无棋可下,\n该你再下一步！");
-            //        Utils.AllRefreshBoard(drawBoard);
-            //        return;
-            //    }
-            //    else if (turn == TurnTo.ME)
-            //    {
-            //        ComputerDown();
-            //    }
-            //    //当前棋手下
-            //    Utils.UpdateMessage("该你下棋了!");
-            //}
-            //if (turn == TurnTo.GAMEOVER)
-            //{
-            //    gameIsOver = true;
-            //    drawBoard.Paint();
-            //    Utils.RefreshBoard(drawBoard);
-            //    Utils.UpdateMessage("游戏结束!");
-            //    //StaticMethod.UpdateMessage(
-            //    MessageBox.Show("游戏结束!结果是:" + drawBoard.GameOverResult((GameMode)Config.Instance.GameMode), "游戏结束!");
-            //}
-        }
-
-
+        
         public bool IsGameOver()
         {
             return Board.IsGameOver();
         }
 
-        private void ComputerPlay()
+        public PlayerType TurnNext()
         {
-            //int square = VaildMove;
-            //double speed;
-            //Utils.UpdateMessage("think...");
-            //Busy = true;
-            //var monkey = new MonkeyOpeningEngine();
-            //var result = monkey.Search(Board.ToBitBoard(), 6);
-            //square = result.Move;
-             
-            //AddMoveItem(square, monkey.BestScore);
-            //speed = (monkey.Time > 0 && monkey.Nodes > 0 ? monkey.Nodes / monkey.Time : Constants.MaxSpeed);
-            //Utils.UpdateMessage(square, monkey.BestScore, monkey.Nodes, monkey.Time, speed, drawBoard);
+            if (Board.CanMove())
+            {
+                currentPlayer = (currentPlayer == PlayerType.Human ? PlayerType.Computer : PlayerType.Human);
+            }
+            else
+            {
+                //switch back to last player
+                Board.SwitchPlayer();
+            }
 
-            //playerUpdateBoard(square);
-            //Busy = false;
+            return currentPlayer;
         }
 
-        public bool HumanPlay(Point point)
+        public void ComputerPlay()
+        {
+            UpdateMessage?.Invoke("think...");
+            Busy = true;
+
+            var pilot = new Pilot();
+            var result = pilot.Search(Board.ToBitBoard(), 6);
+            PlayerPlay(result.Move);
+            UpdatePlay?.Invoke(PlayerType.Computer, result.Move);
+            UpdateResult?.Invoke(result);
+            //UpdateMessage?.Invoke("think...");
+
+            Busy = false;
+        }
+
+        public bool HumanPlay(int square)
         {
             if (Busy)
             {
                 return false;
             }
 
-            /*
-            int sqnum = Board.PointToSquare(point);
-            if (sqnum == -1)
+            if (!Board.ValidMove(square))
             {
                 return false;
             }
-            else
-            {
-                if (board[sqnum] == StoneType.EMPTY)
-                {
-                    if (!drawBoard.ValidMove(sqnum))
-                        return false;
-                }
-                else
-                    return false;
-            }
 
-            //moveList.Add(sqnum);
-            //AddMoveItem(sqnum);
+            PlayerPlay(square);
+            UpdatePlay?.Invoke(PlayerType.Human, square);
 
-            lock (this)
-            {
-                var t = new Thread(playerUpdateBoard);
-                t.Start(sqnum);
-            }*/
             return true;
         }
 
+        private void PlayerPlay(int square)
+        {
+            var flips = Board.MakeMove(square);
+        }
+
+        /*
         protected void OnUpdateResult(SearchResult result)
         {
             UpdateResult?.Invoke(result);
         }
-        
-        /*
+
+        protected void OnUpdatePlay(PlayerType player, int square)
+        {
+
+        }
         public bool StepUp()
         {
             int rebackNum = 0;

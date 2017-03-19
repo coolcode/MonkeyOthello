@@ -50,9 +50,10 @@
     <Compile Include="Engines\IEngine.cs" />
     <Compile Include="Engines\IEvaluation.cs" />
     <Compile Include="Engines\MonkeyOpeningEngine.cs" />
+    <Compile Include="Engines\Pilot.cs" />
     <Compile Include="Engines\RandomEngine.cs" />
     <Compile Include="Engines\SimpleEvaluation.cs" />
-    <Compile Include="Core\NotationHelper.cs" />
+    <Compile Include="Core\Extensions.cs" />
     <Compile Include="Core\Rule.cs" />
     <Compile Include="Engines\StateEvaluation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
