@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MonkeyOthello.Tests</RootNamespace>
     <AssemblyName>MonkeyOthello.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -60,6 +61,10 @@
     <ProjectReference Include="..\MonkeyOthello.Core\MonkeyOthello.Core.csproj">
       <Project>{e71c88c4-3ca7-45d7-aedd-1fa4b26b5fe4}</Project>
       <Name>MonkeyOthello.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MonkeyOthello.Learning\MonkeyOthello.Learning.csproj">
+      <Project>{c6734c71-9439-426a-8a63-6b0f45bd0cc1}</Project>
+      <Name>MonkeyOthello.Learning</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
