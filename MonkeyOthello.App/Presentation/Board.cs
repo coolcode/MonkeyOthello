@@ -16,21 +16,17 @@ namespace MonkeyOthello.Presentation
         }
 
         private Stone[] stones = new Stone[Constants.StonesCount];
-        private Stack<BoardHistItem> boardsHistory = new Stack<BoardHistItem>();
+        private Stack<BoardHistItem> movesHistory = new Stack<BoardHistItem>();
 
         public StoneType Color { get; set; } = StoneType.Black;
-        public int EmptyCount { get { return stones.Count(c => c.Type == StoneType.Empty); } }
+        public int Empties { get { return stones.Count(c => c.Type == StoneType.Empty); } }
         public StoneType? LastColor { get; set; }
         public int? LastMove { get; set; }
+        public int Steps { get { return movesHistory.Count; } }
 
         public Board()
         {
-            Initial();
-        }
-
-        public void NewGame()
-        {
-            Initial();
+            NewGame();
         }
 
         public Board(string boardText)
@@ -76,12 +72,12 @@ namespace MonkeyOthello.Presentation
             }
         }
 
-        private void Initial()
+        public void NewGame()
         {
             Color = StoneType.Black;
             LastColor = null;
             LastMove = null;
-            boardsHistory.Clear();
+            movesHistory.Clear();
             for (int i = 0; i < Constants.StonesCount; i++)
             {
                 stones[i] = new Stone(i, StoneType.Empty);
@@ -92,7 +88,7 @@ namespace MonkeyOthello.Presentation
             stones[flipsStartIndex].Type = StoneType.White;
             stones[flipsStartIndex + 1].Type = StoneType.Black;
             stones[flipsStartIndex + Constants.Line].Type = StoneType.Black;
-            stones[flipsStartIndex + Constants.Line + 1].Type =StoneType.White; 
+            stones[flipsStartIndex + Constants.Line + 1].Type = StoneType.White;
         }
 
         #region IEnumerable<Stone> Members
@@ -162,8 +158,8 @@ namespace MonkeyOthello.Presentation
             LastMove = pos;
 
             var bb = ToBitBoard();
-            boardsHistory.Push(new BoardHistItem { BitBoard = bb, Color = Color, Pos = pos });
-            
+            movesHistory.Push(new BoardHistItem { BitBoard = bb, Color = Color, Pos = pos });
+
             int[] flips;
             var oppBoard = Rule.MoveSwitch(bb, pos, out flips);
 
@@ -179,13 +175,29 @@ namespace MonkeyOthello.Presentation
             return Rule.FindMoves(bb);
         }
 
-        public void Reback(int pos)
+        public bool Reback()
         {
-            var item = boardsHistory.Pop();
-            Color = item.Color.Opp();
-            LastMove = item.Pos;
-            LastColor = item.Color;
+            if (movesHistory.Count == 0)
+            {
+                return false;
+            }
+
+            var item = movesHistory.Pop();
+            Color = item.Color;
             FillStones(item.BitBoard, Color);
+            if (movesHistory.Count > 0)
+            {
+                item = movesHistory.Peek();
+                LastMove = item.Pos;
+                LastColor = item.Color;
+            }
+            else
+            {
+                LastMove = null;
+                LastColor = null;
+            }
+
+            return true;
         }
 
         public BitBoard ToBitBoard()
@@ -211,11 +223,16 @@ namespace MonkeyOthello.Presentation
 
         public void FillStones(BitBoard board, StoneType color)
         {
+            for (var i = 0; i < Constants.StonesCount; i++)
+            {
+                stones[i].Type = StoneType.Empty;
+            }
+
             Action<ulong, StoneType> FillStonesByColor = (b, c) =>
             {
                 for (var i = 0; i < Constants.StonesCount; i++)
                 {
-                    if ((b & (1UL<<i)) !=0)
+                    if ((b & (1UL << i)) != 0)
                     {
                         stones[i].Type = c;
                     }
@@ -246,7 +263,7 @@ namespace MonkeyOthello.Presentation
         {
             var bb = ToBitBoard();
 
-            var over = (EmptyCount == 0
+            var over = (Empties == 0
                 || (!Rule.CanMove(bb) && !Rule.CanMove(bb.Switch()))
                 );
 

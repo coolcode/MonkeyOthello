@@ -7,8 +7,11 @@ namespace MonkeyOthello.Engines
     public interface IEngine
     {
         string Name { get; }
+        UpdateProgress UpdateProgress { get; set; }
         SearchResult Search(BitBoard board, int depth);
     }
+
+    public delegate void UpdateProgress(SearchResult result);
 
     public class SearchResult
     {
@@ -18,6 +21,7 @@ namespace MonkeyOthello.Engines
         public TimeSpan TimeSpan { get; set; }
         public int Nodes { get; set; }
         public List<EvalItem> EvalList { get; set; } = new List<EvalItem>();
+        public double Process { get; set; } = 0.0;
 
         public SearchResult()
         {

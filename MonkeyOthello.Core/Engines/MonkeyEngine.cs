@@ -22,22 +22,22 @@ namespace MonkeyOthello.Engines
             36,35,28,27,63,56,7,0,61,58,47,40,23,16,5,2,45,42,21,18,60,59,39,32,31,24,4,3,44,43,37,34,29,26,20,19,52,51,38,33,30,25,12,11,53,50,46,41,22,17,13,10,62,57,55,48,15,8,6,1,54,49,14,9
             //E5,D5,E4,D4,H8,A8,H1,A1,F8,C8,H6,A6,H3,A3,F1,C1,F6,C6,F3,C3,E8,D8,H5,A5,H4,A4,E1,D1,E6,D6,F5,C5,F4,C4,E3,D3,E7,D7,G5,B5,G4,B4,E2,D2,F7,C7,G6,B6,G3,B3,F2,C2,G8,B8,H7,A7,H2,A2,G1,B1,G7,B7,G2,B2
         };
-         
+
         private Dictionary<int, int> squareDict = new Dictionary<int, int>(64);
-        
+
         private readonly Dictionary<BitBoard, int>[] scoreCaches = new Dictionary<BitBoard, int>[22];
 
         private int hits = 0;
 
         private void PrepareSearch(BitBoard board)
-        { 
+        {
             hits = 0;
             squareDict = orderedSquares.Select((c, i) => new { K = c, V = i }).ToDictionary(kv => kv.K, kv => kv.V);
 
             for (var i = 0; i < scoreCaches.Length; i++)
             {
                 scoreCaches[i] = new Dictionary<BitBoard, int>(1 << 19);
-            } 
+            }
         }
 
         public override SearchResult Search(BitBoard board, int depth)
@@ -88,6 +88,7 @@ namespace MonkeyOthello.Engines
 
             var score = -highScore;
             var foundPv = false;
+            var index = 0;
 
             var orderedMoves = OrderMovesByMobility(moves, board);
 
@@ -135,6 +136,10 @@ namespace MonkeyOthello.Engines
                         foundPv = true;
                     }
                 }
+
+                searchResult.TimeSpan = clock.Elapsed;
+                searchResult.Process = (++index) / (double)(moves.Length+1);
+                UpdateProgress?.Invoke(searchResult);
             }
 
             clock.Stop();
@@ -147,6 +152,7 @@ namespace MonkeyOthello.Engines
 
             var cacheInfo = string.Join(",", s.Select(c => $"({c.Index}:{c.Count})"));
             searchResult.Message += $" (hits: {hits}, cache info:{cacheInfo})";
+            searchResult.Process = 1;
 
             return searchResult;
         }

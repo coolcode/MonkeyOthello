@@ -52,7 +52,7 @@ namespace MonkeyOthello.Presentation
             //} while (!IsGameOver());
 
         }
-        
+
         public bool IsGameOver()
         {
             return Board.IsGameOver();
@@ -79,11 +79,11 @@ namespace MonkeyOthello.Presentation
             Busy = true;
 
             var pilot = new Pilot();
-            var result = pilot.Search(Board.ToBitBoard(), 6);
+            pilot.UpdateProgress = r => UpdateResult?.Invoke(r);
+            var result = pilot.Search(Board.ToBitBoard(), 8);
             PlayerPlay(result.Move);
             UpdatePlay?.Invoke(PlayerType.Computer, result.Move);
             UpdateResult?.Invoke(result);
-            //UpdateMessage?.Invoke("think...");
 
             Busy = false;
         }
@@ -111,16 +111,12 @@ namespace MonkeyOthello.Presentation
             var flips = Board.MakeMove(square);
         }
 
+        public bool Undo()
+        {
+            return Board.Reback();
+        }
+
         /*
-        protected void OnUpdateResult(SearchResult result)
-        {
-            UpdateResult?.Invoke(result);
-        }
-
-        protected void OnUpdatePlay(PlayerType player, int square)
-        {
-
-        }
         public bool StepUp()
         {
             int rebackNum = 0;

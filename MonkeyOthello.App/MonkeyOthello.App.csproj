@@ -45,9 +45,7 @@
     <Compile Include="Presentation\Board.cs" />
     <Compile Include="Presentation\Config.cs" />
     <Compile Include="Presentation\StoneType.cs" />
-    <Compile Include="Presentation\BoardPainter.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Presentation\BoardPainter.cs" />
     <Compile Include="Presentation\Game.cs" />
     <Compile Include="Presentation\GameMode.cs" />
     <Compile Include="Presentation\Stone.cs" />

@@ -3,14 +3,10 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using MonkeyOthello.Core;
+using System.Drawing.Imaging;
 
 namespace MonkeyOthello.Presentation
-{
-    public class BufferBoard : UserControl
-    {
-
-    }
-
+{ 
     public class BoardPainter
     {
         private Image blackStone, blackHint;
@@ -22,15 +18,16 @@ namespace MonkeyOthello.Presentation
         private readonly SizeF chessboundSize = new SizeF(44.5f, 44.5f);
         private readonly Size chessSize = new Size(44, 44);
         private Board board = new Board();
-        private BufferBoard bufferBoard;
+        private UserControl bufferBoard;
         private Graphics painter;
         private Bitmap buffer = new Bitmap(400, 400);
 
-        public BoardPainter(Board board, BufferBoard bufferBoard)
+        public BoardPainter(Board board, UserControl bufferBoard)
         {
             InitialResources();
             this.board = board;
             this.bufferBoard = bufferBoard;
+            
             painter = Graphics.FromImage(buffer);
             bufferBoard.Paint += BufferBoard_Paint;
            
@@ -134,6 +131,12 @@ namespace MonkeyOthello.Presentation
 
             return null;
         }
+
+        public void Save(string name, ImageFormat format)
+        {
+            buffer.Save(name, format);
+        }
+
 
     }
 }

@@ -31,10 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.cvsCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.useBookToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.pvsPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlOthelloBoard = new System.Windows.Forms.Panel();
             this.lblMessage = new System.Windows.Forms.ToolStripStatusLabel();
@@ -96,26 +93,11 @@
             this.cvsCToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.cvsCToolStripMenuItem.Text = "Monkey Vs Monkey";
             // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(147, 6);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(147, 6);
-            // 
             // useBookToolStripMenuItem
             // 
             this.useBookToolStripMenuItem.Name = "useBookToolStripMenuItem";
-            this.useBookToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.useBookToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.useBookToolStripMenuItem.Text = "Opening Book";
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(147, 6);
             // 
             // pvsPToolStripMenuItem
             // 
@@ -128,7 +110,7 @@
             // 
             this.pnlOthelloBoard.BackgroundImage = global::MonkeyOthello.Properties.Resources.background;
             this.pnlOthelloBoard.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pnlOthelloBoard.Location = new System.Drawing.Point(1, 50);
+            this.pnlOthelloBoard.Location = new System.Drawing.Point(6, 30);
             this.pnlOthelloBoard.Name = "pnlOthelloBoard";
             this.pnlOthelloBoard.Size = new System.Drawing.Size(400, 400);
             this.pnlOthelloBoard.TabIndex = 34;
@@ -136,9 +118,12 @@
             // 
             // lblMessage
             // 
+            this.lblMessage.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.lblMessage.Name = "lblMessage";
+            this.lblMessage.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.lblMessage.Size = new System.Drawing.Size(16, 19);
             this.lblMessage.Text = "   ";
+            this.lblMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblNodes
             // 
@@ -228,9 +213,9 @@
             this.toolStripStatusLabel6,
             this.lblNodes,
             this.lblMessage});
-            this.statMain.Location = new System.Drawing.Point(0, 453);
+            this.statMain.Location = new System.Drawing.Point(0, 439);
             this.statMain.Name = "statMain";
-            this.statMain.Size = new System.Drawing.Size(559, 24);
+            this.statMain.Size = new System.Drawing.Size(569, 24);
             this.statMain.TabIndex = 37;
             this.statMain.Text = "statusStrip1";
             // 
@@ -264,15 +249,17 @@
             // 
             // lsvMoves
             // 
+            this.lsvMoves.AutoArrange = false;
             this.lsvMoves.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colNum,
             this.colColor,
             this.colMove,
             this.colEval});
             this.lsvMoves.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.lsvMoves.Location = new System.Drawing.Point(405, 150);
+            this.lsvMoves.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lsvMoves.Location = new System.Drawing.Point(415, 130);
             this.lsvMoves.Name = "lsvMoves";
-            this.lsvMoves.Size = new System.Drawing.Size(149, 298);
+            this.lsvMoves.Size = new System.Drawing.Size(149, 300);
             this.lsvMoves.TabIndex = 38;
             this.Tips.SetToolTip(this.lsvMoves, "Moves History");
             this.lsvMoves.UseCompatibleStateImageBehavior = false;
@@ -287,19 +274,19 @@
             // 
             this.colColor.Text = "○";
             this.colColor.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.colColor.Width = 30;
+            this.colColor.Width = 26;
             // 
             // colMove
             // 
             this.colMove.Text = "Move";
             this.colMove.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.colMove.Width = 40;
+            this.colMove.Width = 38;
             // 
             // colEval
             // 
             this.colEval.Text = "Eval";
-            this.colEval.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.colEval.Width = 40;
+            this.colEval.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.colEval.Width = 38;
             // 
             // picMonkey
             // 
@@ -375,17 +362,14 @@
             this.pvsPToolStripMenuItem,
             this.cvsCToolStripMenuItem});
             this.gameModetoolStripMenuItem.Name = "gameModetoolStripMenuItem";
-            this.gameModetoolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.gameModetoolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.gameModetoolStripMenuItem.Text = "Game Mode";
             // 
             // optionOToolStripMenuItem
             // 
             this.optionOToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.gameModetoolStripMenuItem,
-            this.toolStripSeparator2,
-            this.useBookToolStripMenuItem,
-            this.toolStripSeparator3,
-            this.toolStripSeparator4});
+            this.useBookToolStripMenuItem});
             this.optionOToolStripMenuItem.Name = "optionOToolStripMenuItem";
             this.optionOToolStripMenuItem.Size = new System.Drawing.Size(78, 20);
             this.optionOToolStripMenuItem.Text = "Options(&O)";
@@ -493,7 +477,7 @@
             this.helpHToolStripMenuItem});
             this.menuMain.Location = new System.Drawing.Point(0, 0);
             this.menuMain.Name = "menuMain";
-            this.menuMain.Size = new System.Drawing.Size(559, 24);
+            this.menuMain.Size = new System.Drawing.Size(569, 24);
             this.menuMain.TabIndex = 35;
             this.menuMain.Text = "menuStrip1";
             // 
@@ -505,9 +489,9 @@
             this.groupBox1.Controls.Add(this.lblblackNum);
             this.groupBox1.Controls.Add(this.lblwhiteNum);
             this.groupBox1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.groupBox1.Location = new System.Drawing.Point(407, 50);
+            this.groupBox1.Location = new System.Drawing.Point(417, 30);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(142, 92);
+            this.groupBox1.Size = new System.Drawing.Size(147, 92);
             this.groupBox1.TabIndex = 39;
             this.groupBox1.TabStop = false;
             // 
@@ -515,7 +499,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(559, 477);
+            this.ClientSize = new System.Drawing.Size(569, 463);
             this.Controls.Add(this.pnlOthelloBoard);
             this.Controls.Add(this.statMain);
             this.Controls.Add(this.lsvMoves);
@@ -544,10 +528,7 @@
         #endregion
 
         private System.Windows.Forms.ToolStripMenuItem cvsCToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem useBookToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem pvsPToolStripMenuItem;
         private System.Windows.Forms.Panel pnlOthelloBoard;
         private System.Windows.Forms.ToolStripStatusLabel lblMessage;

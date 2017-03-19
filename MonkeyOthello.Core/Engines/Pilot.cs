@@ -16,12 +16,12 @@ namespace MonkeyOthello.Engines
             if (empties.InRange(40, 60))
             {
                 engine = new MonkeyOpeningEngine();
-                depth = 6;
+                depth = 8;
             }
             else if (empties.InRange(19, 39))
             {
                 engine = new MonkeyOpeningEngine();
-                depth = 6;
+                depth = 8;
             }
             else if (empties.InRange(0, 18))
             {
@@ -33,6 +33,7 @@ namespace MonkeyOthello.Engines
                 throw new Exception($"invalid empties:{empties}");
             }
 
+            engine.UpdateProgress = UpdateProgress;
             return engine.Search(board, depth);
         }
 
