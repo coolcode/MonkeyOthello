@@ -41,6 +41,7 @@
     <Compile Include="Core\Clock.cs" />
     <Compile Include="Core\Constants.cs" />
     <Compile Include="Core\RawDictionary.cs" />
+    <Compile Include="Engines\MCTSEngine.cs" />
     <Compile Include="Engines\MonkeyEngine.cs" />
     <Compile Include="Engines\MonkeyEngineV1.0.cs" />
     <Compile Include="Engines\MonkeyEngineV1.1.cs" />
@@ -50,6 +51,7 @@
     <Compile Include="Engines\IEngine.cs" />
     <Compile Include="Engines\IEvaluation.cs" />
     <Compile Include="Engines\MonkeyOpeningEngine.cs" />
+    <Compile Include="Engines\Node.cs" />
     <Compile Include="Engines\Pilot.cs" />
     <Compile Include="Engines\RandomEngine.cs" />
     <Compile Include="Engines\SimpleEvaluation.cs" />

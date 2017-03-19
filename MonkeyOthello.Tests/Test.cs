@@ -14,7 +14,7 @@ namespace MonkeyOthello.Tests
     {
         #region test data
         //113
-        private static string[] test_data = new string[] {
+        private static string[] testData = new string[] {
 //"........b.wwbw..bbwbbwwwbwbbbwwwbbwbbwwwbbbwbwww..bbwbw....bb...",
 //"........b.wwbw..bbwbbwwwbwbbbwwwbbwbbwwwbbbwbwww..bbwbw.........",
 "..wwwww.b.wwbw..bbwbbwwwbwbbbwwwbbwbbwwwbbbwbwww..bbwbw....bbbbw",
@@ -135,17 +135,24 @@ namespace MonkeyOthello.Tests
             };
         #endregion
 
+        public static void Fight()
+        {
+            var engines = new IEngine[] { new Pilot(), new MonkeyOthelloV2Engine() };
+            IColosseum game = new Colosseum();
+            game.Fight(engines);
+        }
 
         public static void TestEndGameSearch()
         {
             if (File.Exists("test-data.txt"))
             {
-                test_data = File.ReadAllLines("test-data.txt");
+                testData = File.ReadAllLines("test-data.txt");
             }
 
             var color = 'w';
             var sw = new Stopwatch();
             var engines = new IEngine[] {
+                    //new MCTSEngine(),
                     new MonkeyEngineV10(),
                     new MonkeyEngine(),
                     //new EndGameEngine(),
@@ -154,7 +161,7 @@ namespace MonkeyOthello.Tests
             Console.WriteLine(string.Join(" vs. ", engines.Select(c => c.Name)));
             var ts = new TimeSpan[engines.Length];
             sw.Start();
-            var length = Math.Min(20, test_data.Length);// 10;// = bds.Length; 
+            var length = Math.Min(20, testData.Length);// 10;// = bds.Length; 
             for (var i = 0; i < length; i++)
             {
                 int empties = 0, white = 0, black = 0;
@@ -163,17 +170,17 @@ namespace MonkeyOthello.Tests
                 for (var j = 0; j < 64; j++)
                 {
                     var x = 1ul << j;
-                    if (test_data[i][j] == 'w')
+                    if (testData[i][j] == 'w')
                     {
                         w |= x;
                         white++;
                     }
-                    else if (test_data[i][j] == 'b')
+                    else if (testData[i][j] == 'b')
                     {
                         b |= x;
                         black++;
                     }
-                    else if (test_data[i][j] == '.')
+                    else if (testData[i][j] == '.')
                     {
                         empties++;
                     }
@@ -225,7 +232,7 @@ namespace MonkeyOthello.Tests
         public static void TestBitBoard()
         {
             var board1 = new BitBoard(9246146104748420220UL, 8659321588746490112UL);
-            var board2 = new BitBoard(8659321588746490112UL, 9246146104748420220UL );
+            var board2 = new BitBoard(8659321588746490112UL, 9246146104748420220UL);
             var board3 = new BitBoard(9246146104748420220UL, 8659321588746490112UL);
             Console.WriteLine($"b1 hash: {board1.GetHashCode()}");
             Console.WriteLine($"b2 hash: {board2.GetHashCode()}");
@@ -324,12 +331,12 @@ namespace MonkeyOthello.Tests
                    Console.WriteLine(string.Join(",", list));
                };
 
-             Console.WriteLine($"now: "   );
+            Console.WriteLine($"now: ");
             printList(squareList);
 
             for (var current = squareList.First; current != null; current = current.Next)
             {
-                var next = current.Next; 
+                var next = current.Next;
                 squareList.Remove(current);
                 Console.WriteLine($"remove: {current.Value}");
                 printList(squareList);
@@ -349,6 +356,6 @@ namespace MonkeyOthello.Tests
                 //Console.WriteLine(current.Value);
             }
         }
-        
+
     }
 }

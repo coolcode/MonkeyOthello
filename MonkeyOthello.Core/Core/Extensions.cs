@@ -123,5 +123,10 @@ namespace MonkeyOthello.Core
         {
             return value >= from && value <= to;
         }
+
+        public static int Opp(this int color)
+        {
+            return 1 ^ color;
+        }
     }
 }

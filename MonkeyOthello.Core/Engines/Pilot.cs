@@ -9,6 +9,14 @@ namespace MonkeyOthello.Engines
 {
     public class Pilot : BaseEngine
     {
+        public override string Name
+        {
+            get
+            {
+                return "MonkeyOthelloV3";
+            }
+        }
+
         public override SearchResult Search(BitBoard board, int depth)
         {
             IEngine engine;

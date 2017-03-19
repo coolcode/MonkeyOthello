@@ -12,6 +12,7 @@ namespace MonkeyOthello.Tests
         {
             try
             {
+                //Test.Fight();
                 //Test.TestBitBoard();
                 //Test.TestLinkedList();
                 //Test.GenTestData();
@@ -20,7 +21,7 @@ namespace MonkeyOthello.Tests
                 //Test.TestFlips();
                 Console.WriteLine("done!");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e);
             }

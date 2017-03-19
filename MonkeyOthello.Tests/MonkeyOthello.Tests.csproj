@@ -34,6 +34,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MonkeyOthelloV2, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\MonkeyOthelloV2.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,7 +45,10 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleCopy.cs" />
     <Compile Include="Engines\EGEngine.cs" />
+    <Compile Include="Engines\Colosseum.cs" />
+    <Compile Include="Engines\MonkeyOthelloV2Engine.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Test.cs" />
@@ -56,6 +63,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="MonkeyOthelloV2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="test-result-20.txt" />
     <Content Include="test-result.txt" />
   </ItemGroup>

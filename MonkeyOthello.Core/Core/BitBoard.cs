@@ -35,7 +35,7 @@ namespace MonkeyOthello.Core
         {
             return new BitBoard(1UL << 28 | 1UL << 35, 1UL << 27 | 1UL << 36);
         }
-        
+
         public BitBoard Switch()
         {
             return new BitBoard(OpponentPieces, PlayerPieces);
@@ -90,10 +90,15 @@ namespace MonkeyOthello.Core
             return (PlayerPieces == comparedGameState.PlayerPieces) && (OpponentPieces == comparedGameState.OpponentPieces);
         }
 
+        public bool IsGameOver()
+        {
+            return IsFull || (!Rule.CanMove(this) && !Rule.CanMove(Switch()));
+        }
+
         public override int GetHashCode()
-        { 
-           // return PlayerPieces.GetHashCode() | OpponentPieces.GetHashCode();//same speed
-           return PlayerPieces.GetHashCode() ^ (int) (OpponentPieces>>33) ; 
+        {
+            // return PlayerPieces.GetHashCode() | OpponentPieces.GetHashCode();//same speed
+            return PlayerPieces.GetHashCode() ^ (int)(OpponentPieces >> 33);
         }
 
         public override string ToString()
@@ -101,7 +106,22 @@ namespace MonkeyOthello.Core
             return Draw(multiLine: true);
         }
 
-        public string Draw(bool multiLine = false)
+        public string Draw(string color)
+        {
+            if (color.ToLower() == "black" || color.ToLower() == "b")
+            {
+                return Draw(ownSymbol: "X", oppSymbol: "O", multiLine: true);
+            }
+            else
+            {
+                return Draw(ownSymbol: "O", oppSymbol: "X", multiLine: true);
+            }
+        }
+
+        public string Draw(string ownSymbol = "w",
+            string oppSymbol = "b",
+            string emptySymbol = ".",
+            bool multiLine = false)
         {
             var sb = new StringBuilder();
             for (var i = 0; i < Constants.StonesCount; i++)
@@ -114,15 +134,15 @@ namespace MonkeyOthello.Core
                 var pos = 1UL << i;
                 if ((PlayerPieces & pos) > 0)
                 {
-                    sb.Append("w");
+                    sb.Append(ownSymbol);
                 }
                 else if ((OpponentPieces & pos) > 0)
                 {
-                    sb.Append("b");
+                    sb.Append(oppSymbol);
                 }
                 else
                 {
-                    sb.Append(".");
+                    sb.Append(emptySymbol);
                 }
             }
 

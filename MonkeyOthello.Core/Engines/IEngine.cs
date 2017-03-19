@@ -29,13 +29,15 @@ namespace MonkeyOthello.Engines
 
         public override string ToString()
         {
-            return string.Format("Best Move:{0}, Score:{1:N}, Nodes:{2}, TimeSpan:{3}, Message:{4}, NPS:{5}",
+            var notation = Move.ToNotation();
+            return string.Format("Best Move:{0} {6}, Score:{1:N}, Nodes:{2}, TimeSpan:{3:F1}s, Message:{4}, NPS:{5}",
                                  Move,
                                  Score,
                                  Nodes,
-                                 TimeSpan,
+                                 TimeSpan.TotalSeconds,
                                  Message,
-                                 Nodes / (TimeSpan.TotalSeconds + 0.000001));
+                                 Nodes / (TimeSpan.TotalSeconds + 0.000001),
+                                 notation);
         }
     }
 
