@@ -137,14 +137,15 @@ namespace MonkeyOthello.Tests
 
         public static void GenerateKnowledge()
         {
-            var engines = new IEngine[] { new MonkeyOthelloV2Engine(), new RandomEngine() };
+            var engines = new IEngine[] { new RandomEngine("Random1"), new RandomEngine("Random2") };
+            //var engines = new IEngine[] { new MonkeyV2Engine(), new FuzzyEngine() };
             IColosseum game = new Knowledge();
             game.Fight(engines, 1000);
         }
 
         public static void Fight()
         {
-            var engines = new IEngine[] { new Pilot(), new MonkeyOthelloV2Engine() };
+            var engines = new IEngine[] { new Pilot(), new MonkeyV2Engine() };
             IColosseum game = new Colosseum();
             game.Fight(engines);
         }

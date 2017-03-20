@@ -47,10 +47,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleCopy.cs" />
+    <Compile Include="Engines\FuzzyEngine.cs" />
     <Compile Include="Engines\Knowledge.cs" />
-    <Compile Include="Engines\EGEngine.cs" />
+    <Compile Include="Engines\EndGameEngine.cs" />
     <Compile Include="Engines\Colosseum.cs" />
-    <Compile Include="Engines\MonkeyOthelloV2Engine.cs" />
+    <Compile Include="Engines\MonkeyV2Engine.cs" />
+    <Compile Include="Engines\V2Engine.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Test.cs" />

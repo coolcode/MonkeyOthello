@@ -15,6 +15,7 @@ namespace MonkeyOthello.Tests.Engines
     {
         private string fightPath = Path.Combine(Environment.CurrentDirectory, "fight-hist");
         private string knowledgePath = Path.Combine(Environment.CurrentDirectory, "knowledge");
+        private string folderName = new DirectoryInfo(Environment.CurrentDirectory).Name;
 
         public Knowledge()
         {
@@ -38,7 +39,7 @@ namespace MonkeyOthello.Tests.Engines
                 {
                     engines.PK((e1, e2) =>
                     {
-                        Console.Title = $"{i} {e1.Name} vs {e2.Name} [{sw.Elapsed}]";
+                        Console.Title = $"{i} {e1.Name} vs {e2.Name} [{sw.Elapsed}] [{folderName}]";
                         var board = BitBoard.NewGame();
                         Fight(e1, e2, board, i);
                     });
@@ -52,7 +53,7 @@ namespace MonkeyOthello.Tests.Engines
             }
 
             sw.Stop();
-            Console.Title += $"[done!] [{sw.Elapsed}]";
+            Console.Title = $"[done!] [{sw.Elapsed}] [{folderName}]";
         }
 
         public IEnumerable<IEngine> FindGladiators()
