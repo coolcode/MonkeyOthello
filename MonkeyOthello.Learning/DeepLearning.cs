@@ -14,7 +14,7 @@ namespace MonkeyOthello.Learning
 {
     public class DeepLearning
     {
-        private static readonly string dataPath = @"k-data\random\";//
+        private static readonly string dataPath = @"k-data\";//random\
         private static int empties = 19;
         private static readonly string networkPath = Path.Combine(Environment.CurrentDirectory, "networks");
         private static string networkFile;
@@ -38,7 +38,7 @@ namespace MonkeyOthello.Learning
             var outputs = items.Select(x => x.outputs).ToArray();
 
             {
-               // Learn(inputs, outputs, trainRate: 0.99);
+               Learn(inputs, outputs, trainRate: 0.99);
             }
             {
                 var n = (int)(count * 0.8);

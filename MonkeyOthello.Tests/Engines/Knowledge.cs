@@ -233,7 +233,7 @@ namespace MonkeyOthello.Tests.Engines
             }
             else
             {
-                var endGameEngine = new EndGameEngine();
+                var endGameEngine = new ZebraEngine();
                 sr = endGameEngine.Search(board, empties);
             }
             sw.Stop();

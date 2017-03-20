@@ -137,15 +137,17 @@ namespace MonkeyOthello.Tests
 
         public static void GenerateKnowledge()
         {
-            var engines = new IEngine[] { new RandomEngine("Random1"), new RandomEngine("Random2") };
+            //var engines = new IEngine[] { new RandomEngine("Random1"), new RandomEngine("Random2") };
             //var engines = new IEngine[] { new MonkeyV2Engine(), new FuzzyEngine() };
+            var engines = new IEngine[] { new EdaxEngine(), new FuzzyEngine() };
             IColosseum game = new Knowledge();
-            game.Fight(engines, 1000);
+            game.Fight(engines, 3000);
         }
 
         public static void Fight()
         {
-            var engines = new IEngine[] { new Pilot(), new MonkeyV2Engine() };
+            // new Pilot(), new MonkeyV2Engine(), new EdaxEngine()
+            var engines = new IEngine[] { new EdaxEngine(), new MonkeyV2Engine() };
             IColosseum game = new Colosseum();
             game.Fight(engines);
         }
@@ -154,7 +156,7 @@ namespace MonkeyOthello.Tests
         {
             var board = new BitBoard(23502599851429632UL, 560695349311UL);
             Console.WriteLine(board.Draw("black"));
-            var engine = new EndGameEngine();
+            var engine = new ZebraEngine();
             var r = engine.Search(board, board.EmptyPiecesCount());
             Console.WriteLine(r);
         }
@@ -170,9 +172,10 @@ namespace MonkeyOthello.Tests
             var sw = new Stopwatch();
             var engines = new IEngine[] {
                     //new MCTSEngine(),
-                    new MonkeyEngineV10(),
-                    new MonkeyEngine(),
-                    //new EndGameEngine(),
+                    //new MonkeyEngineV10(),
+                    //new MonkeyEngine(),
+                    new ZebraEngine(),
+                    new EdaxEngine(),
                     //new AlphaBetaEngine(),
                 };
             Console.WriteLine(string.Join(" vs. ", engines.Select(c => c.Name)));
@@ -212,9 +215,7 @@ namespace MonkeyOthello.Tests
                 var index = 0;
                 while (index < engines.Length)
                 {
-                    var r = engines[index].Search(board, empties);
-                    //Console.WriteLine($"--cache info: {Rule.CacheInfo()}");
-                    //Rule.ClearCache();
+                    var r = engines[index].Search(board, empties); 
                     Console.WriteLine($"[{engines[index].Name}] r{index + 1}: {r}");
                     ts[index] += r.TimeSpan;
                     index++;

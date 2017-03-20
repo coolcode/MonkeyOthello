@@ -47,9 +47,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleCopy.cs" />
+    <Compile Include="Engines\EdaxEngine.cs" />
     <Compile Include="Engines\FuzzyEngine.cs" />
     <Compile Include="Engines\Knowledge.cs" />
-    <Compile Include="Engines\EndGameEngine.cs" />
+    <Compile Include="Engines\ZebraEngine.cs" />
     <Compile Include="Engines\Colosseum.cs" />
     <Compile Include="Engines\MonkeyV2Engine.cs" />
     <Compile Include="Engines\V2Engine.cs" />
@@ -59,6 +60,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Tools\edax\data\book.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Tools\edax\data\eval.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MonkeyOthello.Core\MonkeyOthello.Core.csproj">
@@ -76,6 +83,9 @@
     </Content>
     <Content Include="test-result-20.txt" />
     <Content Include="test-result.txt" />
+    <Content Include="Tools\edax\wEdax-x64.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="EGEngine.dll">

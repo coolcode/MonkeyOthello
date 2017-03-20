@@ -19,14 +19,17 @@ namespace MonkeyOthello.Core
         public static int? ToIndex(this string algebraicNotation)
         {
             if (string.IsNullOrEmpty(algebraicNotation))
+            {
                 return null;
+            }
 
+            algebraicNotation = algebraicNotation.ToLower();
             var charArray = algebraicNotation.ToCharArray();
             var column = int.Parse(((char)(charArray[0] - 48)).ToString());
             var row = int.Parse(charArray[1].ToString());
 
             if (column < 1 || column > 8 || row < 1 || row > 8)
-                throw new Exception();
+                throw new Exception($"Invalid Notation: {algebraicNotation}");
 
             var x = row - 1;
             var y = column - 1;
