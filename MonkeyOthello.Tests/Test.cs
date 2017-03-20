@@ -135,11 +135,27 @@ namespace MonkeyOthello.Tests
             };
         #endregion
 
+        public static void GenerateKnowledge()
+        {
+            var engines = new IEngine[] { new MonkeyOthelloV2Engine(), new RandomEngine() };
+            IColosseum game = new Knowledge();
+            game.Fight(engines, 1000);
+        }
+
         public static void Fight()
         {
             var engines = new IEngine[] { new Pilot(), new MonkeyOthelloV2Engine() };
             IColosseum game = new Colosseum();
             game.Fight(engines);
+        }
+
+        public static void TestEndGameEngine()
+        {
+            var board = new BitBoard(23502599851429632UL, 560695349311UL);
+            Console.WriteLine(board.Draw("black"));
+            var engine = new EndGameEngine();
+            var r = engine.Search(board, board.EmptyPiecesCount());
+            Console.WriteLine(r);
         }
 
         public static void TestEndGameSearch()
@@ -292,7 +308,7 @@ namespace MonkeyOthello.Tests
             for (var i = 0; i < 10; i++)
             {
                 var board = BitBoard.NewGame();
-                while (board.EmptyPieces.CountBits() > depth)
+                while (board.EmptyPiecesCount() > depth)
                 {
                     var moves = Rule.FindMoves(board);
 
@@ -310,7 +326,7 @@ namespace MonkeyOthello.Tests
                     board = Rule.MoveSwitch(board, pos);
                 }
 
-                if (board.EmptyPieces.CountBits() > depth)
+                if (board.EmptyPiecesCount() > depth)
                 {
                     continue;
                 }

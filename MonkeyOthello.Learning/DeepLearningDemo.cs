@@ -14,8 +14,8 @@ namespace MonkeyOthello.Learning
 {
     public class DeepLearningDemo
     {
-        private static readonly string file = "data.txt";
-        private const int count = 10000;
+        private static readonly string file = "data-countbits.txt";
+        private const int count = 5000;
 
         public static void Run()
         {
@@ -23,7 +23,38 @@ namespace MonkeyOthello.Learning
             var data = LoadData();
             var inputs = data.Select(x => x.inputs).ToArray();
             var outputs = data.Select(x => x.outputs).ToArray();
-            Learn(inputs, outputs);
+            // Learn(inputs, outputs);
+
+            {
+                var n = (int)(count * 0.8);
+                var testInputs = inputs.Skip(n).ToArray();
+                var testOutputs = outputs.Skip(n).ToArray();
+                Test(testInputs, testOutputs);
+            }
+            {
+                var n = (int)(count * 0.0);
+                var testInputs = inputs.Skip(n).ToArray();
+                var testOutputs = outputs.Skip(n).ToArray();
+                Test(testInputs, testOutputs);
+            }
+        }
+
+        private static void Test(double[][] inputs, double[][] outputs)
+        {
+            var network = DeepBeliefNetwork.Load(@"deeplearning-results\deeplearning-countbits.net");
+            // Test the resulting accuracy.
+            int correct = 0;
+            for (int i = 0; i < inputs.Length; i++)
+            {
+                double[] outputValues = network.Compute(inputs[i]);
+                if (Compare(outputValues, outputs[i]))
+                {
+                    correct++;
+                }
+            }
+            
+            Console.WriteLine("Correct " + correct + "/" + inputs.Length + ", " + Math.Round(((double)correct / (double)inputs.Length * 100), 2) + "%");
+
         }
 
         private static double[] Func(double[] inputs)
@@ -148,7 +179,7 @@ namespace MonkeyOthello.Learning
                     correct++;
                 }
             }
-
+            network.Save("deeplearning-countbits.net");
             Console.WriteLine("Correct " + correct + "/" + testInputs.Length + ", " + Math.Round(((double)correct / (double)testInputs.Length * 100), 2) + "%");
 
         }

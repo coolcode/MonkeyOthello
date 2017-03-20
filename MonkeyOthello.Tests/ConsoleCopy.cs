@@ -68,6 +68,14 @@ namespace MonkeyOthello.Tests
             Console.SetOut(doubleWriter);
         }
 
+        public void Flush()
+        {
+            if (fileWriter != null)
+            {
+                fileWriter.Flush();
+            }
+        }
+
         public void Dispose()
         {
             Console.SetOut(oldOut);

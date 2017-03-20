@@ -156,7 +156,7 @@ namespace MonkeyOthello.Engines
             var opp = current.Player.Opp();
 
             /*
-            var empties = board.EmptyPieces.CountBits();
+            var empties = board.EmptyPiecesCount();
             if (empties <= 18)
             {
                 var endGameEngine = new MonkeyEngine();
@@ -197,7 +197,7 @@ namespace MonkeyOthello.Engines
                 board = Rule.MoveSwitch(board, move);
                 player = player.Opp();
                 
-                /*empties = board.EmptyPieces.CountBits();
+                /*empties = board.EmptyPiecesCount();
                 if (empties <= 18)
                 {
                     var endGameEngine = new MonkeyEngine();

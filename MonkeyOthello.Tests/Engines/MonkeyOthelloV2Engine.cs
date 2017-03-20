@@ -13,6 +13,14 @@ namespace MonkeyOthello.Tests.Engines
 {
     public class MonkeyOthelloV2Engine : BaseEngine
     {
+        public override string Name
+        {
+            get
+            {
+                return "MonkeyV2";
+            }
+        }
+
         public override SearchResult Search(BitBoard bb, int depth)
         {
             var btext = bb.Draw();

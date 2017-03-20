@@ -14,7 +14,7 @@ namespace MonkeyOthello.Tests.Engines
     {
         public override SearchResult Search(BitBoard bb, int depth)
         {
-            EGEngine.MyDllAI_SetDepth(6, 20, 18);
+            EGEngine.MyDllAI_SetDepth(6, 22, 20);
 
             var board = new int[91];
             for (var j = 0; j < board.Length; j++)
@@ -56,10 +56,8 @@ namespace MonkeyOthello.Tests.Engines
         {
             var sw = Stopwatch.StartNew();
             var col = (color == 'w' ? 1 : 0);
-
-            //-1代表电脑默认搜索，0代表终局确切比分搜索，1代表胜负平搜索
+            
             var mode = -1;
-            //置换表大小(15≈1M,16≈2M,17≈4M,...,20≈32M
             var nbits = 20;
             EGEngine.MyDllAI_Slove(board, col, mode, nbits);
             var bestMove = EGEngine.MyDllAI_GetBestMove();
@@ -80,45 +78,30 @@ namespace MonkeyOthello.Tests.Engines
         }
     }
 
+    /// <summary>
+    /// End game engine
+    /// </summary>
     public class EGEngine
     {
-        /// <summary>
-        /// 搜索深度设置
-        /// </summary>
-        /// <param name="mid"></param>
-        /// <param name="wld"></param>
-        /// <param name="end"></param>
         [DllImport("EGEngine", EntryPoint = "SetDepth", SetLastError = true)]
         public static extern void MyDllAI_SetDepth(int mid, int wld, int end);
 
         /// <summary>
-        /// 搜索
+        /// Search
         /// </summary>
-        /// <param name="curboard">1*91的数组</param>
-        /// <param name="color">0代表黑色，1代表白色</param>
-        /// <param name="mode">-1代表电脑默认搜索，0代表终局确切比分搜索，1代表胜负平搜索</param>
-        /// <param name="n_bits"></param>
+        /// <param name="board">array 1*91</param>
+        /// <param name="color">0:black, 1:white</param>
+        /// <param name="mode">-1:default, engine decides by itself; 0:return winning or losing pieces; 1:return win or lose only</param>
+        /// <param name="n_bits">hashtable size: 15≈1M,16≈2M,17≈4M,...,20≈32M</param>
         [DllImport("EGEngine", EntryPoint = "AI_Slove", SetLastError = true)]
-        public static extern void MyDllAI_Slove(int[] curboard, int color, int mode, int n_bits);
+        public static extern void MyDllAI_Slove(int[] board, int color, int mode, int nbits);
 
-        /// <summary>
-        /// 获取搜索的估值
-        /// </summary>
-        /// <returns></returns>
         [DllImport("EGEngine", EntryPoint = "AI_GetEval", SetLastError = true)]
         public static extern int MyDllAI_GetEval();
 
-        /// <summary>
-        /// 获取搜索的结点数
-        /// </summary>
-        /// <returns></returns>
         [DllImport("EGEngine", EntryPoint = "AI_GetNodes", SetLastError = true)]
         public static extern int MyDllAI_GetNodes();
 
-        /// <summary>
-        /// 获取搜索的最佳走步
-        /// </summary>
-        /// <returns></returns>
         [DllImport("EGEngine", EntryPoint = "AI_GetBestMove", SetLastError = true)]
         public static extern int MyDllAI_GetBestMove();
     }

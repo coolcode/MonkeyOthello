@@ -34,7 +34,7 @@ namespace MonkeyOthello.Tests.Engines
             int i = 0;
             while (i++ < count)
             {
-                engines.Fight((e1, e2) =>
+                engines.PK((e1, e2) =>
                 {
                     var board = BitBoard.NewGame();
                     Fight(e1, e2, targetPath, board);
@@ -95,7 +95,7 @@ namespace MonkeyOthello.Tests.Engines
                 sw.Stop();
                 timespans[turn] += sw.Elapsed;
 
-                Console.WriteLine($"[{engines[turn].Name}][{board.EmptyPieces.CountBits()}] {searchResult}");
+                Console.WriteLine($"[{engines[turn].Name}][{board.EmptyPiecesCount()}] {searchResult}");
 
                 if (searchResult.Move < 0 ||
                     searchResult.Move >= Constants.StonesCount ||
@@ -160,7 +160,7 @@ namespace MonkeyOthello.Tests.Engines
 
     static class Extensions
     {
-        public static void Fight<T>(this IEnumerable<T> list, Action<T, T> action) where T : class
+        public static void PK<T>(this IEnumerable<T> list, Action<T, T> action) where T : class
         {
             foreach (T t1 in list)
                 foreach (T t2 in list)
@@ -179,7 +179,7 @@ namespace MonkeyOthello.Tests.Engines
 
         public FightResult(BitBoard board, IEngine[] engines, int turn)
         {
-            var diff = board.PlayerPlayerPiecesCount() - board.OpponentPiecesPiecesCount();
+            var diff = board.PlayerPiecesCount() - board.OpponentPiecesCount();
 
             var winnerIndex = diff > 0 ? turn : 1 - turn;
 

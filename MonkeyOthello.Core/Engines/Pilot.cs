@@ -20,7 +20,7 @@ namespace MonkeyOthello.Engines
         public override SearchResult Search(BitBoard board, int depth)
         {
             IEngine engine;
-            var empties = board.EmptyPieces.CountBits();
+            var empties = board.EmptyPiecesCount();
             if (empties.InRange(40, 60))
             {
                 engine = new MonkeyOpeningEngine();

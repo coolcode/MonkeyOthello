@@ -15,8 +15,9 @@ namespace MonkeyOthello.Tests
             try
             {
                 var sw = Stopwatch.StartNew();
-                DeepLearningDemo.Run();
-                sw.Stop();
+                Test.TestEndGameEngine();
+               // Test.GenerateKnowledge();
+                //DeepLearningDemo.Run();
                 //DLDemo.Run();
                 //Test.Fight();
                 //Test.TestBitBoard();
@@ -25,6 +26,7 @@ namespace MonkeyOthello.Tests
                 //Test.TestEndGameSearch();
                 //Test.TestV2IndexToV3Index();
                 //Test.TestFlips();
+                sw.Stop();
                 Console.WriteLine($"done! {sw.Elapsed}");
             }
             catch (Exception e)

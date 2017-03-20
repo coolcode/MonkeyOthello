@@ -16,10 +16,10 @@ namespace MonkeyOthello.Engines
         public int Eval(BitBoard board)
         {
             var oppBoard = board.Switch();
-            var empties = board.EmptyPieces.CountBits();
+            var empties = board.EmptyPiecesCount();
             //chess count
-            var mydisc = board.PlayerPlayerPiecesCount();
-            var opdisc = board.OpponentPiecesPiecesCount(); ;
+            var mydisc = board.PlayerPiecesCount();
+            var opdisc = board.OpponentPiecesCount(); ;
             //mobility
             var mymob = Rule.Mobility(board);
             var opmob = Rule.Mobility(oppBoard);
