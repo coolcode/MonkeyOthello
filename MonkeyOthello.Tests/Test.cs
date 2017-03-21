@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Linq;
 using System.IO;
+using System.Configuration;
 
 namespace MonkeyOthello.Tests
 {
@@ -140,7 +141,10 @@ namespace MonkeyOthello.Tests
             //var engines = new IEngine[] { new RandomEngine("Random1"), new RandomEngine("Random2") };
             //var engines = new IEngine[] { new MonkeyV2Engine(), new FuzzyEngine() };
             var engines = new IEngine[] { new EdaxEngine(), new FuzzyEngine() };
-            IColosseum game = new Knowledge();
+            var trainDepth = 0;
+            int.TryParse(ConfigurationManager.AppSettings["TrainDepth"], out trainDepth);
+            Console.WriteLine($"TrainDepth: {trainDepth}");
+            IColosseum game = new Knowledge(trainDepth);
             game.Fight(engines, 3000);
         }
 
@@ -215,7 +219,7 @@ namespace MonkeyOthello.Tests
                 var index = 0;
                 while (index < engines.Length)
                 {
-                    var r = engines[index].Search(board, empties); 
+                    var r = engines[index].Search(board, empties);
                     Console.WriteLine($"[{engines[index].Name}] r{index + 1}: {r}");
                     ts[index] += r.TimeSpan;
                     index++;

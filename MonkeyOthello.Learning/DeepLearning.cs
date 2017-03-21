@@ -14,7 +14,7 @@ namespace MonkeyOthello.Learning
 {
     public class DeepLearning
     {
-        private static readonly string dataPath = @"k-data\";//random\
+        private static readonly string dataPath = @"k-data\";//edax-fuzzy\random\
         private static int empties = 19;
         private static readonly string networkPath = Path.Combine(Environment.CurrentDirectory, "networks");
         private static string networkFile;
@@ -26,19 +26,25 @@ namespace MonkeyOthello.Learning
                 Directory.CreateDirectory(networkPath);
             }
 
-            networkFile = Path.Combine(networkPath, $@"deeplearning-{empties}.net");
+            networkFile = Path.Combine(networkPath, $@"all-deeplearning-{empties}.net");
         }
 
-        public static void Run()
+        public static void Test()
         {
-            var items = LoadData();
+            //LoadItems();
+            TrainTest();
+        }
+
+        private static void TrainTest()
+        {
+            var items = ConvertData(LoadItems());
             var count = items.Length;
             Console.WriteLine($"items: {items.Length}");
             var inputs = items.Select(x => x.inputs).ToArray();
             var outputs = items.Select(x => x.outputs).ToArray();
 
             {
-               Learn(inputs, outputs, trainRate: 0.99);
+                Learn(inputs, outputs, trainRate: 0.99);
             }
             {
                 var n = (int)(count * 0.8);
@@ -83,24 +89,39 @@ namespace MonkeyOthello.Learning
             public double[] outputs { get; set; }
         }
 
-        private static DataItem[] LoadData()
+        private static List<string> LoadItems()
         {
             var files = Directory.GetFiles(dataPath, "*.k", SearchOption.AllDirectories);
             Console.WriteLine($"found {files.Length} files");
-            var list = new List<DataItem>();
+            var list = new List<string>();
             foreach (var file in files)
             {
                 var shortPath = file.Replace(dataPath, "");
                 Console.WriteLine($"reading {shortPath}");
                 var lines = File.ReadAllLines(file);
-                foreach (var item in lines)
-                {
-                    var values = item.Split(',');
-                    var inputs = ToInputValues(values[0]).Concat(ToInputValues(values[1])).ToArray();
-                    var outputs = ToOutputValues(values[2]);
-                    list.Add(new DataItem { inputs = inputs, outputs = outputs });
-                }
+                list.AddRange(lines);
             }
+
+            var total = list.Count;
+            Console.WriteLine($"total: {total} items");
+            var uni = list.Distinct().ToList();
+            Console.WriteLine($"uni: {uni.Count} items");
+            Console.WriteLine($"duplicae: {total - uni.Count} items");
+
+            return uni;
+        }
+
+        private static DataItem[] ConvertData(IEnumerable<string> items)
+        {
+            var list = new List<DataItem>();
+            foreach (var item in items)
+            {
+                var values = item.Split(',');
+                var inputs = ToInputValues(values[0]).Concat(ToInputValues(values[1])).ToArray();
+                var outputs = ToOutputValues(values[2]);
+                list.Add(new DataItem { inputs = inputs, outputs = outputs });
+            }
+
             return list.ToArray();
         }
 
@@ -126,15 +147,17 @@ namespace MonkeyOthello.Learning
         private static double[] ToOutputValues(string text)
         {
             //>=0 win, otherwise lose
-           return  int.Parse(text) >= 0 ? new[] { 1.0 } : new[] { 0.0 };
+            return int.Parse(text) >= 0 ? new[] { 1.0 } : new[] { 0.0 };
             var eval = int.Parse(text);
             if (eval == 0)
             {
-                return new[] { 0.0,0.0,0.0 };
-            }else if(eval>0 )
+                return new[] { 0.0, 0.0, 0.0 };
+            }
+            else if (eval > 0)
             {
                 return eval > 20 ? new[] { 1.0, 1.0, 1.0 } : new[] { 1.0, 1.0, 0.0 };
-            }else
+            }
+            else
             {
                 return eval < -20 ? new[] { 0.0, 0.0, 0.1 } : new[] { 0.0, 1.0, 0.0 };
             }
@@ -166,7 +189,7 @@ namespace MonkeyOthello.Learning
             return values; */
         }
 
-        public static void Learn(double[][] inputs, double[][] outputs, double trainRate = 0.8)
+        private static void Learn(double[][] inputs, double[][] outputs, double trainRate = 0.8)
         {
             var count = inputs.Length;
             var n = (int)(count * trainRate);

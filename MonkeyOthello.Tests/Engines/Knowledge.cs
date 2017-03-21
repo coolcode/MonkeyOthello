@@ -17,8 +17,12 @@ namespace MonkeyOthello.Tests.Engines
         private string knowledgePath = Path.Combine(Environment.CurrentDirectory, "knowledge");
         private string folderName = new DirectoryInfo(Environment.CurrentDirectory).Name;
 
-        public Knowledge()
+        public int TrainDepth { get; set; } = 20;
+
+        public Knowledge(int trainDepth = 20)
         {
+            TrainDepth = trainDepth;
+
             if (!Directory.Exists(fightPath))
             {
                 Directory.CreateDirectory(fightPath);
@@ -110,7 +114,7 @@ namespace MonkeyOthello.Tests.Engines
             while (!board.IsFull)
             {
                 var empties = board.EmptyPiecesCount();
-                if (empties <= 20)
+                if (empties <= TrainDepth + 1)
                 {
                     var moves = Rule.FindMoves(board);
                     if (moves.Length > 0)
@@ -154,10 +158,17 @@ namespace MonkeyOthello.Tests.Engines
 
                 var sw = Stopwatch.StartNew();
                 var searchResult = engines[turn].Search(board.Copy(), depth);
+
                 sw.Stop();
                 timespans[turn] += sw.Elapsed;
 
                 Console.WriteLine($"[{engines[turn].Name}][{board.EmptyPiecesCount()}] {searchResult}");
+
+                if (engines[turn].Name == "EdaxEngine" && board.EmptyPiecesCount() <= EdaxEngine.EndGameDepth)
+                {
+                    SaveResult(board, searchResult);
+                }
+
 
                 if (searchResult.Move < 0 ||
                     searchResult.Move >= Constants.StonesCount ||
@@ -233,7 +244,7 @@ namespace MonkeyOthello.Tests.Engines
             }
             else
             {
-                var endGameEngine = new ZebraEngine();
+                var endGameEngine = new EdaxEngine(); //new ZebraEngine();
                 sr = endGameEngine.Search(board, empties);
             }
             sw.Stop();
@@ -250,6 +261,7 @@ namespace MonkeyOthello.Tests.Engines
 
             var content = $"{board.PlayerPieces},{board.OpponentPieces},{sr.Score}";
             File.AppendAllLines(targetFile, new[] { content }, Encoding.UTF8);
+            Console.WriteLine($"save : {content}, {sr}");
         }
     }
 

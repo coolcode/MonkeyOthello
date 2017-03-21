@@ -13,12 +13,14 @@ namespace MonkeyOthello.Tests.Engines
 {
     public class EdaxEngine : BaseEngine
     {
+        public const int EndGameDepth = 30;
+
         public override SearchResult Search(BitBoard board, int depth)
         {
             var pattern = board.Draw(ownSymbol: "O", oppSymbol: "X", emptySymbol: "-");
 
             depth = board.EmptyPiecesCount();
-            var gameMode = "midgame-search"; //depth <= 22 ? "endgame-search" : "midgame-search";
+            var gameMode = depth <= EndGameDepth ? "endgame-search" : "midgame-search";
             var r = CallEdax(gameMode, pattern);
 
             return r;
