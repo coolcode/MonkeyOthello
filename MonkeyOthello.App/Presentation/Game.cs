@@ -19,12 +19,22 @@ namespace MonkeyOthello.Presentation
         Computer
     }
 
+    public enum GameLevel
+    {
+        Easy,
+        Medium,
+        Hard,
+        Expert,
+        Crazy
+    }
+
     public class Game
     {
         public IEngine Engine { get; set; } = new EdaxEngine(); // Pilot;
         public Board Board { get; set; }
         public bool Busy { get; set; }
         public GameMode Mode { get; set; } = GameMode.HumanVsComputer;
+        public GameLevel Level { get; set; } = GameLevel.Expert;
 
         public UpdateResult UpdateResult;
         public UpdatePlay UpdatePlay;
@@ -83,7 +93,18 @@ namespace MonkeyOthello.Presentation
             Busy = true;
 
             Engine.UpdateProgress = r => UpdateResult?.Invoke(r);
-            var result = Engine.Search(Board.ToBitBoard(), 6);
+
+            var gameLevelMap = new Dictionary<GameLevel, int>
+            {
+                { GameLevel.Easy, 6 },
+                { GameLevel.Medium, 8 },
+                { GameLevel.Hard, 10 },
+                { GameLevel.Expert, 12 },
+                { GameLevel.Crazy, 14 },
+            };
+
+            var depth = gameLevelMap[Level];
+            var result = Engine.Search(Board.ToBitBoard(), 8);
             PlayerPlay(result.Move);
             UpdatePlay?.Invoke(PlayerType.Computer, result.Move);
             UpdateResult?.Invoke(result);

@@ -10,10 +10,15 @@ using System.Threading;
 
 namespace MonkeyOthello.Engines.X
 {
-    public class EdaxEngine : BaseEngine
+    public class EdaxEngine : BaseEngine, IDisposable
     {
         public const int EndGameDepth = 30;
         public const int WinLoseDepth = 34;
+
+        public EdaxEngine()
+        {
+            Task.Run(() => CheckEdaxShell());
+        }
 
         public override SearchResult Search(BitBoard board, int depth)
         {
@@ -29,6 +34,122 @@ namespace MonkeyOthello.Engines.X
             return r;
         }
 
+        private Process process = null;
+
+        private void CheckEdaxShell()
+        {
+            try
+            {
+                lock (this)
+                {
+                    if (process != null)//TODO: check if close
+                    {
+                        return;
+                    }
+
+                    var edaxPath = Path.Combine(Environment.CurrentDirectory, @"Tools\edax");
+                    var edaxFile = Path.Combine(edaxPath, "wEdax-x64.exe");
+
+                    process = new Process();
+                    process.StartInfo.FileName = "cmd";
+                    //process.StartInfo.WorkingDirectory = edaxPath;
+                    //process.StartInfo.Arguments = "";
+                    process.StartInfo.UseShellExecute = false;
+                    process.StartInfo.RedirectStandardInput = true;
+                    process.StartInfo.RedirectStandardOutput = true;
+                    process.StartInfo.CreateNoWindow = true;
+                    process.Start();
+
+                    var input = process.StandardInput;
+                    var output = process.StandardOutput;
+
+                    input.WriteLine($"cd /d \"{edaxPath}\"\n\n");
+                    input.WriteLine($"wEdax-x64.exe -cassio\n\n");
+
+                    while (true)
+                    {
+                        var line = output.ReadLine();
+                        if (line.Contains("ready."))
+                        {
+                            break;
+                        }
+                        Thread.Sleep(50);
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        private SearchResult CallEdax(string gameMode, string pattern, int alpha, int beta, int depth)
+        {
+            var sw = Stopwatch.StartNew();
+
+            CheckEdaxShell();
+
+            var input = process.StandardInput;
+            var output = process.StandardOutput;
+
+            //ENGINE-PROTOCOL midgame-search --XO---O--XXO-O--OXOXO-OOXXOOXOX-OOXXXXX-OOOXXX----XOXOO--XXXX-XO 0 1 1 100
+            var cmd = $"ENGINE-PROTOCOL {gameMode} {pattern}O {alpha} {beta} {depth} 100";
+            input.WriteLine(cmd);
+            input.Flush();
+
+            var result = string.Empty;
+
+            var foundResult = false;
+            while (true)
+            {
+                var line = output.ReadLine();
+                //Console.WriteLine(line);
+                if (!string.IsNullOrWhiteSpace(line) && !line.Contains("ready."))
+                {
+                    result = line;
+                    foundResult = true;
+                }
+                if (foundResult && line.Contains("ready."))
+                {
+                    break;
+                }
+
+                Thread.Sleep(100);
+            }
+
+
+
+            sw.Stop();
+            //analyze output
+            var r = ParseResult(result);
+            r.TimeSpan = sw.Elapsed;
+            r.Message = $"[{depth}][{gameMode}] {r.Message}";
+            r.Process = 1;
+
+            return r;
+        }
+
+        private void CloseEdax()
+        {
+            if (process == null)
+            {
+                return;
+            }
+
+            var input = process.StandardInput;
+            var output = process.StandardOutput;
+
+            input.WriteLine($"ENGINE-PROTOCOL quit");
+            input.Flush();
+
+            //process.WaitForExit();
+
+            process.Close();
+
+        }
+
+        /*
         private SearchResult CallEdax(string gameMode, string pattern, int alpha, int beta, int depth)
         {
             var sw = Stopwatch.StartNew();
@@ -45,15 +166,6 @@ namespace MonkeyOthello.Engines.X
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.CreateNoWindow = true;
             process.Start();
-            // process.OutputDataReceived += Process_OutputDataReceived;
-            //process.OutputDataReceived += (s, e) =>
-            //{
-            //    if (!string.IsNullOrWhiteSpace(e.Data) && e.Data.Contains("move "))
-            //    {
-            //        r = ParseResult(e.Data);
-            //    }
-            //};
-            //process.BeginOutputReadLine();
 
             var input = process.StandardInput;
             var output = process.StandardOutput;
@@ -62,18 +174,14 @@ namespace MonkeyOthello.Engines.X
             input.WriteLine($"wEdax-x64.exe -cassio\n\n");
             while (true)
             {
-                var line = output.ReadLine();
-                //Console.WriteLine(line);
+                var line = output.ReadLine(); 
                 if (line.Contains("ready."))
                 {
                     break;
                 }
                 Thread.Sleep(50);
             }
-
-            //input.WriteLine($"-q -cassio");
-            //input.Flush();
-
+             
             var cmd = $"ENGINE-PROTOCOL {gameMode} {pattern}O {alpha} {beta} {depth} 100";
             input.WriteLine(cmd);
             input.Flush();
@@ -116,6 +224,7 @@ namespace MonkeyOthello.Engines.X
 
             return r;
         }
+        */
 
         private static SearchResult ParseResult(string result)
         {
@@ -142,6 +251,11 @@ namespace MonkeyOthello.Engines.X
             {
                 var r = ParseResult(e.Data);
             }
+        }
+
+        public void Dispose()
+        {
+            CloseEdax();
         }
     }
 }

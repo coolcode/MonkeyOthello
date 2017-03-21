@@ -65,11 +65,11 @@
             this.cvsPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gameModetoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.masterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.expertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.amateurToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.childToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.babyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuCrazy = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuExpert = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuHard = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuMedium = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuEasy = new System.Windows.Forms.ToolStripMenuItem();
             this.levelLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.undoUToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -374,49 +374,49 @@
             this.optionOToolStripMenuItem.Size = new System.Drawing.Size(78, 20);
             this.optionOToolStripMenuItem.Text = "Options(&O)";
             // 
-            // masterToolStripMenuItem
+            // menuCrazy
             // 
-            this.masterToolStripMenuItem.Name = "masterToolStripMenuItem";
-            this.masterToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D5)));
-            this.masterToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
-            this.masterToolStripMenuItem.Text = "Crazy";
+            this.menuCrazy.Name = "menuCrazy";
+            this.menuCrazy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D5)));
+            this.menuCrazy.Size = new System.Drawing.Size(159, 22);
+            this.menuCrazy.Text = "Crazy";
             // 
-            // expertToolStripMenuItem
+            // menuExpert
             // 
-            this.expertToolStripMenuItem.Name = "expertToolStripMenuItem";
-            this.expertToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D4)));
-            this.expertToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
-            this.expertToolStripMenuItem.Text = "Expert";
+            this.menuExpert.Name = "menuExpert";
+            this.menuExpert.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D4)));
+            this.menuExpert.Size = new System.Drawing.Size(159, 22);
+            this.menuExpert.Text = "Expert";
             // 
-            // amateurToolStripMenuItem
+            // menuHard
             // 
-            this.amateurToolStripMenuItem.Name = "amateurToolStripMenuItem";
-            this.amateurToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D3)));
-            this.amateurToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
-            this.amateurToolStripMenuItem.Text = "Hard";
+            this.menuHard.Name = "menuHard";
+            this.menuHard.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D3)));
+            this.menuHard.Size = new System.Drawing.Size(159, 22);
+            this.menuHard.Text = "Hard";
             // 
-            // childToolStripMenuItem
+            // menuMedium
             // 
-            this.childToolStripMenuItem.Name = "childToolStripMenuItem";
-            this.childToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D2)));
-            this.childToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
-            this.childToolStripMenuItem.Text = "Medium";
+            this.menuMedium.Name = "menuMedium";
+            this.menuMedium.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D2)));
+            this.menuMedium.Size = new System.Drawing.Size(159, 22);
+            this.menuMedium.Text = "Medium";
             // 
-            // babyToolStripMenuItem
+            // menuEasy
             // 
-            this.babyToolStripMenuItem.Name = "babyToolStripMenuItem";
-            this.babyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D1)));
-            this.babyToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
-            this.babyToolStripMenuItem.Text = "Easy";
+            this.menuEasy.Name = "menuEasy";
+            this.menuEasy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D1)));
+            this.menuEasy.Size = new System.Drawing.Size(159, 22);
+            this.menuEasy.Text = "Easy";
             // 
             // levelLToolStripMenuItem
             // 
             this.levelLToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.babyToolStripMenuItem,
-            this.childToolStripMenuItem,
-            this.amateurToolStripMenuItem,
-            this.expertToolStripMenuItem,
-            this.masterToolStripMenuItem});
+            this.menuEasy,
+            this.menuMedium,
+            this.menuHard,
+            this.menuExpert,
+            this.menuCrazy});
             this.levelLToolStripMenuItem.Name = "levelLToolStripMenuItem";
             this.levelLToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
             this.levelLToolStripMenuItem.Text = "Level(&L)";
@@ -562,11 +562,11 @@
         private System.Windows.Forms.ToolStripMenuItem cvsPToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gameModetoolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem optionOToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem masterToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem expertToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem amateurToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem childToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem babyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem menuCrazy;
+        private System.Windows.Forms.ToolStripMenuItem menuExpert;
+        private System.Windows.Forms.ToolStripMenuItem menuHard;
+        private System.Windows.Forms.ToolStripMenuItem menuMedium;
+        private System.Windows.Forms.ToolStripMenuItem menuEasy;
         private System.Windows.Forms.ToolStripMenuItem levelLToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitEToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem undoUToolStripMenuItem;

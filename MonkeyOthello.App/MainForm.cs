@@ -45,17 +45,35 @@ namespace MonkeyOthello
             Controls.Add(bufferBoard);
 
             SetStyle(ControlStyles.UserPaint, true);
-            SetStyle(ControlStyles.AllPaintingInWmPaint, true);  
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             SetStyle(ControlStyles.DoubleBuffer, true);
-             
+
             picMonkey.MouseEnter += picMonkey_MouseEnter;
             picMonkey.MouseLeave += picMonkey_MouseLeave;
             picMonkey.MouseDown += picMonkey_MouseDown;
             picMonkey.MouseMove += picMonkey_MouseMove;
-             
+            menuEasy.Click += MenuLevel_Click;
+            menuMedium.Click += MenuLevel_Click;
+            menuHard.Click += MenuLevel_Click;
+            menuExpert.Click += MenuLevel_Click;
+            menuCrazy.Click += MenuLevel_Click;
+
             this.Load += MainForm_Load;
         }
-         
+
+        private void MenuLevel_Click(object sender, EventArgs e)
+        {
+            var levelText = ((ToolStripMenuItem)sender).Name.Substring(4);
+            GameLevel gameLevel;
+            if (Enum.TryParse(levelText, out gameLevel))
+            {
+                game.Level = gameLevel;
+            }
+
+            if (!game.Busy)
+            {
+            }
+        }
 
         private void AddMoveItem(int move, int? score = null)
         {
@@ -120,7 +138,7 @@ namespace MonkeyOthello
                     }
                 });
             };
-            
+
             game.UpdateMessage = msg =>
             {
                 Safe(() =>
@@ -406,6 +424,5 @@ namespace MonkeyOthello
 
 
         #endregion
-
     }
 }
