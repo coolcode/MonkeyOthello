@@ -31,7 +31,12 @@ namespace MonkeyOthello.Tests.Engines
 
         public void Fight(IEnumerable<IEngine> engines, int count = 1)
         {
-            int i = 0;
+            foreach (var engine in engines)
+            {
+                engine.UpdateProgress = r => Console.WriteLine($"[{engine.Name}] {r}");
+            }
+
+            var i = 0;
             while (i++ < count)
             {
                 engines.PK((e1, e2) =>
@@ -82,19 +87,21 @@ namespace MonkeyOthello.Tests.Engines
 
             var engines = new IEngine[] { engineA, engineB };
             var timespans = new TimeSpan[] { TimeSpan.Zero, TimeSpan.Zero };
-            var colors = new[] {"Black","White" };
+            var colors = new[] { "Black", "White" };
             int turn = 0;
             Console.WriteLine(board.Draw(colors[turn]));
 
             while (!board.IsFull)
             {
-                var depth = 0;
+                var depth = 8;
 
                 var sw = Stopwatch.StartNew();
                 var searchResult = engines[turn].Search(board.Copy(), depth);
                 sw.Stop();
                 timespans[turn] += sw.Elapsed;
 
+                Console.Title = $"[{board.EmptyPiecesCount()}][{depth}] [{engines[turn].Name}] {board.PlayerPiecesCount()}:{board.OpponentPiecesCount()}";
+                Console.Title += $" {searchResult.Score}";
                 Console.WriteLine($"[{engines[turn].Name}][{board.EmptyPiecesCount()}] {searchResult}");
 
                 if (searchResult.Move < 0 ||
@@ -110,7 +117,7 @@ namespace MonkeyOthello.Tests.Engines
                     {
                         WinnerName = engines[1 - turn].Name,
                         LoserName = engines[turn].Name,
-                        WinnerStoneType = colors[turn] ,
+                        WinnerStoneType = colors[turn],
                         Score = 1,
                         TimeSpan = clock.Elapsed
                     };

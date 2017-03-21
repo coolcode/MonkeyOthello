@@ -8,6 +8,8 @@ namespace MonkeyOthello.Engines
 {
     public abstract class BaseEngine : IEngine
     {
+        protected const int minimumScore = -100;
+
         public virtual string Name
         {
             get { return this.GetType().Name; }

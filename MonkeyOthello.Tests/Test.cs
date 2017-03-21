@@ -8,6 +8,7 @@ using System.Text;
 using System.Linq;
 using System.IO;
 using System.Configuration;
+using MonkeyOthello.Learning;
 
 namespace MonkeyOthello.Tests
 {
@@ -150,7 +151,7 @@ namespace MonkeyOthello.Tests
 
         public static void Fight()
         {
-            // new Pilot(), new MonkeyV2Engine(), new EdaxEngine()
+            // Pilot, MonkeyV2Engine, EdaxEngine, DeepLearningEngine
             var engines = new IEngine[] { new EdaxEngine(), new MonkeyV2Engine() };
             IColosseum game = new Colosseum();
             game.Fight(engines);

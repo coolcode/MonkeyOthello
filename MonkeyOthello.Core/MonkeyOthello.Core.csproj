@@ -50,6 +50,7 @@
     <Compile Include="Engines\EndGameEvaluation.cs" />
     <Compile Include="Engines\IEngine.cs" />
     <Compile Include="Engines\IEvaluation.cs" />
+    <Compile Include="Engines\MonkeyEndEngine.cs" />
     <Compile Include="Engines\MonkeyOpeningEngine.cs" />
     <Compile Include="Engines\Node.cs" />
     <Compile Include="Engines\Pilot.cs" />

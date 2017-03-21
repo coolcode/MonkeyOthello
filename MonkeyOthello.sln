@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonkeyOthello.App", "Monkey
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonkeyOthello.Learning", "MonkeyOthello.Learning\MonkeyOthello.Learning.csproj", "{C6734C71-9439-426A-8A63-6B0F45BD0CC1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonkeyOthello.Engines.X", "MonkeyOthello.Engines.X\MonkeyOthello.Engines.X.csproj", "{62F75F98-A6D7-4A11-8D29-BC164D9BE6AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{C6734C71-9439-426A-8A63-6B0F45BD0CC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6734C71-9439-426A-8A63-6B0F45BD0CC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6734C71-9439-426A-8A63-6B0F45BD0CC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62F75F98-A6D7-4A11-8D29-BC164D9BE6AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62F75F98-A6D7-4A11-8D29-BC164D9BE6AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62F75F98-A6D7-4A11-8D29-BC164D9BE6AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62F75F98-A6D7-4A11-8D29-BC164D9BE6AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,5 @@
 ﻿using FengartOthello;
 using FengartOthello.AI;
-using MonkeyOthello.Core;
 using MonkeyOthello.Engines;
 using System;
 using System.Collections.Generic;
@@ -19,7 +18,7 @@ namespace MonkeyOthello.Tests.Engines
 
             var sw = Stopwatch.StartNew();
             var engine = new Engine();
-            engine.Search(board.Select(c=>(ChessType)c).ToArray(), (ChessType)col);
+            engine.Search(board.Select(c=>(ChessType)c).ToArray(), col);
             var bestMove = engine.BestMove; 
             sw.Stop();
 

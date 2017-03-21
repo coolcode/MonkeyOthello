@@ -15,11 +15,11 @@ namespace MonkeyOthello.Tests
             try
             {
                 var sw = Stopwatch.StartNew();
-                 //DeepLearning.Test(); 
+                //DeepLearning.Test(); 
                 //DeepLearningDemo.Run();
                 // Test.TestEndGameEngine();
-                Test.GenerateKnowledge();
-                 //Test.Fight();
+                 //Test.GenerateKnowledge();
+                Test.Fight();
                 //Test.TestBitBoard();
                 //Test.TestLinkedList();
                 //Test.GenTestData();

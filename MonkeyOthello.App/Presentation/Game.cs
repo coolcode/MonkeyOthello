@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Forms;
 using System.Drawing;
+using MonkeyOthello.Engines.X;
 
 namespace MonkeyOthello.Presentation
 {
@@ -20,12 +21,15 @@ namespace MonkeyOthello.Presentation
 
     public class Game
     {
+        public IEngine Engine { get; set; } = new EdaxEngine(); // Pilot;
         public Board Board { get; set; }
         public bool Busy { get; set; }
-        private GameMode Mode { get; set; } = GameMode.HumanVsComputer;
+        public GameMode Mode { get; set; } = GameMode.HumanVsComputer;
+
         public UpdateResult UpdateResult;
         public UpdatePlay UpdatePlay;
         public UpdateMessage UpdateMessage;
+
         private PlayerType currentPlayer = PlayerType.Human;
 
         public Game(Board board)
@@ -78,9 +82,8 @@ namespace MonkeyOthello.Presentation
             UpdateMessage?.Invoke("think...");
             Busy = true;
 
-            var pilot = new Pilot();
-            pilot.UpdateProgress = r => UpdateResult?.Invoke(r);
-            var result = pilot.Search(Board.ToBitBoard(), 8);
+            Engine.UpdateProgress = r => UpdateResult?.Invoke(r);
+            var result = Engine.Search(Board.ToBitBoard(), 6);
             PlayerPlay(result.Move);
             UpdatePlay?.Invoke(PlayerType.Computer, result.Move);
             UpdateResult?.Invoke(result);
@@ -116,88 +119,5 @@ namespace MonkeyOthello.Presentation
             return Board.Reback();
         }
 
-        /*
-        public bool StepUp()
-        {
-            int rebackNum = 0;
-            if (gameMode != GameMode.PvsP)
-            {
-                if (moveList.Count >= 2)
-                {
-                    gameIsOver = false;
-                    rebackNum += drawBoard.Reback();
-                    rebackNum += drawBoard.Reback();
-                    for (int i = 1; i <= rebackNum; i++)
-                    {
-                        moveList.RemoveAt(moveList.Count - 1);
-                        RemoveMoveItem();
-
-                    }
-                    drawBoard.Paint();
-                    Utils.RefreshBoard(drawBoard);
-                }
-                if (moveList.Count < 2)
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                if (moveList.Count >= 1)
-                {
-                    gameIsOver = false;
-                    rebackNum = drawBoard.Reback();
-                    for (int i = 1; i <= rebackNum; i++)
-                    {
-                        moveList.RemoveAt(moveList.Count - 1);
-                        RemoveMoveItem();
-                        drawBoard.Paint();
-                        Utils.RefreshBoard(drawBoard);
-                    }
-                }
-                if (moveList.Count < 1)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }*/
-
-        /*
-        private delegate void ListViewAddEvent(object Item);
-
-        private void ListViewAddItem(object Item)
-        {
-            movesListView.Items.Add((ListViewItem)Item);
-        }
-
-        private void UpdateListView(System.Windows.Forms.ListViewItem Item)
-        {
-            movesListView.Invoke(new ListViewAddEvent(ListViewAddItem), new object[] { Item });
-        }
-
-        private delegate void ListViewRemoveEvent();
-
-        private void ListViewRemoveItem()
-        {
-            movesListView.Items.RemoveAt(movesListView.Items.Count - 1);
-        }
-
-        private void AddMoveItem(int square, double? eval = null)
-        {
-            var lastColor = (Board.Color == StoneType.White ? "W" : "B");
-            var Item = new ListViewItem(new string[] {
-                moveList.Count.ToString(),
-                lastColor,
-                square.ToNotation(),
-                eval==null? string.Empty: string.Format("{0}", Math.Round(eval.Value)) });
-            UpdateListView(Item);
-        }
-
-        private void RemoveMoveItem()
-        {
-            movesListView.Invoke(new ListViewRemoveEvent(ListViewRemoveItem), null);
-        }
-        */
     }
 }

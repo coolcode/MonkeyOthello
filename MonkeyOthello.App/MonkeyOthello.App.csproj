@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>me48.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -79,6 +82,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Tools\edax\data\book.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Tools\edax\data\eval.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -123,11 +132,18 @@
     <Content Include="Resources\StartBoard2_16.png" />
     <Content Include="Resources\undo.png" />
     <Content Include="Resources\WhiteStone.png" />
+    <Content Include="Tools\edax\wEdax-x64.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MonkeyOthello.Core\MonkeyOthello.Core.csproj">
       <Project>{e71c88c4-3ca7-45d7-aedd-1fa4b26b5fe4}</Project>
       <Name>MonkeyOthello.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MonkeyOthello.Engines.X\MonkeyOthello.Engines.X.csproj">
+      <Project>{62f75f98-a6d7-4a11-8d29-bc164d9be6aa}</Project>
+      <Name>MonkeyOthello.Engines.X</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

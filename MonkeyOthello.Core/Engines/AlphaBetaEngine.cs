@@ -54,7 +54,7 @@ namespace MonkeyOthello.Engines
 
             var alpha = -highScore - 1;
             var beta = highScore + 1;
-            var score = -highScore;
+            var score = minimumScore;
             var foundPv = false;
 
             for (var i = 0; i < moves.Length; i++)
@@ -144,7 +144,7 @@ namespace MonkeyOthello.Engines
                 }
             }
 
-            var score = -highScore;
+            var score = minimumScore;
             var foundPv = false;
             for (int i = 0; i < moves.Length; i++)
             {

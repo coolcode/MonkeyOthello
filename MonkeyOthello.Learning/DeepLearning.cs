@@ -14,7 +14,7 @@ namespace MonkeyOthello.Learning
 {
     public class DeepLearning
     {
-        private static readonly string dataPath = @"k-data\";//edax-fuzzy\random\
+        private static readonly string dataPath = @"k-data\edax-fuzzy\";//edax-fuzzy\random\
         private static int empties = 19;
         private static readonly string networkPath = Path.Combine(Environment.CurrentDirectory, "networks");
         private static string networkFile;
@@ -44,7 +44,7 @@ namespace MonkeyOthello.Learning
             var outputs = items.Select(x => x.outputs).ToArray();
 
             {
-                Learn(inputs, outputs, trainRate: 0.99);
+               // Learn(inputs, outputs, trainRate: 0.99);
             }
             {
                 var n = (int)(count * 0.8);
@@ -97,6 +97,11 @@ namespace MonkeyOthello.Learning
             foreach (var file in files)
             {
                 var shortPath = file.Replace(dataPath, "");
+                if (Path.GetFileName(file).StartsWith("19"))
+                {
+                    Console.WriteLine($"skip {shortPath}");
+                    continue;
+                }
                 Console.WriteLine($"reading {shortPath}");
                 var lines = File.ReadAllLines(file);
                 list.AddRange(lines);

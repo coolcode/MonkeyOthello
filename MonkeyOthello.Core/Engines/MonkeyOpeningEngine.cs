@@ -12,6 +12,7 @@ namespace MonkeyOthello.Engines
         public MonkeyOpeningEngine()
         {
             Evaluation = new StateEvaluation();
+            Window = new PurningWindow(-20, 20);
         }
 
         protected override int FastestFirstSolve(BitBoard board, int alpha, int beta, int depth, bool prevmove = true)
@@ -40,7 +41,7 @@ namespace MonkeyOthello.Engines
                 }
             }
 
-            var score = -highScore;
+            var score = minimumScore;
             var foundPv = false;
 
             var orderedMoves = OrderMovesByMobility(moves, board);
@@ -121,7 +122,7 @@ namespace MonkeyOthello.Engines
                 }
             }
 
-            var nextScore = -highScore;
+            var nextScore = minimumScore;
             var foundPv = false;
 
             var orderedMoves = OrderMovesByMobility(moves, board);

@@ -106,7 +106,7 @@ namespace MonkeyOthello
                     lblNodes.Text = string.Format("{0}", (r.Nodes > 1000 ? Math.Round(r.Nodes / 1000.0) + " K" : r.Nodes.ToString()));
                     lblSpendTime.Text = string.Format("{0:F1}s", r.TimeSpan.TotalSeconds);
                     lblSpeed.Text = string.Format("{0}", (speed < 10000000 ? ((int)(speed / 1000) + " kn/s") : "+∞"));
-                    lblMessage.Text = $"{r.Process:p0} {string.Join(",", r.EvalList)}";
+                    lblMessage.Text = $"{r.Message}"; //$"{r.Process:p0} {string.Join(",", r.EvalList)}";
                     if (lblMessage.Text.Length >= 49)
                     {
                         lblMessage.Text = lblMessage.Text.Substring(0, 46) + "...";

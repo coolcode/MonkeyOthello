@@ -84,7 +84,7 @@ namespace MonkeyOthello.Engines
                 beta = 1;
             }
 
-            var score = -highScore;
+            var score = minimumScore;
             var foundPv = false;
 
             var orderedMoves = FindOrderedMoves(board); //OrderMoves(moves, board);
@@ -176,7 +176,7 @@ namespace MonkeyOthello.Engines
             //    }
             //}
 
-            var score = -highScore;
+            var score = minimumScore;
             var foundPv = false;
             var hasMoves = false;
             //var orderedMoves = OrderMoves(moves, board); 
@@ -295,7 +295,7 @@ namespace MonkeyOthello.Engines
                 }
             }
 
-            var score = -highScore;
+            var score = minimumScore;
             var foundPv = false;
 
             foreach (var m in moves)
@@ -382,7 +382,7 @@ namespace MonkeyOthello.Engines
                 }
             }
 
-            var score = -highScore;
+            var score = minimumScore;
             var diffCount = board.DiffCount();
 
             foreach (var pos in moves)

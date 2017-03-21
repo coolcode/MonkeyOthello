@@ -31,8 +31,12 @@ namespace MonkeyOthello.Tests.Engines
             var sw = Stopwatch.StartNew();
             var process = new Process();
 
-            process.StartInfo.FileName = "cmd";
-            process.StartInfo.Arguments = "";
+            var edaxPath = Path.Combine(Environment.CurrentDirectory, @"Tools\edax");
+            var edaxFile = Path.Combine(edaxPath, "wEdax-x64.exe");
+
+            process.StartInfo.FileName = edaxFile;
+            process.StartInfo.WorkingDirectory = edaxPath;
+            process.StartInfo.Arguments = "-q -cassio";
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardInput = true;
             process.StartInfo.RedirectStandardOutput = true;
@@ -42,10 +46,11 @@ namespace MonkeyOthello.Tests.Engines
             var input = process.StandardInput;
             var output = process.StandardOutput;
   
-            var edaxPath = Path.Combine(Environment.CurrentDirectory, @"Tools\edax");
-            input.WriteLine($"cd /d \"{edaxPath}\"\n\n");
-            input.WriteLine($"wEdax-x64.exe -cassio\n\n");
-            while (true)
+
+
+            //input.WriteLine($"cd /d \"{edaxPath}\"\n\n");
+            //input.WriteLine($"wEdax-x64.exe -cassio\n\n");
+            /*while (true)
             {
                 var line = output.ReadLine();
                 //Console.WriteLine(line);
@@ -54,11 +59,11 @@ namespace MonkeyOthello.Tests.Engines
                     break;
                 }
                 Thread.Sleep(50);
-            }
+            }*/ 
 
             var alpha = -64;
             var beta = 64;
-            var depth = 10;
+            var depth = 4;
              
             input.WriteLine($"ENGINE-PROTOCOL {gameMode} {pattern}O {alpha} {beta} {depth} 100");
             input.Flush();

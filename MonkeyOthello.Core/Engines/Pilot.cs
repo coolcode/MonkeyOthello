@@ -33,7 +33,7 @@ namespace MonkeyOthello.Engines
             }
             else if (empties.InRange(0, 18))
             {
-                engine = new MonkeyEngine();
+                engine = new MonkeyEndEngine();
                 depth = empties;
             }
             else
