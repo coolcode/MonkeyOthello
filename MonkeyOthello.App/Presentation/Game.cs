@@ -56,7 +56,11 @@ namespace MonkeyOthello.Presentation
             currentPlayer = PlayerType.Human;
             Board.NewGame();
             Busy = false;
-            if (Mode == GameMode.ComputerVsComputer)
+            if (Mode == GameMode.ComputerVsHuman)
+            {
+                currentPlayer = PlayerType.Computer;
+            }
+            else if (Mode == GameMode.ComputerVsComputer)
             {
                 ComputervsComputer();
             }
@@ -151,7 +155,7 @@ namespace MonkeyOthello.Presentation
                 {
                     //timeout, random move
                     var moves = Board.FindMoves();
-                    result.Move = moves[new Random().Next(0,moves.Length)];
+                    result.Move = moves[new Random().Next(0, moves.Length)];
                 }
             }
 
@@ -159,7 +163,7 @@ namespace MonkeyOthello.Presentation
             UpdatePlay?.Invoke(PlayerType.Computer, result.Move);
             UpdateResult?.Invoke(result);
 
-           // if (bb.EmptyPiecesCount() > EdaxEngine.WinLoseDepth)
+            // if (bb.EmptyPiecesCount() > EdaxEngine.WinLoseDepth)
             {
                 if (backgroundSearchTask != null)
                 {

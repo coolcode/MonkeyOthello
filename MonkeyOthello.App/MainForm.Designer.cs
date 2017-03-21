@@ -98,6 +98,7 @@
             this.useBookToolStripMenuItem.Name = "useBookToolStripMenuItem";
             this.useBookToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.useBookToolStripMenuItem.Text = "Opening Book";
+            this.useBookToolStripMenuItem.Visible = false;
             // 
             // pvsPToolStripMenuItem
             // 

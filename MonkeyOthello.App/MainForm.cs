@@ -57,22 +57,41 @@ namespace MonkeyOthello
             menuHard.Click += MenuLevel_Click;
             menuExpert.Click += MenuLevel_Click;
             menuCrazy.Click += MenuLevel_Click;
-
+            pvsCToolStripMenuItem.Click += PvsCToolStripMenuItem_Click;
+            cvsPToolStripMenuItem.Click += CvsPToolStripMenuItem_Click;
             this.Load += MainForm_Load;
         }
-        
+
+        private void PvsCToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            pvsCToolStripMenuItem.Checked = true;
+            cvsPToolStripMenuItem.Checked = false;
+            game.Mode = GameMode.HumanVsComputer;
+        }
+
+        private void CvsPToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            pvsCToolStripMenuItem.Checked = false;
+            cvsPToolStripMenuItem.Checked = true;
+            game.Mode = GameMode.ComputerVsHuman;
+        }
+
         private void MenuLevel_Click(object sender, EventArgs e)
         {
-            var levelText = ((ToolStripMenuItem)sender).Name.Substring(4);
+            var currentMenuItem = (ToolStripMenuItem)sender;
+            var levelText = currentMenuItem.Name.Substring(4);
             GameLevel gameLevel;
             if (Enum.TryParse(levelText, out gameLevel))
             {
                 game.Level = gameLevel;
             }
 
-            if (!game.Busy)
-            {
-            }
+            menuEasy.Checked = false;
+            menuMedium.Checked = false;
+            menuHard.Checked = false;
+            menuExpert.Checked = false;
+            menuCrazy.Checked = false;
+            currentMenuItem.Checked = true;
         }
 
         private void AddMoveItem(int move, int? score = null)
@@ -124,12 +143,8 @@ namespace MonkeyOthello
                     lblNodes.Text = string.Format("{0}", (r.Nodes > 1000 ? Math.Round(r.Nodes / 1000.0) + " K" : r.Nodes.ToString()));
                     lblSpendTime.Text = string.Format("{0:F1}s", r.TimeSpan.TotalSeconds);
                     lblSpeed.Text = string.Format("{0}", (speed < 10000000 ? ((int)(speed / 1000) + " kn/s") : "+∞"));
-                    lblMessage.Text = $"{r.Message}"; //$"{r.Process:p0} {string.Join(",", r.EvalList)}";
-                    if (lblMessage.Text.Length >= 49)
-                    {
-                        lblMessage.Text = lblMessage.Text.Substring(0, 46) + "...";
-                    }
-                    lblMessage.Invalidate();
+                    ShowMessage(r.Message);//$"{r.Process:p0} {string.Join(",", r.EvalList)}";
+
                     statMain.Invalidate();
 
                     if (r.Process == 1)
@@ -140,17 +155,12 @@ namespace MonkeyOthello
             };
 
             game.UpdateMessage = msg =>
-            {
-                Safe(() =>
                 {
-                    lblMessage.Text = $"{msg}";
-                    if (lblMessage.Text.Length >= 49)
+                    Safe(() =>
                     {
-                        lblMessage.Text = lblMessage.Text.Substring(0, 46) + "...";
-                    }
-                    lblMessage.Invalidate();                     
-                });
-            };
+                        ShowMessage(msg);
+                    });
+                };
 
             game.NewGame();
         }
@@ -168,20 +178,17 @@ namespace MonkeyOthello
 
                         if (game.IsGameOver())
                         {
-                            MessageBox.Show("Game over!");
+                            MessageBox.Show("Game over!", Text);
                             return;
                         }
 
                         if (game.TurnNext() == PlayerType.Computer)
                         {
-                            var thread = new Thread(new ThreadStart(ComputerPlay));
-                            thread.Priority = ThreadPriority.Normal;
-                            thread.IsBackground = true;
-                            thread.Start();
+                            ComputerStartTask();
                         }
                         else
                         {
-                            MessageBox.Show("Pass, your turn.");
+                            MessageBox.Show("Pass, your turn.", Text);
                         }
                     }
                     else
@@ -194,6 +201,14 @@ namespace MonkeyOthello
             {
                 ShowMessage(ex.Message);
             }
+        }
+
+        private void ComputerStartTask()
+        {
+            var thread = new Thread(new ThreadStart(ComputerPlay));
+            thread.Priority = ThreadPriority.Normal;
+            thread.IsBackground = true;
+            thread.Start();
         }
 
         private void bufferBoard_MouseMove(object sender, MouseEventArgs e)
@@ -222,16 +237,14 @@ namespace MonkeyOthello
 
             if (game.IsGameOver())
             {
-                MessageBox.Show("Game over!");
+                MessageBox.Show("Game over!", Text);
                 return;
             }
 
             if (game.TurnNext() == PlayerType.Computer)
             {
-                MessageBox.Show("Pass, computer's turn.");
-                var thread = new Thread(new ThreadStart(ComputerPlay));
-                thread.Priority = ThreadPriority.Normal;
-                thread.Start();
+                MessageBox.Show("Pass, computer's turn.", Text);
+                ComputerStartTask();
             }
         }
 
@@ -257,7 +270,7 @@ namespace MonkeyOthello
         {
             if (!game.IsGameOver())
             {
-                var result = MessageBox.Show("Start a new game?", "New Game", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                var result = MessageBox.Show("Start a new game?", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result != DialogResult.Yes)
                     return;
             }
@@ -270,7 +283,7 @@ namespace MonkeyOthello
             {
                 var imageSave = new SaveFileDialog();
                 imageSave.Title = "Image Name";
-                imageSave.Filter = "jpg|*.jpg|bmp|*.bmp|gif|*.gif";
+                imageSave.Filter = "png|*.png|jpg|*.jpg";
                 DialogResult result = imageSave.ShowDialog();
                 if (result == DialogResult.OK)
                 {
@@ -278,20 +291,17 @@ namespace MonkeyOthello
                     switch (imageSave.FilterIndex)
                     {
                         case 2:
-                            boardPainter.Save(name, ImageFormat.Bmp);
-                            break;
-                        case 3:
-                            boardPainter.Save(name, ImageFormat.Gif);
+                            boardPainter.Save(name, ImageFormat.Jpeg);
                             break;
                         default:
-                            boardPainter.Save(name, ImageFormat.Jpeg);
+                            boardPainter.Save(name, ImageFormat.Png);
                             break;
                     }
                 }
             }
             catch
             {
-                MessageBox.Show("Fail while saving image");
+                MessageBox.Show("Fail while saving image", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -309,11 +319,25 @@ namespace MonkeyOthello
             game.NewGame();
             UpdateBoard();
             UpdatePiecesCount();
+
+            if (game.Mode == GameMode.ComputerVsHuman)
+            {
+                ComputerStartTask();
+            }
         }
 
         private void ShowMessage(string msg)
         {
+            if (string.IsNullOrEmpty(msg))
+            {
+                return;
+            }
+            if (msg.Length >= 49)
+            {
+                msg = msg.Substring(0, 46) + "...";
+            }
             lblMessage.Text = msg;
+            lblMessage.Invalidate();
         }
 
         private void UpdateMessage(int square, double score, int nodes, double time, double speed)
