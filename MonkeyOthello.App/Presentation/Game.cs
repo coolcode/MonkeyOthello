@@ -6,6 +6,9 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Drawing;
 using MonkeyOthello.Engines.X;
+using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Concurrent;
 
 namespace MonkeyOthello.Presentation
 {
@@ -31,10 +34,11 @@ namespace MonkeyOthello.Presentation
     public class Game
     {
         public IEngine Engine { get; set; } = new EdaxEngine(); // Pilot;
+        public IEngine BackgroundEngine { get; set; } = new EdaxEngine { Timeout = 15 }; // Pilot;
         public Board Board { get; set; }
         public bool Busy { get; set; }
         public GameMode Mode { get; set; } = GameMode.HumanVsComputer;
-        public GameLevel Level { get; set; } = GameLevel.Expert;
+        public GameLevel Level { get; set; } = GameLevel.Hard;
 
         public UpdateResult UpdateResult;
         public UpdatePlay UpdatePlay;
@@ -87,29 +91,172 @@ namespace MonkeyOthello.Presentation
             return currentPlayer;
         }
 
+        private CancellationTokenSource backgroundSearchTokenSource = new CancellationTokenSource();
+        private Task backgroundSearchTask = null;
+
+        private ConcurrentDictionary<int, MoveMapItem> moveMaps = new ConcurrentDictionary<int, MoveMapItem>();
+
+        class MoveMapItem
+        {
+            public int Move { get; set; }
+            public int Eval { get; set; }
+
+            public override string ToString()
+            {
+                return $"{Move.ToNotation()},{Eval}";
+            }
+        }
+
+
         public void ComputerPlay()
         {
-            UpdateMessage?.Invoke("think...");
+            if (backgroundSearchTask != null && backgroundSearchTask.Status == TaskStatus.Running)
+            {
+                UpdateMessage?.Invoke("stop thinking...");
+                backgroundSearchTokenSource.Cancel();
+            }
+
             Busy = true;
+            UpdateMessage?.Invoke("searching...");
 
             Engine.UpdateProgress = r => UpdateResult?.Invoke(r);
 
-            var gameLevelMap = new Dictionary<GameLevel, int>
-            {
-                { GameLevel.Easy, 6 },
-                { GameLevel.Medium, 8 },
-                { GameLevel.Hard, 10 },
-                { GameLevel.Expert, 12 },
-                { GameLevel.Crazy, 14 },
-            };
+            var bb = Board.ToBitBoard();
+            var depth = GetSearchDepth();
+            SearchResult result = null;
 
-            var depth = gameLevelMap[Level];
-            var result = Engine.Search(Board.ToBitBoard(), 8);
+            if (Board.LastMove != null)
+            {
+                if (moveMaps.ContainsKey(Board.LastMove.Value))
+                {
+                    var item = moveMaps[Board.LastMove.Value];
+                    if (Board.ValidMove(item.Move))
+                    {
+                        result = new SearchResult
+                        {
+                            Move = item.Move,
+                            Score = item.Eval,
+                            Process = 1,
+                            Message = "BackgroundSearch",
+                        };
+                    }
+                }
+            }
+
+            if (result == null)
+            {
+                result = Engine.Search(bb, depth);
+
+                if (result.IsTimeout)
+                {
+                    //timeout, random move
+                    var moves = Board.FindMoves();
+                    result.Move = moves[new Random().Next(0,moves.Length)];
+                }
+            }
+
             PlayerPlay(result.Move);
             UpdatePlay?.Invoke(PlayerType.Computer, result.Move);
             UpdateResult?.Invoke(result);
 
+           // if (bb.EmptyPiecesCount() > EdaxEngine.WinLoseDepth)
+            {
+                if (backgroundSearchTask != null)
+                {
+                    var i = 0;
+                    while (i++ < 100)
+                    {
+                        if (backgroundSearchTask.Status != TaskStatus.Running)
+                        {
+                            break;
+                        }
+
+                        UpdateMessage?.Invoke($"wait times: {i++}...");
+                        Thread.Sleep(100);
+                    }
+                    UpdateMessage?.Invoke("thinking was stoped.");
+                }
+
+                backgroundSearchTokenSource = new CancellationTokenSource();
+                backgroundSearchTask = BackgroundSearch(backgroundSearchTokenSource.Token);
+            }
+
             Busy = false;
+
+        }
+
+        private Task BackgroundSearch(CancellationToken token)
+        {
+            Action search = () =>
+            {
+                UpdateMessage?.Invoke("thinking...");
+
+                var currentBoard = Board.ToBitBoard();
+                var moves = Rule.FindMoves(currentBoard);
+                var bestScore = -64;
+                var bestMove = -1;
+                //var moveEvalMap = new Dictionary<int, int>();
+                moveMaps.Clear();
+                var i = 0;
+                foreach (var move in moves)
+                {
+                    i++;
+                    if (token.IsCancellationRequested)
+                    {
+                        break;
+                    }
+
+                    var oppboard = Rule.MoveSwitch(currentBoard, move);
+
+                    var own = false;
+                    if (!Rule.CanMove(oppboard))
+                    {
+                        oppboard = oppboard.Switch();
+                        own = true;
+                    }
+
+                    var sr = BackgroundEngine.Search(oppboard, GetSearchDepth());
+
+                    if (sr.IsTimeout)
+                    {
+                        sr.Move = -1;
+                        sr.Score = -Constants.HighestScore;
+                    }
+
+                    var eval = own ? sr.Score : -sr.Score;//opp's score
+                    if (eval > bestScore)
+                    {
+                        bestScore = eval;
+                        bestMove = move;
+                    }
+                    moveMaps[move] = new MoveMapItem { Move = sr.Move, Eval = eval };
+                    var moveEvalResult = string.Join("|", moveMaps.Select(kv => $"{kv.Key.ToNotation()},{kv.Value}"));
+
+                    //moveEvalMap[move] = eval;
+                    //var moveEvalResult = string.Join(",", moveEvalMap.Select(kv => $"({kv.Key.ToNotation()}:{kv.Value})"));
+                    UpdateMessage?.Invoke($"[{i}/{moves.Length}] best:({bestMove.ToNotation()},{bestScore}), [{moveEvalResult}]");
+                    //Console.WriteLine($"move:{move}, score:{eval}");
+                }
+
+                if (moveMaps.Count == 0)
+                {
+                    if (token.IsCancellationRequested)
+                    {
+                        UpdateMessage?.Invoke($"canceled.");
+                    }
+                    else
+                    {
+                        UpdateMessage?.Invoke($"no moves.");
+                    }
+                }
+                else
+                {
+                    var moveEvalResult = string.Join("|", moveMaps.Select(kv => $"{kv.Key.ToNotation()},{kv.Value}"));
+                    UpdateMessage?.Invoke($"best:({bestMove.ToNotation()},{bestScore}), [{moveEvalResult}]");
+                }
+            };
+
+            return Task.Run(search, token);
         }
 
         public bool HumanPlay(int square)
@@ -130,6 +277,20 @@ namespace MonkeyOthello.Presentation
             return true;
         }
 
+        private int GetSearchDepth()
+        {
+            Dictionary<GameLevel, int> gameLevelMap = new Dictionary<GameLevel, int>
+            {
+                { GameLevel.Easy, 6 },
+                { GameLevel.Medium, 12 },
+                { GameLevel.Hard, 16 },
+                { GameLevel.Expert, 24 }, // VS. WZebra: 0-0 
+                { GameLevel.Crazy, 26 },
+            };
+
+            return gameLevelMap[Level];
+        }
+
         private void PlayerPlay(int square)
         {
             var flips = Board.MakeMove(square);
@@ -137,6 +298,7 @@ namespace MonkeyOthello.Presentation
 
         public bool Undo()
         {
+            moveMaps.Clear();
             return Board.Reback();
         }
 

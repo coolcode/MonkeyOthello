@@ -82,6 +82,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Tools\edax\data\book.dat" />
+    <None Include="Tools\edax\data\eval.dat" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -126,6 +128,7 @@
     <Content Include="Resources\StartBoard2_16.png" />
     <Content Include="Resources\undo.png" />
     <Content Include="Resources\WhiteStone.png" />
+    <Content Include="Tools\edax\wEdax-x64.exe" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MonkeyOthello.Core\MonkeyOthello.Core.csproj">

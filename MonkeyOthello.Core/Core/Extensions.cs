@@ -9,6 +9,10 @@ namespace MonkeyOthello.Core
     {
         public static string ToNotation(this int square)
         {
+            if (square < 0 || square>= Constants.StonesCount)
+            {
+                return "XO";
+            }
             var m = square / 8;
             var n = square % 8;
             var column = Convert.ToChar(n + 65);

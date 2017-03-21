@@ -22,9 +22,11 @@ namespace MonkeyOthello.Engines
         public int Nodes { get; set; }
         public List<EvalItem> EvalList { get; set; } = new List<EvalItem>();
         public double Process { get; set; } = 0.0;
-
+        public bool IsTimeout { get; set; } = false;
+        
         public SearchResult()
         {
+            TimeSpan = TimeSpan.Zero;
         }
 
         public override string ToString()

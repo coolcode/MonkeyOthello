@@ -60,7 +60,7 @@ namespace MonkeyOthello
 
             this.Load += MainForm_Load;
         }
-
+        
         private void MenuLevel_Click(object sender, EventArgs e)
         {
             var levelText = ((ToolStripMenuItem)sender).Name.Substring(4);
@@ -144,7 +144,11 @@ namespace MonkeyOthello
                 Safe(() =>
                 {
                     lblMessage.Text = $"{msg}";
-                    lblMessage.Invalidate();
+                    if (lblMessage.Text.Length >= 49)
+                    {
+                        lblMessage.Text = lblMessage.Text.Substring(0, 46) + "...";
+                    }
+                    lblMessage.Invalidate();                     
                 });
             };
 
@@ -172,6 +176,7 @@ namespace MonkeyOthello
                         {
                             var thread = new Thread(new ThreadStart(ComputerPlay));
                             thread.Priority = ThreadPriority.Normal;
+                            thread.IsBackground = true;
                             thread.Start();
                         }
                         else

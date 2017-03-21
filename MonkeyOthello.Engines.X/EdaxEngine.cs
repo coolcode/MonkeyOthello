@@ -13,7 +13,13 @@ namespace MonkeyOthello.Engines.X
     public class EdaxEngine : BaseEngine, IDisposable
     {
         public const int EndGameDepth = 30;
-        public const int WinLoseDepth = 34;
+        public const int WinLoseDepth = 36;
+
+        /// <summary>
+        /// default: 30 (seconds)
+        /// </summary>
+        public int Timeout { get; set; } = 30;
+        
 
         public EdaxEngine()
         {
@@ -43,7 +49,7 @@ namespace MonkeyOthello.Engines.X
                 lock (this)
                 {
                     if (process != null)//TODO: check if close
-                    {
+                    { 
                         return;
                     }
 
@@ -57,8 +63,13 @@ namespace MonkeyOthello.Engines.X
                     process.StartInfo.UseShellExecute = false;
                     process.StartInfo.RedirectStandardInput = true;
                     process.StartInfo.RedirectStandardOutput = true;
+                    process.StartInfo.RedirectStandardError = true;
+                    process.ErrorDataReceived += Process_ErrorDataReceived;
                     process.StartInfo.CreateNoWindow = true;
+                    
                     process.Start();
+
+                    process.BeginErrorReadLine();
 
                     var input = process.StandardInput;
                     var output = process.StandardOutput;
@@ -84,44 +95,94 @@ namespace MonkeyOthello.Engines.X
             }
         }
 
+        private void Process_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            RestartShell();
+        }
+
+        public void RestartShell()
+        {
+            if (process != null)
+            {
+                process.Close();
+                process.Dispose();
+                process = null;
+            }
+
+            CheckEdaxShell();
+        }
+
         private SearchResult CallEdax(string gameMode, string pattern, int alpha, int beta, int depth)
         {
             var sw = Stopwatch.StartNew();
 
             CheckEdaxShell();
 
-            var input = process.StandardInput;
-            var output = process.StandardOutput;
-
-            //ENGINE-PROTOCOL midgame-search --XO---O--XXO-O--OXOXO-OOXXOOXOX-OOXXXXX-OOOXXX----XOXOO--XXXX-XO 0 1 1 100
-            var cmd = $"ENGINE-PROTOCOL {gameMode} {pattern}O {alpha} {beta} {depth} 100";
-            input.WriteLine(cmd);
-            input.Flush();
-
             var result = string.Empty;
-
             var foundResult = false;
-            while (true)
+
+            do
             {
-                var line = output.ReadLine();
-                //Console.WriteLine(line);
-                if (!string.IsNullOrWhiteSpace(line) && !line.Contains("ready."))
+                var input = process.StandardInput;
+                var output = process.StandardOutput;
+
+                //ENGINE-PROTOCOL midgame-search --XO---O--XXO-O--OXOXO-OOXXOOXOX-OOXXXXX-OOOXXX----XOXOO--XXXX-XO 0 1 1 100
+                var cmd = $"ENGINE-PROTOCOL {gameMode} {pattern}O {alpha} {beta} {depth} 100";
+                input.WriteLine(cmd);
+                input.Flush();
+                 
+                while (true)
                 {
-                    result = line;
-                    foundResult = true;
+                    var cts = new CancellationTokenSource();
+                    var readTask = Task.Factory.StartNew(() => output.ReadLine());
+                    if (!readTask.Wait(Timeout*1000, cts.Token))
+                    {
+                        cts.Cancel();
+                        break;
+                    }
+
+                    var line = readTask.Result;
+                    //Console.WriteLine(line);
+                    if (!string.IsNullOrWhiteSpace(line) && !line.Contains("ready."))
+                    {
+                        result = line;
+                        foundResult = true;
+                    }
+                    if (foundResult && line.Contains("ready."))
+                    {
+                        break;
+                    }
+
+                    Thread.Sleep(100);
                 }
-                if (foundResult && line.Contains("ready."))
+
+                if (!foundResult)
                 {
-                    break;
+                    depth -= 2;//use lower depth to research
+                    if (depth < 2)
+                    {
+                        break;
+                    }
+                    UpdateProgress?.Invoke(new SearchResult { Message = "restart shell..." });
+                    RestartShell();
                 }
 
-                Thread.Sleep(100);
-            }
-
-
+            } while (!foundResult);
 
             sw.Stop();
             //analyze output
+
+            if (string.IsNullOrWhiteSpace(result))
+            {
+                return new SearchResult
+                {
+                    IsTimeout = true,
+                    TimeSpan = sw.Elapsed,
+                    Message = "time out!",
+                    Process = 1
+                };
+            }
+
             var r = ParseResult(result);
             r.TimeSpan = sw.Elapsed;
             r.Message = $"[{depth}][{gameMode}] {r.Message}";
