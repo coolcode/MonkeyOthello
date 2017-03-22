@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Presentation\Board.cs" />
     <Compile Include="Presentation\Config.cs" />
+    <Compile Include="Presentation\Options.cs" />
     <Compile Include="Presentation\StoneType.cs" />
     <Compile Include="Presentation\BoardPainter.cs" />
     <Compile Include="Presentation\Game.cs" />

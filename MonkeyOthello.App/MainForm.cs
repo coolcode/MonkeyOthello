@@ -18,7 +18,8 @@ namespace MonkeyOthello
         private Random rand = new Random();
         private Board board = new Board();
         private BoardPainter boardPainter;
-        private Game game;
+        private Game game = null;
+        private Options options = Options.Default;
         private GameMode gameMode = GameMode.HumanVsComputer;
         private UserControl bufferBoard = new DoubleBufferBoard();
 
@@ -37,6 +38,13 @@ namespace MonkeyOthello
             InitializeComponent();
 
             ResizeRedraw = true;
+
+            pvsPToolStripMenuItem.Visible = false;
+            cvsCToolStripMenuItem.Visible = false;
+            helpHToolStripMenuItem.Visible = false;
+            optionOToolStripMenuItem.DropDownItems.Clear();
+            optionOToolStripMenuItem.DropDownItems.Add(pvsCToolStripMenuItem);
+            optionOToolStripMenuItem.DropDownItems.Add(cvsPToolStripMenuItem);
 
             bufferBoard.Size = new Size(400, 400);
             bufferBoard.Location = new Point(6, 30);
@@ -67,6 +75,8 @@ namespace MonkeyOthello
             pvsCToolStripMenuItem.Checked = true;
             cvsPToolStripMenuItem.Checked = false;
             game.Mode = GameMode.HumanVsComputer;
+            options.Mode = GameMode.HumanVsComputer;
+            options.Save();
         }
 
         private void CvsPToolStripMenuItem_Click(object sender, EventArgs e)
@@ -74,6 +84,8 @@ namespace MonkeyOthello
             pvsCToolStripMenuItem.Checked = false;
             cvsPToolStripMenuItem.Checked = true;
             game.Mode = GameMode.ComputerVsHuman;
+            options.Mode = GameMode.ComputerVsHuman;
+            options.Save();
         }
 
         private void MenuLevel_Click(object sender, EventArgs e)
@@ -84,6 +96,8 @@ namespace MonkeyOthello
             if (Enum.TryParse(levelText, out gameLevel))
             {
                 game.Level = gameLevel;
+                options.Level = gameLevel;
+                options.Save();
             }
 
             menuEasy.Checked = false;
@@ -119,6 +133,42 @@ namespace MonkeyOthello
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            //options
+            options = Options.Load();
+            switch (options.Level)
+            {
+                case GameLevel.Easy:
+                    menuEasy.Checked = true;
+                    break;
+                case GameLevel.Medium:
+                    menuMedium.Checked = true;
+                    break;
+                case GameLevel.Hard:
+                    menuHard.Checked = true;
+                    break;
+                case GameLevel.Expert:
+                    menuExpert.Checked = true;
+                    break;
+                case GameLevel.Crazy:
+                    menuCrazy.Checked = true;
+                    break;
+                default:
+                    break;
+            }
+
+            switch (options.Mode)
+            {
+                case GameMode.HumanVsComputer:
+                    pvsCToolStripMenuItem.Checked = true;
+                    break;
+                case GameMode.ComputerVsHuman:
+                    cvsPToolStripMenuItem.Checked = true;
+                    break;
+                default:
+                    break;
+            }
+
+            //board
             boardPainter = new BoardPainter(board, bufferBoard);
             game = new Game(board);
             game.UpdatePlay = (player, square) =>
