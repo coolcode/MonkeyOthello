@@ -248,13 +248,13 @@ namespace MonkeyOthello.Engines.V2.AI
                                 emptiesNum++;
                             else if (edge[j] == color)
                             {
-                                if ((emptiesNum & 1) == 0)//偶数
+                                if ((emptiesNum & 1) == 0)// 
                                     return score + weight_train[emptiesIndex, IND_MYSTAB] * emptiesNum / 2;
                                 return score - weight_train[emptiesIndex, IND_MYSTAB] * emptiesNum / 2;
                             }
                             else
                             {
-                                if ((emptiesNum & 1) == 0)//偶数
+                                if ((emptiesNum & 1) == 0)// 
                                     return score - weight_train[emptiesIndex, IND_MYSTAB] * emptiesNum / 2;
                                 return score + weight_train[emptiesIndex, IND_MYSTAB] * emptiesNum / 3;
                             }
@@ -300,13 +300,13 @@ namespace MonkeyOthello.Engines.V2.AI
                                 emptiesNum++;
                             else if (edge[j] == color)
                             {
-                                if ((emptiesNum & 1) == 0)//偶数
+                                if ((emptiesNum & 1) == 0)// 
                                     return score + weight_train[emptiesIndex, IND_MYSTAB] * emptiesNum / 2;
                                 return score - weight_train[emptiesIndex, IND_MYSTAB] * emptiesNum / 2;
                             }
                             else
                             {
-                                if ((emptiesNum & 1)== 0)//偶数
+                                if ((emptiesNum & 1)== 0)// 
                                     return score - weight_train[emptiesIndex, IND_MYSTAB] * emptiesNum / 2;
                                 return score + weight_train[emptiesIndex, IND_MYSTAB] * emptiesNum / 2;
                             }

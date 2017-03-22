@@ -229,7 +229,7 @@
             // aboutAToolStripMenuItem
             // 
             this.aboutAToolStripMenuItem.Name = "aboutAToolStripMenuItem";
-            this.aboutAToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.aboutAToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.aboutAToolStripMenuItem.Text = "About(&A)";
             this.aboutAToolStripMenuItem.Click += new System.EventHandler(this.aboutAToolStripMenuItem_Click);
             // 
@@ -300,7 +300,7 @@
             this.picMonkey.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picMonkey.TabIndex = 17;
             this.picMonkey.TabStop = false;
-            this.Tips.SetToolTip(this.picMonkey, "欢迎使用Monkey黑白棋(V2.0)");
+            this.Tips.SetToolTip(this.picMonkey, "Monkey Othello");
             // 
             // picblackStone
             // 
@@ -312,7 +312,7 @@
             this.picblackStone.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picblackStone.TabIndex = 8;
             this.picblackStone.TabStop = false;
-            this.Tips.SetToolTip(this.picblackStone, "黑棋数量");
+            this.Tips.SetToolTip(this.picblackStone, "Black Pieces");
             // 
             // picWhiteStone
             // 
@@ -324,7 +324,7 @@
             this.picWhiteStone.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picWhiteStone.TabIndex = 9;
             this.picWhiteStone.TabStop = false;
-            this.Tips.SetToolTip(this.picWhiteStone, "白棋数量");
+            this.Tips.SetToolTip(this.picWhiteStone, "White Pieces");
             // 
             // lblwhiteNum
             // 
@@ -511,7 +511,7 @@
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Monkey Othello V3.0 (Buce Lee)";
+            this.Text = "Monkey Othello v3.0 (Bruce Lee)";
             this.statMain.ResumeLayout(false);
             this.statMain.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picMonkey)).EndInit();

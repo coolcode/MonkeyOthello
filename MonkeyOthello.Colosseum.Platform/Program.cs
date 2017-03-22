@@ -21,7 +21,7 @@ namespace MonkeyOthello.Colosseum.Platform
 
                 //var ownBoard = BitBoard.Parse("-X-O------XOXX--OOOXXXX-OOOOXXX-OXXOXXX-O-XX------XX------------");
                 //var oppBoard = Rule.MoveSwitch(ownBoard, 2);
-
+                //
                 //var oppBoard = BitBoard.Parse("----------XOXX--OOOXXXX-OOOOXXX-OXXOXXX-------------------------");
                 //FightPlatform.Analyze(oppBoard);
 
