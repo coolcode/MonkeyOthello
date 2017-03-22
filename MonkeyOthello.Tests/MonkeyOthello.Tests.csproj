@@ -35,10 +35,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MonkeyOthelloV2, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\MonkeyOthelloV2.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -49,32 +45,23 @@
   <ItemGroup>
     <Compile Include="ConsoleCopy.cs" />
     <Compile Include="Engines\EdaxEngine.cs" />
-    <Compile Include="Engines\FuzzyEngine.cs" />
     <Compile Include="Engines\Knowledge.cs" />
-    <Compile Include="Engines\ZebraEngine.cs" />
     <Compile Include="Engines\Colosseum.cs" />
-    <Compile Include="Engines\MonkeyV2Engine.cs" />
-    <Compile Include="Engines\V2Engine.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Test.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Tools\networks\all-deeplearning-19.net">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Tools\edax\data\book.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Tools\edax\data\eval.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MonkeyOthello.Core\MonkeyOthello.Core.csproj">
       <Project>{e71c88c4-3ca7-45d7-aedd-1fa4b26b5fe4}</Project>
       <Name>MonkeyOthello.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MonkeyOthello.Engines.V2\MonkeyOthello.Engines.V2.csproj">
+      <Project>{08c0d05d-eb26-413e-9a06-3abbdb397c87}</Project>
+      <Name>MonkeyOthello.Engines.V2</Name>
     </ProjectReference>
     <ProjectReference Include="..\MonkeyOthello.Learning\MonkeyOthello.Learning.csproj">
       <Project>{c6734c71-9439-426a-8a63-6b0f45bd0cc1}</Project>
@@ -82,21 +69,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="MonkeyOthelloV2.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="test-result-20.txt" />
     <Content Include="test-result.txt" />
-    <Content Include="Tools\edax\wEdax-x64.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="EGEngine.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(SolutionDir)Tools\edax\*.*" "$(TargetDir)edax" /s /i /y
+xcopy "$(SolutionDir)Tools\v2\EGEngine.dll" "$(TargetDir)" /s /i /y</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

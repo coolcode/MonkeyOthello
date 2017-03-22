@@ -82,8 +82,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Tools\edax\data\book.dat" />
-    <None Include="Tools\edax\data\eval.dat" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -128,7 +126,6 @@
     <Content Include="Resources\StartBoard2_16.png" />
     <Content Include="Resources\undo.png" />
     <Content Include="Resources\WhiteStone.png" />
-    <Content Include="Tools\edax\wEdax-x64.exe" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MonkeyOthello.Core\MonkeyOthello.Core.csproj">
@@ -141,6 +138,9 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(SolutionDir)Tools\edax\*.*" "$(TargetDir)edax" /s /i /y</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

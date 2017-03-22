@@ -31,7 +31,7 @@ namespace MonkeyOthello.Tests.Engines
             var sw = Stopwatch.StartNew();
             var process = new Process();
 
-            var edaxPath = Path.Combine(Environment.CurrentDirectory, @"Tools\edax");
+            var edaxPath = Path.Combine(Environment.CurrentDirectory, @"edax\");
             var edaxFile = Path.Combine(edaxPath, "wEdax-x64.exe");
 
             process.StartInfo.FileName = edaxFile;

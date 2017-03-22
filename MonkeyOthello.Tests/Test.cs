@@ -9,6 +9,7 @@ using System.Linq;
 using System.IO;
 using System.Configuration;
 using MonkeyOthello.Learning;
+using MonkeyOthello.Engines.V2;
 
 namespace MonkeyOthello.Tests
 {
@@ -136,19 +137,7 @@ namespace MonkeyOthello.Tests
 "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwbwwwwwwwbwwwwbbb.",
             };
         #endregion
-
-        public static void GenerateKnowledge()
-        {
-            //var engines = new IEngine[] { new RandomEngine("Random1"), new RandomEngine("Random2") };
-            //var engines = new IEngine[] { new MonkeyV2Engine(), new FuzzyEngine() };
-            var engines = new IEngine[] { new EdaxEngine(), new FuzzyEngine() };
-            var trainDepth = 0;
-            int.TryParse(ConfigurationManager.AppSettings["TrainDepth"], out trainDepth);
-            Console.WriteLine($"TrainDepth: {trainDepth}");
-            IColosseum game = new Knowledge(trainDepth);
-            game.Fight(engines, 3000);
-        }
-
+        
         public static void Fight()
         {
             // Pilot, MonkeyV2Engine, EdaxEngine, DeepLearningEngine

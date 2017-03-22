@@ -15,7 +15,7 @@ namespace MonkeyOthello.Engines
             get { return this.GetType().Name; }
         }
 
-        public UpdateProgress UpdateProgress { get; set; }
+        public virtual UpdateProgress UpdateProgress { get; set; }
 
         public abstract SearchResult Search(BitBoard board, int depth);
 

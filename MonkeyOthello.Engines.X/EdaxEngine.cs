@@ -19,7 +19,7 @@ namespace MonkeyOthello.Engines.X
         /// default: 30 (seconds)
         /// </summary>
         public int Timeout { get; set; } = 30;
-        
+
 
         public EdaxEngine()
         {
@@ -49,11 +49,11 @@ namespace MonkeyOthello.Engines.X
                 lock (this)
                 {
                     if (process != null)//TODO: check if close
-                    { 
+                    {
                         return;
                     }
 
-                    var edaxPath = Path.Combine(Environment.CurrentDirectory, @"Tools\edax");
+                    var edaxPath = Path.Combine(Environment.CurrentDirectory, @"edax\");
                     var edaxFile = Path.Combine(edaxPath, "wEdax-x64.exe");
 
                     process = new Process();
@@ -66,7 +66,7 @@ namespace MonkeyOthello.Engines.X
                     process.StartInfo.RedirectStandardError = true;
                     process.ErrorDataReceived += Process_ErrorDataReceived;
                     process.StartInfo.CreateNoWindow = true;
-                    
+
                     process.Start();
 
                     process.BeginErrorReadLine();
@@ -120,7 +120,9 @@ namespace MonkeyOthello.Engines.X
 
             var result = string.Empty;
             var foundResult = false;
-
+            var reliability = 1.0;
+            var retryCount = 10;
+            var i = 0;
             do
             {
                 var input = process.StandardInput;
@@ -130,12 +132,12 @@ namespace MonkeyOthello.Engines.X
                 var cmd = $"ENGINE-PROTOCOL {gameMode} {pattern}O {alpha} {beta} {depth} 100";
                 input.WriteLine(cmd);
                 input.Flush();
-                 
+
                 while (true)
                 {
                     var cts = new CancellationTokenSource();
                     var readTask = Task.Factory.StartNew(() => output.ReadLine());
-                    if (!readTask.Wait(Timeout*1000, cts.Token))
+                    if (!readTask.Wait(Timeout * 1000, cts.Token))
                     {
                         cts.Cancel();
                         break;
@@ -158,16 +160,34 @@ namespace MonkeyOthello.Engines.X
 
                 if (!foundResult)
                 {
-                    depth -= 2;//use lower depth to research
-                    if (depth < 2)
+                    //the result is not reliable
+                    reliability -= 1.0/retryCount;
+                    if (gameMode == "endgame-search")
                     {
-                        break;
+                        //use minimum window to research
+                        alpha = -1;
+                        beta = 1;
                     }
-                    UpdateProgress?.Invoke(new SearchResult { Message = "restart shell..." });
+                    else
+                    {//midgame
+                        //use lower depth to research
+                        depth -= 2;
+                        if (depth < 2)
+                        {
+                            break;
+                        }
+                    }
+
+                    UpdateProgress?.Invoke(new SearchResult
+                    {
+                        Reliability = reliability,
+                        Message = $"restart shell..., new param:[{alpha},{beta},{depth}] {sw.Elapsed}"
+                    });
+
                     RestartShell();
                 }
 
-            } while (!foundResult);
+            } while (!foundResult && i++ < retryCount);
 
             sw.Stop();
             //analyze output
@@ -179,7 +199,8 @@ namespace MonkeyOthello.Engines.X
                     IsTimeout = true,
                     TimeSpan = sw.Elapsed,
                     Message = "time out!",
-                    Process = 1
+                    Process = 1,
+                    Reliability = reliability,
                 };
             }
 
@@ -187,6 +208,7 @@ namespace MonkeyOthello.Engines.X
             r.TimeSpan = sw.Elapsed;
             r.Message = $"[{depth}][{gameMode}] {r.Message}";
             r.Process = 1;
+            r.Reliability = reliability;
 
             return r;
         }
@@ -304,14 +326,6 @@ namespace MonkeyOthello.Engines.X
                 Nodes = nodes,
                 Message = $"{time} | {result}",
             };
-        }
-
-        private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
-        {
-            if (!string.IsNullOrWhiteSpace(e.Data) && e.Data.Contains("move "))
-            {
-                var r = ParseResult(e.Data);
-            }
         }
 
         public void Dispose()
