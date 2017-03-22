@@ -158,5 +158,52 @@ namespace MonkeyOthello.Core
 
             return sb.ToString();
         }
+
+        public static BitBoard Parse(string text, bool playerTakeBlack=false)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentNullException("text");
+            }
+
+            if (text.Length != 64)
+            {
+                throw new ArgumentOutOfRangeException("the length of text must be 64");
+            }
+
+            var w = 0ul;
+            var b = 0ul;
+            for (var i = 0; i < 64; i++)
+            {
+                var p = text[i];
+                var x = 1ul << i;
+                switch (p)
+                {
+                    case 'w':
+                    case 'W':
+                    case 'o':
+                    case 'O':
+                    case '¡ð':
+                        w |= x;
+                        break;
+                    case 'b':
+                    case 'B':
+                    case 'x':
+                    case 'X':
+                    case '¡ñ':
+                        b |= x;
+                        break;
+                    case '.':
+                    case '-':
+                    case '¡õ':
+                    case ' ':
+                    default:
+                        //do nothing, just to tell you guys which empty symbols are
+                        break;
+                }
+            }
+
+            return playerTakeBlack ? new BitBoard(b, w) : new BitBoard(w, b);
+        }
     }
 }

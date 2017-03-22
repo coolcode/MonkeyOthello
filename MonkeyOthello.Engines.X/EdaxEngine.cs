@@ -102,13 +102,15 @@ namespace MonkeyOthello.Engines.X
 
         public void RestartShell()
         {
-            if (process != null)
+            lock (this)
             {
-                process.Close();
-                process.Dispose();
-                process = null;
+                if (process != null)
+                {
+                    process.Close();
+                    process.Dispose();
+                    process = null;
+                }
             }
-
             CheckEdaxShell();
         }
 
@@ -133,10 +135,29 @@ namespace MonkeyOthello.Engines.X
                 input.WriteLine(cmd);
                 input.Flush();
 
-                while (true)
+                var count = 10;
+                var index = 0;
+                do//TODO:try only one time
                 {
                     var cts = new CancellationTokenSource();
-                    var readTask = Task.Factory.StartNew(() => output.ReadLine());
+                    var readTask = Task.Factory.StartNew(() =>
+                    {
+                        try
+                        {
+                            return output.ReadLine();
+                        }
+                        catch (Exception ex)
+                        {
+                            UpdateProgress?.Invoke(new SearchResult
+                            {
+                                Reliability = 0,
+                                Message = $"spent: {sw.Elapsed}, error:{ex}"
+                            });
+                        }
+
+                        return string.Empty;
+                    });
+
                     if (!readTask.Wait(Timeout * 1000, cts.Token))
                     {
                         cts.Cancel();
@@ -144,26 +165,38 @@ namespace MonkeyOthello.Engines.X
                     }
 
                     var line = readTask.Result;
+
+                    if (string.IsNullOrWhiteSpace(line))
+                    {
+                        break;
+                    }
                     //Console.WriteLine(line);
                     if (!string.IsNullOrWhiteSpace(line) && !line.Contains("ready."))
                     {
                         result = line;
                         foundResult = true;
+                        break;
                     }
                     if (foundResult && line.Contains("ready."))
                     {
                         break;
                     }
-
+                    // break;
                     Thread.Sleep(100);
-                }
+                } while (index++ < count && sw.Elapsed.TotalMinutes < 2);
 
                 if (!foundResult)
                 {
                     //the result is not reliable
-                    reliability -= 1.0/retryCount;
+                    reliability -= 1.0 / retryCount;
                     if (gameMode == "endgame-search")
                     {
+                        if (alpha == -1)
+                        {
+                            //give up
+
+                            break;
+                        }
                         //use minimum window to research
                         alpha = -1;
                         beta = 1;
@@ -187,7 +220,7 @@ namespace MonkeyOthello.Engines.X
                     RestartShell();
                 }
 
-            } while (!foundResult && i++ < retryCount);
+            } while (!foundResult && i++ < retryCount && sw.Elapsed.TotalMinutes<2);
 
             sw.Stop();
             //analyze output

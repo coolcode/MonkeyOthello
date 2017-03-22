@@ -1,4 +1,5 @@
-﻿using MonkeyOthello.Engines;
+﻿using MonkeyOthello.Core;
+using MonkeyOthello.Engines;
 using MonkeyOthello.Engines.X;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,15 @@ namespace MonkeyOthello.Colosseum.Platform
             try
             {
                 var sw = Stopwatch.StartNew();
-                GenerateKnowledge();
+
+                //var ownBoard = BitBoard.Parse("-X-O------XOXX--OOOXXXX-OOOOXXX-OXXOXXX-O-XX------XX------------");
+                //var oppBoard = Rule.MoveSwitch(ownBoard, 2);
+
+                //var oppBoard = BitBoard.Parse("----------XOXX--OOOXXXX-OOOOXXX-OXXOXXX-------------------------");
+                //FightPlatform.Analyze(oppBoard);
+
+                FightPlatform. GenerateKnowledge();
+
                 sw.Stop();
                 Console.WriteLine($"done! {sw.Elapsed}");
             }
@@ -26,38 +35,6 @@ namespace MonkeyOthello.Colosseum.Platform
                 Console.WriteLine(e);
             }
             Console.Read();
-        }
-
-        public static void GenerateKnowledge()
-        {
-            var timeout = 60;
-            var engines = new IEngine[] {
-                new EdaxEngine { Timeout = timeout },
-                new FuzzyEngine(new EdaxEngine { Timeout = timeout }, new RandomEngine())
-            };
-
-            foreach (var engine in engines)
-            {
-                engine.UpdateProgress = UpdateProgress;
-            }
-
-            var endEngine = new EdaxEngine { Timeout = timeout, UpdateProgress = UpdateProgress };
-
-            var trainDepth = 20;
-            int.TryParse(ConfigurationManager.AppSettings["TrainDepth"], out trainDepth);
-            var midGameDepth = 16;
-            int.TryParse(ConfigurationManager.AppSettings["MidGameDepth"], out midGameDepth);
-            var endGameDepth = EdaxEngine.EndGameDepth;
-
-            Console.WriteLine($"TrainDepth: {trainDepth}, MidGameDepth:{midGameDepth}");
-
-            IColosseum game = new TrainableColosseum(endEngine, trainDepth, midGameDepth, endGameDepth);
-            game.Fight(engines, 5000);
-        }
-
-        private static void UpdateProgress(SearchResult result)
-        {
-            Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} {result}");
         }
 
     }

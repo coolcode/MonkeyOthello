@@ -137,7 +137,7 @@ namespace MonkeyOthello.Tests
 "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwbwwwwwwwbwwwwbbb.",
             };
         #endregion
-        
+
         public static void Fight()
         {
             // Pilot, MonkeyV2Engine, EdaxEngine, DeepLearningEngine
@@ -178,34 +178,8 @@ namespace MonkeyOthello.Tests
             var length = Math.Min(20, testData.Length);// 10;// = bds.Length; 
             for (var i = 0; i < length; i++)
             {
-                int empties = 0, white = 0, black = 0;
-                var w = 0ul;
-                var b = 0ul;
-                for (var j = 0; j < 64; j++)
-                {
-                    var x = 1ul << j;
-                    if (testData[i][j] == 'w')
-                    {
-                        w |= x;
-                        white++;
-                    }
-                    else if (testData[i][j] == 'b')
-                    {
-                        b |= x;
-                        black++;
-                    }
-                    else if (testData[i][j] == '.')
-                    {
-                        empties++;
-                    }
-                }
-
-                var discdiff = (color == 'b' ? black - white : white - black);
-
-                var board = (color == 'b' ? new BitBoard(b, w) : new BitBoard(w, b));
-
-                Console.WriteLine($"{i} (empties={empties:D2} white={white:D2} black={black:D2}  diff={empties})");
-
+                var board = BitBoard.Parse(testData[i], color == 'b');
+                int empties = board.EmptyPiecesCount();
                 var index = 0;
                 while (index < engines.Length)
                 {
@@ -219,7 +193,6 @@ namespace MonkeyOthello.Tests
             }
 
             sw.Stop();
-
 
             for (var i = 0; i < ts.Length; i++)
             {
