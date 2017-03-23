@@ -1,4 +1,5 @@
 ﻿using MonkeyOthello.Core;
+using MonkeyOthello.Engines;
 using MonkeyOthello.Presentation;
 using System;
 using System.Collections.Generic;
@@ -187,16 +188,7 @@ namespace MonkeyOthello
             {
                 Safe(() =>
                 {
-                    var speed = r.Nodes / r.TimeSpan.TotalSeconds;
-                    lblSquare.Text = r.Move.ToNotation();
-                    lblEval.Text = $"{r.Score}";
-                    lblEval.ForeColor = (r.Score < 0 ? Color.Red : Color.Blue);
-                    lblNodes.Text = FormatNumber(r.Nodes);
-                    lblSpendTime.Text = $"{r.TimeSpan.TotalSeconds:F1}s";
-                    lblSpeed.Text = (speed > (1ul << 31) | double.IsNaN(speed) ? "+∞" : FormatNumber(speed) + "/s");
-                    ShowMessage(r.Message);//$"{r.Process:p0} {string.Join(",", r.EvalList)}";
-
-                    statMain.Invalidate();
+                    DisplaySearchResult(r);
 
                     if (r.Process == 1)
                     {
@@ -214,6 +206,20 @@ namespace MonkeyOthello
                 };
 
             game.NewGame();
+        }
+
+        private void DisplaySearchResult(SearchResult r)
+        {
+            var speed = r.Nodes / r.TimeSpan.TotalSeconds;
+            lblSquare.Text = r.Move.ToNotation();
+            lblEval.Text = $"{r.Score}";
+            lblEval.ForeColor = (r.Score < 0 ? Color.Red : Color.Blue);
+            lblNodes.Text = FormatNumber(r.Nodes);
+            lblSpendTime.Text = $"{r.TimeSpan.TotalSeconds:F1}s";
+            lblSpeed.Text = (speed > (1ul << 31) | double.IsNaN(speed) ? "+∞" : FormatNumber(speed) + "/s");
+            ShowMessage(r.Message);//$"{r.Process:p0} {string.Join(",", r.EvalList)}";
+
+            statMain.Invalidate();
         }
 
         private string FormatNumber(double number)
@@ -244,7 +250,7 @@ namespace MonkeyOthello
 
                         if (game.IsGameOver())
                         {
-                            MessageBox.Show("Game over!", Text);
+                            ShowMessageBox("Game over!");
                             return;
                         }
 
@@ -254,7 +260,7 @@ namespace MonkeyOthello
                         }
                         else
                         {
-                            MessageBox.Show("Pass, your turn.", Text);
+                            ShowMessageBox("Pass, your turn.");
                         }
                     }
                     else
@@ -303,15 +309,23 @@ namespace MonkeyOthello
 
             if (game.IsGameOver())
             {
-                MessageBox.Show("Game over!", Text);
+                ShowMessageBox("Game over!");
                 return;
             }
 
             if (game.TurnNext() == PlayerType.Computer)
             {
-                MessageBox.Show("Pass, computer's turn.", Text);
+                ShowMessageBox("Pass, computer's turn.");
                 ComputerStartTask();
             }
+        }
+
+        private void ShowMessageBox(string msg, string title = null)
+        {
+            Safe(() =>
+            {
+                MessageBox.Show(this, msg, title ?? Text);
+            });
         }
 
         private void BeforeThink()
@@ -374,17 +388,13 @@ namespace MonkeyOthello
 
         private void NewGame()
         {
-            lsvMoves.Items.Clear();
-            undoUToolStripMenuItem.Enabled = false;
-            lblNodes.Text = "0";
-            lblEval.Text = "0";
-            lblSpeed.Text = "  ";
-            lblSpendTime.Text = "  ";
-            lblSquare.Text = "  ";
-            ShowMessage("New game");
             game.NewGame();
             UpdateBoard();
             UpdatePiecesCount();
+            DisplaySearchResult(new SearchResult());
+            ShowMessage("New game");
+            lsvMoves.Items.Clear();
+            undoUToolStripMenuItem.Enabled = false;
 
             if (game.Mode == GameMode.ComputerVsHuman)
             {
