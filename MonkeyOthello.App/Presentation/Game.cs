@@ -1,4 +1,4 @@
-using MonkeyOthello.Engines;
+﻿using MonkeyOthello.Engines;
 using MonkeyOthello.Core;
 using System;
 using System.Collections.Generic;
@@ -164,6 +164,11 @@ namespace MonkeyOthello.Presentation
             UpdateResult?.Invoke(result);
 
             // if (bb.EmptyPiecesCount() > EdaxEngine.WinLoseDepth)
+            if (!Board.CanMove())
+            {
+                moveMaps.Clear();
+            }
+            else
             {
                 if (backgroundSearchTask != null)
                 {
@@ -193,11 +198,11 @@ namespace MonkeyOthello.Presentation
         {
             Action search = () =>
             {
-                UpdateMessage?.Invoke("thinking...");
+                UpdateMessage?.Invoke("⌛thinking...");
 
                 var currentBoard = Board.ToBitBoard();
                 var moves = Rule.FindMoves(currentBoard);
-                var bestScore = -64;
+                var bestScore = -Constants.HighestScore - 1;
                 var bestMove = -1;
                 //var moveEvalMap = new Dictionary<int, int>();
                 moveMaps.Clear();
@@ -233,12 +238,11 @@ namespace MonkeyOthello.Presentation
                         bestScore = eval;
                         bestMove = move;
                     }
-                    moveMaps[move] = new MoveMapItem { Move = sr.Move, Eval = eval };
-                    var moveEvalResult = string.Join("|", moveMaps.Select(kv => $"{kv.Key.ToNotation()},{kv.Value}"));
-
+                    moveMaps[move] = new MoveMapItem { Move = sr.Move, Eval = -eval };
+                    var nextMovesMessage = ToMessage(moveMaps, bestMove, bestScore);
                     //moveEvalMap[move] = eval;
                     //var moveEvalResult = string.Join(",", moveEvalMap.Select(kv => $"({kv.Key.ToNotation()}:{kv.Value})"));
-                    UpdateMessage?.Invoke($"[{i}/{moves.Length}] best:({bestMove.ToNotation()},{bestScore}), [{moveEvalResult}]");
+                    UpdateMessage?.Invoke($"[{i}/{moves.Length}] {nextMovesMessage}");
                     //Console.WriteLine($"move:{move}, score:{eval}");
                 }
 
@@ -255,12 +259,19 @@ namespace MonkeyOthello.Presentation
                 }
                 else
                 {
-                    var moveEvalResult = string.Join("|", moveMaps.Select(kv => $"{kv.Key.ToNotation()},{kv.Value}"));
-                    UpdateMessage?.Invoke($"best:({bestMove.ToNotation()},{bestScore}), [{moveEvalResult}]");
+                    var nextMovesMessage = ToMessage(moveMaps, bestMove, bestScore);
+                    UpdateMessage?.Invoke(nextMovesMessage);
                 }
             };
 
             return Task.Run(search, token);
+        }
+
+        private string ToMessage(IDictionary<int, MoveMapItem> map, int bestMove, int bestScore)
+        {
+            var moveEvalResult = string.Join(" | ", map.Select(kv => $"{kv.Key.ToNotation()},{kv.Value}"));
+
+            return $"[{bestMove.ToNotation()},{bestScore}], [{moveEvalResult}]";
         }
 
         public bool HumanPlay(int square)

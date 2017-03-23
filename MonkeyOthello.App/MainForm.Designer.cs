@@ -36,18 +36,13 @@
             this.pnlOthelloBoard = new System.Windows.Forms.Panel();
             this.lblMessage = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblNodes = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabel6 = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblSpeed = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabel5 = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblSpendTime = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblEval = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblSquare = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblEmpties = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
             this.statMain = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.aboutAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpHToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pvsCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -96,7 +91,7 @@
             // useBookToolStripMenuItem
             // 
             this.useBookToolStripMenuItem.Name = "useBookToolStripMenuItem";
-            this.useBookToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.useBookToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.useBookToolStripMenuItem.Text = "Opening Book";
             this.useBookToolStripMenuItem.Visible = false;
             // 
@@ -132,12 +127,7 @@
             this.lblNodes.Name = "lblNodes";
             this.lblNodes.Size = new System.Drawing.Size(17, 19);
             this.lblNodes.Text = "0";
-            // 
-            // toolStripStatusLabel6
-            // 
-            this.toolStripStatusLabel6.Name = "toolStripStatusLabel6";
-            this.toolStripStatusLabel6.Size = new System.Drawing.Size(20, 19);
-            this.toolStripStatusLabel6.Text = "✄";
+            this.lblNodes.ToolTipText = "Nodes";
             // 
             // lblSpeed
             // 
@@ -145,12 +135,7 @@
             this.lblSpeed.Name = "lblSpeed";
             this.lblSpeed.Size = new System.Drawing.Size(42, 19);
             this.lblSpeed.Text = "0 NPS";
-            // 
-            // toolStripStatusLabel5
-            // 
-            this.toolStripStatusLabel5.Name = "toolStripStatusLabel5";
-            this.toolStripStatusLabel5.Size = new System.Drawing.Size(19, 19);
-            this.toolStripStatusLabel5.Text = "✈";
+            this.lblSpeed.ToolTipText = "Search Speed";
             // 
             // lblSpendTime
             // 
@@ -158,25 +143,17 @@
             this.lblSpendTime.Name = "lblSpendTime";
             this.lblSpendTime.Size = new System.Drawing.Size(34, 19);
             this.lblSpendTime.Text = "0.0 s";
-            // 
-            // toolStripStatusLabel3
-            // 
-            this.toolStripStatusLabel3.Name = "toolStripStatusLabel3";
-            this.toolStripStatusLabel3.Size = new System.Drawing.Size(17, 19);
-            this.toolStripStatusLabel3.Text = "☼";
+            this.lblSpendTime.ToolTipText = "Time";
             // 
             // lblEval
             // 
             this.lblEval.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.lblEval.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblEval.ForeColor = System.Drawing.Color.Blue;
             this.lblEval.Name = "lblEval";
-            this.lblEval.Size = new System.Drawing.Size(17, 19);
+            this.lblEval.Size = new System.Drawing.Size(18, 19);
             this.lblEval.Text = "0";
-            // 
-            // toolStripStatusLabel2
-            // 
-            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(22, 19);
-            this.toolStripStatusLabel2.Text = " ☺";
+            this.lblEval.ToolTipText = "Evaluation";
             // 
             // lblSquare
             // 
@@ -184,6 +161,7 @@
             this.lblSquare.Name = "lblSquare";
             this.lblSquare.Size = new System.Drawing.Size(17, 19);
             this.lblSquare.Text = "  ";
+            this.lblSquare.ToolTipText = "Move";
             // 
             // lblEmpties
             // 
@@ -191,6 +169,7 @@
             this.lblEmpties.Name = "lblEmpties";
             this.lblEmpties.Size = new System.Drawing.Size(23, 19);
             this.lblEmpties.Text = "60";
+            this.lblEmpties.ToolTipText = "Empties";
             // 
             // toolStripStatusLabel4
             // 
@@ -203,33 +182,22 @@
             this.statMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel4,
             this.lblEmpties,
-            this.toolStripStatusLabel1,
             this.lblSquare,
-            this.toolStripStatusLabel2,
             this.lblEval,
-            this.toolStripStatusLabel3,
             this.lblSpendTime,
-            this.toolStripStatusLabel5,
             this.lblSpeed,
-            this.toolStripStatusLabel6,
             this.lblNodes,
             this.lblMessage});
             this.statMain.Location = new System.Drawing.Point(0, 439);
             this.statMain.Name = "statMain";
+            this.statMain.ShowItemToolTips = true;
             this.statMain.Size = new System.Drawing.Size(569, 24);
             this.statMain.TabIndex = 37;
-            this.statMain.Text = "statusStrip1";
-            // 
-            // toolStripStatusLabel1
-            // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(17, 19);
-            this.toolStripStatusLabel1.Text = "✔";
             // 
             // aboutAToolStripMenuItem
             // 
             this.aboutAToolStripMenuItem.Name = "aboutAToolStripMenuItem";
-            this.aboutAToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutAToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.aboutAToolStripMenuItem.Text = "About(&A)";
             this.aboutAToolStripMenuItem.Click += new System.EventHandler(this.aboutAToolStripMenuItem_Click);
             // 
@@ -363,7 +331,7 @@
             this.pvsPToolStripMenuItem,
             this.cvsCToolStripMenuItem});
             this.gameModetoolStripMenuItem.Name = "gameModetoolStripMenuItem";
-            this.gameModetoolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.gameModetoolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.gameModetoolStripMenuItem.Text = "Game Mode";
             // 
             // optionOToolStripMenuItem
@@ -534,18 +502,13 @@
         private System.Windows.Forms.Panel pnlOthelloBoard;
         private System.Windows.Forms.ToolStripStatusLabel lblMessage;
         private System.Windows.Forms.ToolStripStatusLabel lblNodes;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel6;
         private System.Windows.Forms.ToolStripStatusLabel lblSpeed;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel5;
         private System.Windows.Forms.ToolStripStatusLabel lblSpendTime;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel3;
         private System.Windows.Forms.ToolStripStatusLabel lblEval;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.ToolStripStatusLabel lblSquare;
         private System.Windows.Forms.ToolStripStatusLabel lblEmpties;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel4;
         private System.Windows.Forms.StatusStrip statMain;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripMenuItem aboutAToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpHToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pvsCToolStripMenuItem;

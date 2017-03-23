@@ -189,10 +189,11 @@ namespace MonkeyOthello
                 {
                     var speed = r.Nodes / r.TimeSpan.TotalSeconds;
                     lblSquare.Text = r.Move.ToNotation();
-                    lblEval.Text = string.Format("{0}", r.Score);
-                    lblNodes.Text = string.Format("{0}", (r.Nodes > 1000 ? Math.Round(r.Nodes / 1000.0) + " K" : r.Nodes.ToString()));
-                    lblSpendTime.Text = string.Format("{0:F1}s", r.TimeSpan.TotalSeconds);
-                    lblSpeed.Text = string.Format("{0}", (speed < 10000000 ? ((int)(speed / 1000) + " kn/s") : "+∞"));
+                    lblEval.Text = $"{r.Score}";
+                    lblEval.ForeColor = (r.Score < 0 ? Color.Red : Color.Blue);
+                    lblNodes.Text = FormatNumber(r.Nodes);
+                    lblSpendTime.Text = $"{r.TimeSpan.TotalSeconds:F1}s";
+                    lblSpeed.Text = (speed > (1ul << 31) | double.IsNaN(speed) ? "+∞" : FormatNumber(speed) + "/s");
                     ShowMessage(r.Message);//$"{r.Process:p0} {string.Join(",", r.EvalList)}";
 
                     statMain.Invalidate();
@@ -213,6 +214,21 @@ namespace MonkeyOthello
                 };
 
             game.NewGame();
+        }
+
+        private string FormatNumber(double number)
+        {
+            if (number >= 1000000)
+            {
+                return $"{number / 1000000:F0} M";
+            }
+
+            if (number >= 1000)
+            {
+                return $"{number / 1000:F0} K";
+            }
+
+            return $"{number:F0}";
         }
 
         private void bufferBoard_MouseDown(object sender, MouseEventArgs e)
@@ -382,21 +398,13 @@ namespace MonkeyOthello
             {
                 return;
             }
-            if (msg.Length >= 49)
+            lblMessage.ToolTipText = msg;
+            if (msg.Length >= 59)
             {
-                msg = msg.Substring(0, 46) + "...";
+                msg = msg.Substring(0, 56) + "...";
             }
             lblMessage.Text = msg;
             lblMessage.Invalidate();
-        }
-
-        private void UpdateMessage(int square, double score, int nodes, double time, double speed)
-        {
-            lblSquare.Text = square.ToNotation();
-            lblEval.Text = string.Format("{0:F2}", score);
-            lblNodes.Text = string.Format("{0}", (nodes > 1000 ? Math.Round(nodes / 1000.0) + " K" : nodes.ToString()));
-            lblSpendTime.Text = string.Format("{0:F2}s", time);
-            lblSpeed.Text = string.Format("{0}", (speed < 10000000 ? ((int)(speed / 1000) + " kn/s") : "+∞"));
         }
 
         private void UpdatePiecesCount()
