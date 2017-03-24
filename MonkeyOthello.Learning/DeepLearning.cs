@@ -3,8 +3,11 @@ using Accord.Neuro;
 using Accord.Neuro.Learning;
 using Accord.Neuro.Networks;
 using Accord.Statistics;
+using MonkeyOthello.Core;
+using MonkeyOthello.Utils;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -14,187 +17,121 @@ namespace MonkeyOthello.Learning
 {
     public class DeepLearning
     {
-        private static readonly string dataPath = @"k-data\edax-fuzzy\";//edax-fuzzy\random\
-        private static int empties = 19;
+        //private static readonly string dataPath = @"E:\projects\MonkeyOthello\tests\k-edax-fuzzy-004-22\knowledge";// @"k-data\edax-fuzzy\";//edax-fuzzy\random\
+        //private static int empties = 19;
         private static readonly string networkPath = Path.Combine(Environment.CurrentDirectory, "networks");
-        private static string networkFile;
+        //private static string networkFile;
 
         static DeepLearning()
         {
-            if (!Directory.Exists(networkPath))
-            {
-                Directory.CreateDirectory(networkPath);
-            }
+            CreateDirectoryIfNotExist(networkPath);
 
-            networkFile = Path.Combine(networkPath, $@"all-deeplearning-{empties}.net");
         }
+
 
         public static void Test()
         {
-            //LoadItems();
-            TrainTest();
+            using (var cc = new ConsoleCopy())
+            {
+                //PrepareData(  $@"E:\projects\MonkeyOthello\tests\" );
+                //LoadItems();
+                // TrainAll();
+                //TestAll();
+                VaildateDeepLearningEngine(30);
+            }
         }
 
-        private static void TrainTest()
+        
+        private static void TrainAll()
         {
-            var items = ConvertData(LoadItems());
+            for (var i = 19; i <= 30; i++)
+            {
+                Console.WriteLine($"begin training {i} {"-".Repeat(20)}");
+                var sw = Stopwatch.StartNew();
+                var networkFile = Path.Combine(networkPath, $@"deeplearning-{i}.net");
+                var dataPath = Path.Combine(Environment.CurrentDirectory, $@"knowledge\{i}\");
+                Train(dataPath, networkFile);
+                sw.Stop();
+                Console.WriteLine($"done training {i}, {sw.Elapsed} ");
+            }
+        }
+
+        private static void TestAll()
+        {
+            for (var i = 19; i <= 30; i++)
+            {
+                Console.WriteLine($"begin test {i} {"-".Repeat(20)}");
+                var sw = Stopwatch.StartNew();
+                var networkFile = Path.Combine(networkPath, $@"deeplearning-{i}.net");
+                var dataPath = Path.Combine(Environment.CurrentDirectory, $@"knowledge\{i}\");
+                TestByRate(dataPath, networkFile, 0.2, 0.01, 1.0);
+                sw.Stop();
+                Console.WriteLine($"done test {i}, {sw.Elapsed} ");
+            }
+        }
+
+        private static void PrepareData(string basePath)
+        {
+            var savedBasePath = Path.Combine(Environment.CurrentDirectory, @"knowledge\");
+            CreateDirectoryIfNotExist(savedBasePath);
+
+            for (var i = 19; i <= 30; i++)
+            {
+                var folder = $@"k-edax-{i}\knowledge\";
+                Console.WriteLine($"visit {folder}");
+                var path = Path.Combine(basePath, folder);
+                var kfiles = Directory.GetFiles(path, "*.k");
+                foreach (var kfile in kfiles)
+                {
+                    var originalFileName = Path.GetFileName(kfile);
+                    var index = int.Parse(originalFileName.Split('-')[0]);
+                    var savedPath = Path.Combine(savedBasePath, $@"{index}\");
+                    CreateDirectoryIfNotExist(savedPath);
+                    var savedFilePath = Path.Combine(savedPath, $"[{i}]{originalFileName}");
+                    File.Copy(kfile, savedFilePath, true);
+                    Console.WriteLine($"copy '{originalFileName}' to '{savedFilePath.Replace(AppContext.BaseDirectory, "")}'");
+                }
+            }
+        }
+
+        private static void Train(string dataPath, string networkFile)
+        {
+            var items = ConvertData(LoadItems(dataPath));
             var count = items.Length;
-            Console.WriteLine($"items: {items.Length}");
-            var inputs = items.Select(x => x.inputs).ToArray();
-            var outputs = items.Select(x => x.outputs).ToArray();
+            Console.WriteLine($"items: {count}");
+            var inputs = items.Select(x => x.Inputs).ToArray();
+            var outputs = items.Select(x => x.Outputs).ToArray();
 
             {
-               // Learn(inputs, outputs, trainRate: 0.99);
-            }
-            {
-                var n = (int)(count * 0.8);
-                var testInputs = inputs.Skip(n).ToArray();
-                var testOutputs = outputs.Skip(n).ToArray();
-                Test(testInputs, testOutputs);
+                Learn(networkFile, inputs, outputs, trainRate: 0.99);
             }
             {
                 var n = (int)(count * 0.0);
                 var testInputs = inputs.Skip(n).ToArray();
                 var testOutputs = outputs.Skip(n).ToArray();
-                Test(testInputs, testOutputs);
+                Test(networkFile, testInputs, testOutputs);
             }
         }
 
-        private static void Test(double[][] inputs, double[][] outputs)
+
+        private static void TestByRate(string dataPath, string networkFile, params double[] testRates)
         {
-            Console.WriteLine($"test {inputs.Length} items--------------------------------");
-            var network = DeepBeliefNetwork.Load(networkFile);
-            // Test the resulting accuracy.
-            int correct = 0;
-            var error = 0.0;
-            for (int i = 0; i < inputs.Length; i++)
+            var items = ConvertData(LoadItems(dataPath));
+            var count = items.Length;
+            var inputs = items.Select(x => x.Inputs).ToArray();
+            var outputs = items.Select(x => x.Outputs).ToArray();
+
+            foreach (var testRate in testRates)
             {
-                double[] outputValues = network.Compute(inputs[i]);
-                if (Compare(outputValues, outputs[i]))
-                {
-                    correct++;
-                }
-                error += Error(outputValues, outputs[i]);
+                Console.WriteLine($"test rate: {testRate:p0}");
+                var n = (int)(count * (1 - testRate));
+                var testInputs = inputs.Skip(n).ToArray();
+                var testOutputs = outputs.Skip(n).ToArray();
+                Test(networkFile, testInputs, testOutputs);
             }
-
-            Console.WriteLine("Correct " + correct + "/" + inputs.Length + ", " + Math.Round(((double)correct / (double)inputs.Length * 100), 2) + "%");
-
-            error = Math.Sqrt(error / inputs.Length);
-            Console.WriteLine($"Error: {error }");
         }
 
-        class DataItem
-        {
-            public double[] inputs { get; set; }
-            public double[] outputs { get; set; }
-        }
-
-        private static List<string> LoadItems()
-        {
-            var files = Directory.GetFiles(dataPath, "*.k", SearchOption.AllDirectories);
-            Console.WriteLine($"found {files.Length} files");
-            var list = new List<string>();
-            foreach (var file in files)
-            {
-                var shortPath = file.Replace(dataPath, "");
-                if (Path.GetFileName(file).StartsWith("19"))
-                {
-                    Console.WriteLine($"skip {shortPath}");
-                    continue;
-                }
-                Console.WriteLine($"reading {shortPath}");
-                var lines = File.ReadAllLines(file);
-                list.AddRange(lines);
-            }
-
-            var total = list.Count;
-            Console.WriteLine($"total: {total} items");
-            var uni = list.Distinct().ToList();
-            Console.WriteLine($"uni: {uni.Count} items");
-            Console.WriteLine($"duplicae: {total - uni.Count} items");
-
-            return uni;
-        }
-
-        private static DataItem[] ConvertData(IEnumerable<string> items)
-        {
-            var list = new List<DataItem>();
-            foreach (var item in items)
-            {
-                var values = item.Split(',');
-                var inputs = ToInputValues(values[0]).Concat(ToInputValues(values[1])).ToArray();
-                var outputs = ToOutputValues(values[2]);
-                list.Add(new DataItem { inputs = inputs, outputs = outputs });
-            }
-
-            return list.ToArray();
-        }
-
-        private static double[] ToInputValues(string text)
-        {
-            var bits = ulong.Parse(text);
-            var values = new double[64];
-            for (var i = 0; i < values.Length; i++)
-            {
-                if ((bits & (1UL << i)) != 0)
-                {
-                    values[i] = 1.0;
-                }
-                else
-                {
-                    values[i] = 0.0;
-                }
-            }
-
-            return values;
-        }
-
-        private static double[] ToOutputValues(string text)
-        {
-            //>=0 win, otherwise lose
-            return int.Parse(text) >= 0 ? new[] { 1.0 } : new[] { 0.0 };
-            var eval = int.Parse(text);
-            if (eval == 0)
-            {
-                return new[] { 0.0, 0.0, 0.0 };
-            }
-            else if (eval > 0)
-            {
-                return eval > 20 ? new[] { 1.0, 1.0, 1.0 } : new[] { 1.0, 1.0, 0.0 };
-            }
-            else
-            {
-                return eval < -20 ? new[] { 0.0, 0.0, 0.1 } : new[] { 0.0, 1.0, 0.0 };
-            }
-
-            //data range:[-64,64] total: 129, belongs to(2^7,2^8) so use 8 bits array to store outputs
-            //0: -64, 1:-63 ... 64:128
-            /*var eval = int.Parse(text) + 64;
-            
-            var values = new double[8];
-            for (var i = 0; i < values.Length; i++)
-            {
-                if ((eval & (1 << i)) != 0)
-                {
-                    values[i] = 1.0;
-                }
-                else
-                {
-                    values[i] = 0.0;
-                }
-            }*/
-
-            /*
-            var values = Enumerable.Repeat(0.0,128).ToArray();
-            if (eval > 0)
-            {
-                values[eval - 1] = 1.0;
-            }
-           
-            return values; */
-        }
-
-        private static void Learn(double[][] inputs, double[][] outputs, double trainRate = 0.8)
+        private static void Learn(string networkFile, double[][] inputs, double[][] outputs, double trainRate = 0.8)
         {
             var count = inputs.Length;
             var n = (int)(count * trainRate);
@@ -263,7 +200,206 @@ namespace MonkeyOthello.Learning
             Console.WriteLine($"save network: {networkFile}");
 
             // Test the resulting accuracy.
-            Test(testInputs, testOutputs);
+            Test(networkFile, testInputs, testOutputs);
+        }
+
+
+        private static void Test(string networkFile, double[][] inputs, double[][] outputs)
+        {
+            Console.WriteLine($"test {inputs.Length} items--------------------------------");
+            var network = DeepBeliefNetwork.Load(networkFile);
+            // Test the resulting accuracy.
+            int correct = 0;
+            var error = 0.0;
+            for (int i = 0; i < inputs.Length; i++)
+            {
+                double[] outputValues = network.Compute(inputs[i]);
+                if (Compare(outputValues, outputs[i]))
+                {
+                    correct++;
+                }
+                error += Error(outputValues, outputs[i]);
+            }
+
+            Console.WriteLine("Correct " + correct + "/" + inputs.Length + ", " + Math.Round(((double)correct / (double)inputs.Length * 100), 2) + "%");
+
+            error = Math.Sqrt(error / inputs.Length);
+            Console.WriteLine($"Error: {error }");
+        }
+
+        private static void VaildateDeepLearningEngine(int empties)
+        {
+            var dataPath = Path.Combine(Environment.CurrentDirectory, $@"knowledge\{empties}\");
+            var items = ConvertData(LoadItems(dataPath));
+            var count = items.Length;
+            var inputs = items.Select(x => x.Inputs).ToArray();
+            var outputs = items.Select(x => x.Outputs).ToArray();
+
+            Console.WriteLine($"[{empties}] test {inputs.Length} items--------------------------------");
+
+            Console.WriteLine($"DeepBeliefNetwork--------------------------------");
+
+            var networkFile = Path.Combine(networkPath, $@"deeplearning-{empties}.net");
+            var network = DeepBeliefNetwork.Load(networkFile);
+            Test(networkFile, inputs, outputs);
+
+            Console.WriteLine($"DeepLearningEngine--------------------------------");
+            int correct = 0;
+            var error = 0.0;
+            for (int i = 0; i < inputs.Length; i++)
+            {
+                var outputValues = DeepLearningEngineSearch(items[i].Board);
+                if (Compare(outputValues, outputs[i]))
+                {
+                    correct++;
+                }
+                error += Error(outputValues, outputs[i]);
+
+                if ((i + 1) % 10 == 0)
+                {
+                    Console.WriteLine("Correct " + correct + "/" + (i + 1) + ", " + Math.Round(((double)correct / (double)(i + 1) * 100), 2) + "%");
+                }
+            }
+
+            Console.WriteLine("Correct " + correct + "/" + inputs.Length + ", " + Math.Round(((double)correct / (double)inputs.Length * 100), 2) + "%");
+
+            error = Math.Sqrt(error / inputs.Length);
+            Console.WriteLine($"Error: {error }");
+        }
+
+        private static double[] DeepLearningEngineSearch(BitBoard board)
+        {
+            var engine = new DeepLearningEngine();
+             //var result = engine.Search(board, 2);
+           var result = engine.Search(board, 4);
+
+            if (result.Score >= 0)
+            {
+                return new[] { 1.0 };
+            }
+
+            return new[] { 0.0 };
+        }
+
+        class DataItem
+        {
+            public BitBoard Board { get; set; }
+            public double[] Inputs { get; set; }
+            public double[] Outputs { get; set; }
+        }
+
+        private static void CreateDirectoryIfNotExist(string path)
+        {
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+        }
+
+        private static List<string> LoadItems(string dataPath)
+        {
+            var files = Directory.GetFiles(dataPath, "*.k", SearchOption.AllDirectories);
+            Console.WriteLine($"found {files.Length} files");
+            var list = new List<string>();
+            foreach (var file in files)
+            {
+                var shortPath = file.Replace(dataPath, "");
+                if (Path.GetFileName(file).StartsWith("19"))
+                {
+                    Console.WriteLine($"skip {shortPath}");
+                    continue;
+                }
+                Console.WriteLine($"reading {shortPath}");
+                var lines = File.ReadAllLines(file);
+                list.AddRange(lines);
+            }
+
+            var total = list.Count;
+            Console.WriteLine($"total: {total} items");
+            var uni = list.Distinct().ToList();
+            Console.WriteLine($"uni: {uni.Count} items");
+            Console.WriteLine($"duplicae: {total - uni.Count} items");
+
+            return uni;
+        }
+
+        private static DataItem[] ConvertData(IEnumerable<string> items)
+        {
+            var list = new List<DataItem>();
+            foreach (var item in items)
+            {
+                var values = item.Split(',');
+                var inputs = ToInputValues(values[0]).Concat(ToInputValues(values[1])).ToArray();
+                var outputs = ToOutputValues(values[2]);
+                var board = new BitBoard(ulong.Parse(values[0]), ulong.Parse(values[1]));
+                list.Add(new DataItem { Board = board, Inputs = inputs, Outputs = outputs });
+            }
+
+            return list.ToArray();
+        }
+
+        private static double[] ToInputValues(string text)
+        {
+            var bits = ulong.Parse(text);
+            var values = new double[64];
+            for (var i = 0; i < values.Length; i++)
+            {
+                if ((bits & (1UL << i)) != 0)
+                {
+                    values[i] = 1.0;
+                }
+                else
+                {
+                    values[i] = 0.0;
+                }
+            }
+
+            return values;
+        }
+
+        private static double[] ToOutputValues(string text)
+        {
+            //>=0 win, otherwise lose
+            return int.Parse(text) >= 0 ? new[] { 1.0 } : new[] { 0.0 };
+            var eval = int.Parse(text);
+            if (eval == 0)
+            {
+                return new[] { 0.0, 0.0, 0.0 };
+            }
+            else if (eval > 0)
+            {
+                return eval > 20 ? new[] { 1.0, 1.0, 1.0 } : new[] { 1.0, 1.0, 0.0 };
+            }
+            else
+            {
+                return eval < -20 ? new[] { 0.0, 0.0, 0.1 } : new[] { 0.0, 1.0, 0.0 };
+            }
+
+            //data range:[-64,64] total: 129, belongs to(2^7,2^8) so use 8 bits array to store outputs
+            //0: -64, 1:-63 ... 64:128
+            /*var eval = int.Parse(text) + 64;
+            
+            var values = new double[8];
+            for (var i = 0; i < values.Length; i++)
+            {
+                if ((eval & (1 << i)) != 0)
+                {
+                    values[i] = 1.0;
+                }
+                else
+                {
+                    values[i] = 0.0;
+                }
+            }*/
+
+            /*
+            var values = Enumerable.Repeat(0.0,128).ToArray();
+            if (eval > 0)
+            {
+                values[eval - 1] = 1.0;
+            }
+           
+            return values; */
         }
 
         private static bool Compare(double[] d1, double[] d2)

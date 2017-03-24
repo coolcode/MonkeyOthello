@@ -10,7 +10,7 @@ namespace MonkeyOthello.Core
     {
         public const int Line = 8;
         public const int StonesCount = Line * Line;
-        public const int MaxEmptyNum = StonesCount - 4;
+        public const int MaxEmptiesCount = StonesCount - 4;
         public const int HighestScore = 64;
         public static readonly int MaxEndGameDepth = Math.Min((StonesCount - 4), 22);
         public const ulong FullBoard = ulong.MaxValue;

@@ -1,5 +1,6 @@
 ﻿using MonkeyOthello.Core;
 using MonkeyOthello.Engines;
+using MonkeyOthello.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

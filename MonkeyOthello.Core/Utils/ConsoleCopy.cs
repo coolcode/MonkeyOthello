@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MonkeyOthello.Colosseum
+namespace MonkeyOthello.Utils
 {
     public class ConsoleCopy : IDisposable
     {
@@ -45,25 +45,26 @@ namespace MonkeyOthello.Colosseum
 
         }
 
-        public ConsoleCopy(string path)
+        public ConsoleCopy(string filePath=null)
         {
+            if (string.IsNullOrEmpty(filePath))
+            {
+                if (!Directory.Exists("logs\\"))
+                {
+                    Directory.CreateDirectory("logs\\");
+                }
+                filePath = $@"logs\{DateTime.Today:yyyy-MM-dd}.log";
+            }
+
             oldOut = Console.Out;
 
-            try
-            {
-                fileStream = File.Create(path);
+            fileStream = File.Create(filePath);
 
-                fileWriter = new StreamWriter(fileStream);
-                fileWriter.AutoFlush = true;
+            fileWriter = new StreamWriter(fileStream);
+            fileWriter.AutoFlush = true;
 
-                doubleWriter = new DoubleWriter(fileWriter, oldOut);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Cannot open file for writing");
-                Console.WriteLine(e);
-                return;
-            }
+            doubleWriter = new DoubleWriter(fileWriter, oldOut);
+
             Console.SetOut(doubleWriter);
         }
 

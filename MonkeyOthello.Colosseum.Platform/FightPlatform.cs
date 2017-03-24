@@ -1,6 +1,7 @@
 ﻿using MonkeyOthello.Core;
 using MonkeyOthello.Engines;
 using MonkeyOthello.Engines.X;
+using MonkeyOthello.Learning;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -41,6 +42,32 @@ namespace MonkeyOthello.Colosseum.Platform
             int.TryParse(ConfigurationManager.AppSettings["MidGameDepth"], out midGameDepth);
             var endGameDepth = EdaxEngine.EndGameDepth;
 
+            Console.WriteLine($"TrainDepth: {trainDepth}, MidGameDepth:{midGameDepth}");
+
+            IColosseum game = new TrainableColosseum(endEngine, trainDepth, midGameDepth, endGameDepth);
+            game.Fight(engines, 5000);
+        }
+
+
+        public static void GenerateKnowledgeBaseOnNetwork()
+        {
+            var engines = new IEngine[] {
+                new EdaxEngine { Timeout = timeout },
+                new FuzzyEngine(new EdaxEngine { Timeout = timeout }, new RandomEngine())
+            };
+
+            foreach (var engine in engines)
+            {
+                engine.UpdateProgress = UpdateProgress;
+            }
+
+            var endEngine = new DeepLearningEngine();
+                       
+            var trainDepth = 8;
+            int.TryParse(ConfigurationManager.AppSettings["TrainDepth"], out trainDepth);
+            var midGameDepth = 16;
+            int.TryParse(ConfigurationManager.AppSettings["MidGameDepth"], out midGameDepth);
+            var endGameDepth = EdaxEngine.EndGameDepth;
             Console.WriteLine($"TrainDepth: {trainDepth}, MidGameDepth:{midGameDepth}");
 
             IColosseum game = new TrainableColosseum(endEngine, trainDepth, midGameDepth, endGameDepth);

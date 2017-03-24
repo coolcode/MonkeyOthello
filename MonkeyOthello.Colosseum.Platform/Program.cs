@@ -25,7 +25,8 @@ namespace MonkeyOthello.Colosseum.Platform
                 //var oppBoard = BitBoard.Parse("----------XOXX--OOOXXXX-OOOOXXX-OXXOXXX-------------------------");
                 //FightPlatform.Analyze(oppBoard);
 
-                FightPlatform. GenerateKnowledge();
+                //FightPlatform. GenerateKnowledge();
+                FightPlatform.GenerateKnowledgeBaseOnNetwork();
 
                 sw.Stop();
                 Console.WriteLine($"done! {sw.Elapsed}");

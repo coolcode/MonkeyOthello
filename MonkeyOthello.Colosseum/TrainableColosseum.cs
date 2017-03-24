@@ -1,5 +1,6 @@
 ﻿using MonkeyOthello.Core;
 using MonkeyOthello.Engines;
+using MonkeyOthello.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -134,7 +135,7 @@ namespace MonkeyOthello.Colosseum
                     var moves = Rule.FindMoves(board);
                     if (moves.Length > 0)
                     {
-                        var bestScore = -64;
+                        var bestScore = -64-1;
                         var bestMove = -1;
                         foreach (var move in moves)
                         {
