@@ -12,8 +12,7 @@ namespace MonkeyOthello.Engines.V2.AI
         private MidSolve midSolve;
         private EndSolve endSolve;
         private MTDSolve mtdSolve;
-
-        private int endDepth;
+        
         private int wldDepth;
 
         private ChessType color;
@@ -64,7 +63,6 @@ namespace MonkeyOthello.Engines.V2.AI
             var depth = 8;
             staSolve.SearchDepth = depth;
             midSolve.SearchDepth = depth;
-            endDepth = 18;
             wldDepth = 20;
             boardState = BoardState.START;
             emptiesOfStartGame = 32 + midSolve.SearchDepth;

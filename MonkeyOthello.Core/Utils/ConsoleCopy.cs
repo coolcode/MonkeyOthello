@@ -7,45 +7,9 @@ using System.Threading.Tasks;
 
 namespace MonkeyOthello.Utils
 {
-    public class ConsoleCopy : IDisposable
+    public class ConsoleCopy
     {
-        FileStream fileStream;
-        StreamWriter fileWriter;
-        TextWriter doubleWriter;
-        TextWriter oldOut;
-
-        class DoubleWriter : TextWriter
-        {
-
-            TextWriter one;
-            TextWriter two;
-
-            public DoubleWriter(TextWriter one, TextWriter two)
-            {
-                this.one = one;
-                this.two = two;
-            }
-
-            public override Encoding Encoding
-            {
-                get { return one.Encoding; }
-            }
-
-            public override void Flush()
-            {
-                one.Flush();
-                two.Flush();
-            }
-
-            public override void Write(char value)
-            {
-                one.Write(value);
-                two.Write(value);
-            }
-
-        }
-
-        public ConsoleCopy(string filePath=null)
+        public static TextWriter Create(string filePath = null)
         {
             if (string.IsNullOrEmpty(filePath))
             {
@@ -56,39 +20,54 @@ namespace MonkeyOthello.Utils
                 filePath = $@"logs\{DateTime.Today:yyyy-MM-dd}.log";
             }
 
-            oldOut = Console.Out;
-
-            fileStream = File.Create(filePath);
-
-            fileWriter = new StreamWriter(fileStream);
+            var fileWriter = File.AppendText(filePath);
             fileWriter.AutoFlush = true;
+            var doubleWriter = new DoubleWriter(fileWriter, Console.Out);
+            // Console.SetOut(doubleWriter);
 
-            doubleWriter = new DoubleWriter(fileWriter, oldOut);
-
-            Console.SetOut(doubleWriter);
+            return doubleWriter;
         }
 
-        public void Flush()
+        class DoubleWriter : TextWriter
         {
-            if (fileWriter != null)
-            {
-                fileWriter.Flush();
-            }
-        }
+            TextWriter fileWriter;
+            TextWriter consoleWriter;
 
-        public void Dispose()
-        {
-            Console.SetOut(oldOut);
-            if (fileWriter != null)
+            public DoubleWriter(TextWriter fileWriter, TextWriter consoleWriter)
+            {
+                this.fileWriter = fileWriter;
+                this.consoleWriter = consoleWriter;
+                Console.SetOut(this);
+            }
+
+            public override Encoding Encoding
+            {
+                get { return fileWriter.Encoding; }
+            }
+
+            public override void Flush()
             {
                 fileWriter.Flush();
-                fileWriter.Close();
-                fileWriter = null;
+                consoleWriter.Flush();
             }
-            if (fileStream != null)
+
+            public override void Write(char value)
             {
-                fileStream.Close();
-                fileStream = null;
+                fileWriter.Write(value);
+                consoleWriter.Write(value);
+            }
+
+            protected override void Dispose(bool disposing)
+            {
+                if (fileWriter != null)
+                {
+                    fileWriter.Flush();
+                    fileWriter.Close();
+                    fileWriter.Dispose();
+                }
+
+                Console.SetOut(consoleWriter);
+                base.Dispose(disposing);
             }
         }
 

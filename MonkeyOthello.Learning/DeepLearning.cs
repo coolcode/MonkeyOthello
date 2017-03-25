@@ -4,7 +4,6 @@ using Accord.Neuro.Learning;
 using Accord.Neuro.Networks;
 using Accord.Statistics;
 using MonkeyOthello.Core;
-using MonkeyOthello.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,35 +15,32 @@ using System.Threading.Tasks;
 namespace MonkeyOthello.Learning
 {
     public class DeepLearning
-    {
-        //private static readonly string dataPath = @"E:\projects\MonkeyOthello\tests\k-edax-fuzzy-004-22\knowledge";// @"k-data\edax-fuzzy\";//edax-fuzzy\random\
-        //private static int empties = 19;
+    { 
         private static readonly string networkPath = Path.Combine(Environment.CurrentDirectory, "networks");
-        //private static string networkFile;
-
+         
         static DeepLearning()
         {
             CreateDirectoryIfNotExist(networkPath);
-
         }
 
 
         public static void Test()
         {
-            using (var cc = new ConsoleCopy())
-            {
-                //PrepareData(  $@"E:\projects\MonkeyOthello\tests\" );
-                //LoadItems();
-                // TrainAll();
-                //TestAll();
-                VaildateDeepLearningEngine(30);
-            }
+            var from = 30;
+            var to = 32;
+
+           PrepareData(  $@"E:\projects\MonkeyOthello\tests\", from, to);
+            //LoadItems();
+            TrainAll(from, to);
+            TestAll(from, to);
+            //VaildateDeepLearningEngine(30);
+
         }
 
-        
-        private static void TrainAll()
+
+        private static void TrainAll(int from, int to)
         {
-            for (var i = 19; i <= 30; i++)
+            for (var i = from; i <= to; i++)
             {
                 Console.WriteLine($"begin training {i} {"-".Repeat(20)}");
                 var sw = Stopwatch.StartNew();
@@ -56,9 +52,9 @@ namespace MonkeyOthello.Learning
             }
         }
 
-        private static void TestAll()
+        private static void TestAll(int from, int to)
         {
-            for (var i = 19; i <= 30; i++)
+            for (var i = from; i <= to; i++)
             {
                 Console.WriteLine($"begin test {i} {"-".Repeat(20)}");
                 var sw = Stopwatch.StartNew();
@@ -70,14 +66,14 @@ namespace MonkeyOthello.Learning
             }
         }
 
-        private static void PrepareData(string basePath)
+        private static void PrepareData(string basePath, int from, int to)
         {
             var savedBasePath = Path.Combine(Environment.CurrentDirectory, @"knowledge\");
             CreateDirectoryIfNotExist(savedBasePath);
 
-            for (var i = 19; i <= 30; i++)
+            for (var i = from; i <= to; i++)
             {
-                var folder = $@"k-edax-{i}\knowledge\";
+                var folder = $@"k-dl-{i}\knowledge\";
                 Console.WriteLine($"visit {folder}");
                 var path = Path.Combine(basePath, folder);
                 var kfiles = Directory.GetFiles(path, "*.k");
@@ -270,8 +266,8 @@ namespace MonkeyOthello.Learning
         private static double[] DeepLearningEngineSearch(BitBoard board)
         {
             var engine = new DeepLearningEngine();
-             //var result = engine.Search(board, 2);
-           var result = engine.Search(board, 4);
+            //var result = engine.Search(board, 2);
+            var result = engine.Search(board, 4);
 
             if (result.Score >= 0)
             {

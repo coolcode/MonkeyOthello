@@ -23,6 +23,10 @@ namespace MonkeyOthello.Learning
         {
             var emptiesDepthMap = new Dictionary<int, int>
             {
+                {26, 4 },
+                {27, 4 },
+                {28, 4 },
+                {29, 4 },
                 {30, 4 },
                 {31, 4 },
                 {32, 6 },

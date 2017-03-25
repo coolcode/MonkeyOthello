@@ -43,7 +43,6 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConsoleCopy.cs" />
     <Compile Include="Engines\EdaxEngine.cs" />
     <Compile Include="Engines\Knowledge.cs" />
     <Compile Include="Engines\Colosseum.cs" />
@@ -62,6 +61,10 @@
     <ProjectReference Include="..\MonkeyOthello.Engines.V2\MonkeyOthello.Engines.V2.csproj">
       <Project>{08c0d05d-eb26-413e-9a06-3abbdb397c87}</Project>
       <Name>MonkeyOthello.Engines.V2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MonkeyOthello.Engines.X\MonkeyOthello.Engines.X.csproj">
+      <Project>{62f75f98-a6d7-4a11-8d29-bc164d9be6aa}</Project>
+      <Name>MonkeyOthello.Engines.X</Name>
     </ProjectReference>
     <ProjectReference Include="..\MonkeyOthello.Learning\MonkeyOthello.Learning.csproj">
       <Project>{c6734c71-9439-426a-8a63-6b0f45bd0cc1}</Project>

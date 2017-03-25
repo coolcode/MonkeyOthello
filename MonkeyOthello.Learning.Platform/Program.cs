@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MonkeyOthello.Utils;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -13,8 +14,9 @@ namespace MonkeyOthello.Learning.Platform
         {
             try
             {
+                ConsoleCopy.Create();
                 var sw = Stopwatch.StartNew();
-                DeepLearning.Test(); 
+                DeepLearning.Test();
                 sw.Stop();
                 Console.WriteLine($"done! {sw.Elapsed}");
             }

@@ -1,5 +1,6 @@
 ﻿using MonkeyOthello.Core;
 using MonkeyOthello.Engines;
+using MonkeyOthello.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -67,7 +68,7 @@ namespace MonkeyOthello.Tests.Engines
             var targetFile = Path.Combine(targetPath,
                                           string.Format("{0:yyyy-MM-dd HH-mm} {1}-{2}.txt", DateTime.Now, engineA.Name, engineB.Name));
 
-            using (var cc = new ConsoleCopy(targetFile))
+            using (var cc =  ConsoleCopy.Create(targetFile))
             {
                 Console.WriteLine("################### Begin #######################");
                 Console.WriteLine("{0} ({2}) vs {1} ({3})", engineA.Name, engineB.Name, "Black", "White");

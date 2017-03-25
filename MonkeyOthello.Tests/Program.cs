@@ -15,7 +15,8 @@ namespace MonkeyOthello.Tests
             try
             {
                 var sw = Stopwatch.StartNew();
-                DeepLearning.Test();
+                Test.ValidateDeepLearningResult();
+                //DeepLearning.Test();
                 //DeepLearningDemo.Run();
                 //Test.TestEndGameEngine();
                 //Test.GenerateKnowledge();

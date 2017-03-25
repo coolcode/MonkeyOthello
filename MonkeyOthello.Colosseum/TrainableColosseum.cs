@@ -97,7 +97,7 @@ namespace MonkeyOthello.Colosseum
                 $"{indexText} {DateTime.Now:yyyy-MM-dd HH-mm} {engineA.Name}-{engineB.Name}.tmp");
 
             FightResult fightResult;
-            using (var cc = new ConsoleCopy(targetFile))
+            using (var cc =   ConsoleCopy.Create(targetFile))
             {
                 Console.WriteLine("################### Begin #######################");
                 Console.WriteLine("{0} ({2}) vs {1} ({3})", engineA.Name, engineB.Name, "Black", "White");

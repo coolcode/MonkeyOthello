@@ -119,7 +119,7 @@ namespace MonkeyOthello.Engines.V2.AI
             int j;
             int eval;
             Empties em, old_em;
-            int par, holepar;
+            int holepar;
             // 
             nodes++;
 

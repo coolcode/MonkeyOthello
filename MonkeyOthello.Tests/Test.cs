@@ -138,6 +138,40 @@ namespace MonkeyOthello.Tests
             };
         #endregion
 
+        public static void ValidateDeepLearningResult()
+        {
+            var engine = new MonkeyOthello.Engines.X.EdaxEngine
+            {
+                Timeout = 60,
+                UpdateProgress = (r) => Console.WriteLine(r)
+            };
+
+            var file = @"E:\projects\MonkeyOthello\tests\k-dl-32\knowledge\32-2017-03-25-02.k";
+            var lines = File.ReadAllLines(file);
+            var correct = 0;
+            var i = 0;
+            foreach (var line in lines)
+            {
+                var sp = line.Split(',');
+                var ownp = ulong.Parse(sp[0]);
+                var oppp = ulong.Parse(sp[1]);
+                var eval = int.Parse(sp[2]);
+                var bb = new BitBoard(ownp, oppp);
+                var r = engine.Search(bb, 16);
+                
+                if(eval>=0 && r.Score>=0 || eval < 0 && r.Score < 0)
+                {
+                    correct++;
+                }
+                 
+                if ((i + 1) % 10 == 0)
+                {
+                    Console.WriteLine("Correct " + correct + "/" + (i + 1) + ", " + Math.Round(((double)correct / (double)(i + 1) * 100), 2) + "%");
+                }
+                i++;
+            }
+        }
+
         public static void Fight()
         {
             // Pilot, MonkeyV2Engine, EdaxEngine, DeepLearningEngine
