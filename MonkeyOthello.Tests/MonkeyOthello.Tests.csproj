@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>bear.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -43,6 +46,7 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controller.cs" />
     <Compile Include="Engines\EdaxEngine.cs" />
     <Compile Include="Engines\Knowledge.cs" />
     <Compile Include="Engines\Colosseum.cs" />
@@ -72,6 +76,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bear.ico" />
     <Content Include="test-result-20.txt" />
     <Content Include="test-result.txt" />
   </ItemGroup>

@@ -15,9 +15,9 @@ using System.Threading.Tasks;
 namespace MonkeyOthello.Learning
 {
     public class DeepLearning
-    { 
+    {
         private static readonly string networkPath = Path.Combine(Environment.CurrentDirectory, "networks");
-         
+
         static DeepLearning()
         {
             CreateDirectoryIfNotExist(networkPath);
@@ -26,19 +26,19 @@ namespace MonkeyOthello.Learning
 
         public static void Test()
         {
-            var from = 30;
-            var to = 32;
+            var from = 29;
+            var to = 33;
 
-           PrepareData(  $@"E:\projects\MonkeyOthello\tests\", from, to);
-            //LoadItems();
+            PrepareData($@"E:\projects\MonkeyOthello\tests\", from, to);
             TrainAll(from, to);
             TestAll(from, to);
+            //LoadItems();
             //VaildateDeepLearningEngine(30);
 
         }
 
 
-        private static void TrainAll(int from, int to)
+        public static void TrainAll(int from, int to)
         {
             for (var i = from; i <= to; i++)
             {
@@ -52,7 +52,7 @@ namespace MonkeyOthello.Learning
             }
         }
 
-        private static void TestAll(int from, int to)
+        public static void TestAll(int from, int to)
         {
             for (var i = from; i <= to; i++)
             {
@@ -66,7 +66,7 @@ namespace MonkeyOthello.Learning
             }
         }
 
-        private static void PrepareData(string basePath, int from, int to)
+        public static void PrepareData(string basePath, int from, int to)
         {
             var savedBasePath = Path.Combine(Environment.CurrentDirectory, @"knowledge\");
             CreateDirectoryIfNotExist(savedBasePath);

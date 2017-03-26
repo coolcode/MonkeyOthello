@@ -31,12 +31,17 @@ namespace MonkeyOthello.Learning
                 {31, 4 },
                 {32, 6 },
                 {33, 6 },
-                {34, 8 },
-                {35, 8 },
+                //{34, 8 },
+                //{35, 8 },
             };
 
             var empties = board.EmptyPiecesCount();
-            var newDepth = emptiesDepthMap[empties];
+            var newDepth = 0;
+
+            if(!emptiesDepthMap.TryGetValue(empties, out newDepth))
+            {
+                newDepth = 6;
+            }
 
             return base.Search(board, newDepth);
             /*
