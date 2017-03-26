@@ -14,25 +14,33 @@ namespace MonkeyOthello.Tests
     {
         public static void Run()
         {
-            var start = 34;
+            var start = 38;
             var span = 4;
             for (var x = start; x <= 54; x += span)
             {
                 CloseColosseumPlatforms();
+                Thread.Sleep(5000);
                 UpdateColosseumPlatforms();
+                Thread.Sleep(5000);
                 RunColosseumPlatforms(Enumerable.Range(x, span).ToArray());
                 //wait until creating more than 10k items
                 var i = 0;
                 while (true)
                 {
-                    Console.WriteLine($"wait {i} minuter");
-                    Thread.Sleep(60000);
-                    Console.WriteLine("check...");
-                    var counts = CheckColosseumItemsCount(Enumerable.Range(x, span).ToArray());
-
-                    if (counts.All(c => c > 10000))
+                    try
                     {
-                        break;
+                        Console.WriteLine($"waited {i++} minute(s)");
+                        Thread.Sleep(60000);
+                        Console.WriteLine("check...");
+                        var counts = CheckColosseumItemsCount(Enumerable.Range(x, span).ToArray());
+
+                        if (counts.All(c => c > 10000))
+                        {
+                            break;
+                        }
+                    }catch(Exception e)
+                    {
+                        Console.WriteLine(e);
                     }
                 }
 
@@ -93,6 +101,7 @@ namespace MonkeyOthello.Tests
                           .Select(file => File.ReadAllLines(file).Length)
                           .Sum();
 
+                    Console.WriteLine($"{i}'s items: {count}");
                     counts.Add(count);
                 }
             }

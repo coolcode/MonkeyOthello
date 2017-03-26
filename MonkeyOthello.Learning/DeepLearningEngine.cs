@@ -40,7 +40,7 @@ namespace MonkeyOthello.Learning
 
             if(!emptiesDepthMap.TryGetValue(empties, out newDepth))
             {
-                newDepth = 6;
+                newDepth = 8;
             }
 
             return base.Search(board, newDepth);
