@@ -24,7 +24,7 @@ namespace MonkeyOthello.Engines.V2
             sr.Move = V2SquareToV3(bestMove);
             if (bestMove >= 10 && bestMove <= 80 && (ChessType)board[bestMove] == ChessType.EMPTY)
             {
-                sr.Nodes = engine.Nodes;
+                sr.Nodes = (ulong)engine.Nodes;
                 sr.Score = (int)engine.BestScore;
                 sr.TimeSpan = sw.Elapsed;
             }

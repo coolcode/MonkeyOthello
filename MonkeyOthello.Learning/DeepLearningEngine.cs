@@ -21,43 +21,57 @@ namespace MonkeyOthello.Learning
 
         private static readonly IEngine openingBookEngine = new OpeningBookEngine();
 
+        public IEngine Allied { get; set; }
+
         public override SearchResult Search(BitBoard board, int depth)
         {
             var empties = board.EmptyPiecesCount();
 
             if (empties.InRange(55, 60))
             {
-                var engine = openingBookEngine; 
+                var engine = openingBookEngine;
                 return engine.Search(board, 0);
             }
-            else if (empties.InRange(0, 20))
+            //else if (empties.InRange(0, 20))
+            //{
+            //    var engine = new MonkeyEndEngine();
+            //    return engine.Search(board, empties);
+            //}
+
+            if (empties.InRange(30, 38))
             {
-                var engine = new MonkeyEndEngine();
-                return engine.Search(board, empties);
+                var emptiesDepthMap = new Dictionary<int, int>
+                {
+                    {26, 4 },
+                    {27, 4 },
+                    {28, 4 },
+                    {29, 4 },
+                    {30, 4 },
+                    {31, 4 },
+                    {32, 6 },
+                    {33, 6 },
+                    //{34, 8 },
+                    //{35, 8 },
+                };
+
+                var newDepth = 0;
+
+                if (!emptiesDepthMap.TryGetValue(empties, out newDepth))
+                {
+                    newDepth = 8;
+                }
+
+                var r1 = base.Search(board, newDepth);
+                var r2 = Allied.Search(board, depth);
+                r1.Message = $"{r2.Move} {r2.Move.ToNotation()}, {r2.Score}, {r1.Message}";
+
+                return r1;
             }
-
-            var emptiesDepthMap = new Dictionary<int, int>
+            else
             {
-                {26, 4 },
-                {27, 4 },
-                {28, 4 },
-                {29, 4 },
-                {30, 4 },
-                {31, 4 },
-                {32, 6 },
-                {33, 6 },
-                //{34, 8 },
-                //{35, 8 },
-            };
-
-            var newDepth = 0;
-
-            if(!emptiesDepthMap.TryGetValue(empties, out newDepth))
-            {
-                newDepth = 8;
+                var r2 = Allied.Search(board, depth);
+                return r2;
             }
-
-            return base.Search(board, newDepth);
             /*
             if (empties.InRange(0, 20))
             {

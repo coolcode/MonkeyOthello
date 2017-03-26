@@ -33,7 +33,7 @@ namespace MonkeyOthello.Engines.V2
             sr.Move = V2SquareToV3(bestMove);
             if (bestMove >= 10 && bestMove <= 80 && board[bestMove] == 1)
             {
-                sr.Nodes = EGEngine.GetNodes();
+                sr.Nodes = (ulong)EGEngine.GetNodes();
                 sr.Score = EGEngine.GetEval();
                 sr.TimeSpan = sw.Elapsed;
             }

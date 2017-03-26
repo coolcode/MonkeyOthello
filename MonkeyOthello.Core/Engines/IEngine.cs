@@ -19,7 +19,7 @@ namespace MonkeyOthello.Engines
         public int Score { get; set; } = 0;
         public string Message { get; set; } = string.Empty;
         public TimeSpan TimeSpan { get; set; }
-        public int Nodes { get; set; } = 0;
+        public ulong Nodes { get; set; } = 0;
         public List<EvalItem> EvalList { get; set; } = new List<EvalItem>();
         public double Process { get; set; } = 0.0;
         public bool IsTimeout { get; set; } = false;

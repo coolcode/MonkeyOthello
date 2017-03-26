@@ -141,14 +141,14 @@ namespace MonkeyOthello.Tests
 
         public static void TrainOpeningBook()
         {
-            var engine = new MonkeyOthello.Engines.X.EdaxEngine
+            Func<IEngine> tutorFunc = ()=> new MonkeyOthello.Engines.X.EdaxEngine
             {
                 Timeout = 60,
                 UpdateProgress = (r) => Console.WriteLine(r)
             };
 
-            var trainer = new Trainer(engine);
-            trainer.Train(2);
+            var trainer = new Trainer();
+            trainer.Train(tutorFunc, 4);
         }
 
         public static void ValidateDeepLearningResult()
@@ -188,7 +188,7 @@ namespace MonkeyOthello.Tests
         public static void Fight()
         {
             // EdaxEngine, MonkeyV2Engine, Pilot, DeepLearningEngine
-            var engines = new IEngine[] { new Pilot(), new MonkeyV2Engine() };
+            var engines = new IEngine[] {  new DeepLearningEngine { Allied = new MonkeyOthello.Engines.X.EdaxEngine() }, new MonkeyOthello.Engines.X.EdaxEngine() };
             IColosseum game = new Colosseum();
             game.Fight(engines);
         }

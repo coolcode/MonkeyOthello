@@ -1,10 +1,13 @@
 ﻿using MonkeyOthello.Core;
 using MonkeyOthello.Engines;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MonkeyOthello.OpeningBook
@@ -62,14 +65,11 @@ namespace MonkeyOthello.OpeningBook
 
     public class Trainer
     {
-        public IEngine TutorEngine { get; set; }
-
-        private readonly Dictionary<BitBoard, OpeningBookItem> map = new Dictionary<BitBoard, OpeningBookItem>();
+        private readonly ConcurrentDictionary<BitBoard, OpeningBookItem> map = new ConcurrentDictionary<BitBoard, OpeningBookItem>();
         private readonly string bookPath = Path.Combine(Environment.CurrentDirectory, @"books\");
 
-        public Trainer(IEngine tutor)
+        public Trainer()
         {
-            TutorEngine = tutor;
             if (!Directory.Exists(bookPath))
             {
                 Directory.CreateDirectory(bookPath);
@@ -82,7 +82,8 @@ namespace MonkeyOthello.OpeningBook
         {
             foreach (var file in Directory.GetFiles(bookPath, "*.lmf"))
             {
-                var items = File.ReadAllLines(file).Select(OpeningBookItem.Parse);
+                var items = File.ReadAllLines(file).Select(OpeningBookItem.Parse).ToList();
+                Console.WriteLine($"load {items.Count} items from {Path.GetFileName(file)}");
 
                 foreach (var item in items)
                 {
@@ -91,17 +92,18 @@ namespace MonkeyOthello.OpeningBook
             }
         }
 
-        public void Train(int depth)
+        public void Train(Func<IEngine> tutorFunc, int depth, int me = 54)
         {
             var beginEmpties = 60;
-            var queue = new Queue<BitBoard>();
+
+            var queue = new ConcurrentQueue<BitBoard>();
             if (map.Count == 0)
             {
                 queue.Enqueue(BitBoard.NewGame());
             }
             else
             {
-                var me = map.Values.Min(x => x.Empties);
+                //var me = map.Values.Min(x => x.Empties);
                 var items = map.Values.Where(x => x.Empties == me).ToArray();
                 foreach (var item in items)
                 {
@@ -110,80 +112,108 @@ namespace MonkeyOthello.OpeningBook
                 beginEmpties = me;
             }
 
+            var maxThreads = 16;
+            var engines = new IEngine[maxThreads];
+            for (var i = 0; i < maxThreads; i++)
+            {
+                engines[i] = tutorFunc();
+            }
+
+            //ThreadPool.SetMaxThreads(10, 10);
+            var sw = Stopwatch.StartNew();
+            Console.WriteLine($"left:{queue.Count}, {sw.Elapsed}");
             while (queue.Count > 0)
             {
-                var board = queue.Dequeue();
-                var empties = board.EmptyPiecesCount();
+                var threadNum = Math.Min(queue.Count, maxThreads);
+                Parallel.For(0, threadNum, x =>
+                 {
+                     BitBoard board;
+                     queue.TryDequeue(out board);
+                     var empties = board.EmptyPiecesCount();
 
-                Console.WriteLine($"visit: {board}, empties:{empties}, left:{queue.Count}");
+                     //Console.WriteLine($"visit: {board}, empties:{empties}, left:{queue.Count}");
+                     //Console.WriteLine($"left:{queue.Count}");
 
-                var moves = Rule.FindMoves(board);
-                if (moves.Length == 0)
-                {
-                    //board = board.Switch();
-                    continue;
-                }
+                     var moves = Rule.FindMoves(board);
+                     if (moves.Length == 0)
+                     {
+                         //board = board.Switch();
+                         return;
+                     }
 
-                var bestScore = -64 - 1;
-                var bestMove = -1;
+                     //var bestScore = -64 - 1;
+                     //var bestMove = -1;
 
-                var evalList = new List<EvalItem>();
-                foreach (var move in moves)
-                {
-                    var oppboard = Rule.MoveSwitch(board, move);
+                     var evalList = new List<EvalItem>();
+                     foreach (var move in moves)
+                     {
+                         var oppboard = Rule.MoveSwitch(board, move);
 
-                    var own = false;
-                    if (!Rule.CanMove(oppboard))
-                    {
-                        oppboard = oppboard.Switch();
-                        own = true;
-                    }
+                         var own = false;
+                         if (!Rule.CanMove(oppboard))
+                         {
+                             oppboard = oppboard.Switch();
+                             own = true;
+                         }
 
-                    if (oppboard.EmptyPiecesCount() > beginEmpties - depth)
-                    {
-                        //extend nodes
-                        queue.Enqueue(oppboard);
-                        Console.WriteLine($"add: {oppboard}, empties:{oppboard.EmptyPiecesCount()}, left:{queue.Count}");
-                    }
+                         if (oppboard.EmptyPiecesCount() > beginEmpties - depth)
+                         {
+                             //extend nodes
+                             queue.Enqueue(oppboard);
+                             //Console.WriteLine($"add: {oppboard}, empties:{oppboard.EmptyPiecesCount()}, left:{queue.Count}");
+                         }
 
-                    if (map.ContainsKey(board))
-                    {
-                        continue;
-                    }
+                         OpeningBookItem ob1;
+                         if (map.TryGetValue(board, out ob1))
+                         {
+                             continue;
+                         }
 
-                    var sr = TutorEngine.Search(oppboard, 16);
-                    var eval = own ? sr.Score : -sr.Score;//opp's score
-                    if (eval > bestScore)
-                    {
-                        bestScore = eval;
-                        bestMove = move;
-                    }
+                         IEngine tutor = engines[x];
 
-                    evalList.Add(new EvalItem
-                    {
-                        Move = move,
-                        Score = eval,
-                    });
-                }
+                         var sr = tutor.Search(oppboard, 16);
 
-                if (map.ContainsKey(board))
-                {
-                    Console.WriteLine($"{board} exists.");
-                    continue;
-                }
 
-                var openbookItem = new OpeningBookItem
-                {
-                    Board = board,
-                    Empties = empties,
-                    EvalList = evalList
-                };
+                         var eval = own ? sr.Score : -sr.Score;//opp's score
+                         //if (eval > bestScore)
+                         //{
+                         //    bestScore = eval;
+                         //    bestMove = move;
+                         //}
 
-                File.AppendAllLines(Path.Combine(bookPath, $"book-{empties}.lmf"), new[] { openbookItem.ToString() });
+                         evalList.Add(new EvalItem
+                         {
+                             Move = move,
+                             Score = eval,
+                         });
+                     }
 
-                map[board] = openbookItem;
+                     OpeningBookItem ob;
+                     if (map.TryGetValue(board, out ob))
+                     {
+                         //Console.WriteLine($"board exists.");
+                         return;
+                     }
 
-                Console.WriteLine($"add book item: {openbookItem}.");
+                     var openbookItem = new OpeningBookItem
+                     {
+                         Board = board,
+                         Empties = empties,
+                         EvalList = evalList
+                     };
+
+                     lock (this)
+                     {
+                         File.AppendAllLines(Path.Combine(bookPath, $"book-{empties}.lmf"), new[] { openbookItem.ToString() });
+
+                         map[board] = openbookItem;
+                     }
+
+                     Console.WriteLine($"add book item: {openbookItem}.");
+
+                 });
+
+                Console.WriteLine($"left:{queue.Count}, {sw.Elapsed}");
 
             }
         }

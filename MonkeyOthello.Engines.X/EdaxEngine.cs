@@ -31,11 +31,11 @@ namespace MonkeyOthello.Engines.X
         {
             var empties = board.EmptyPiecesCount();
 
-            if (empties.InRange(55, 60))
-            {
-                var engine = openingBookEngine;
-                return engine.Search(board, 0);
-            }
+            //if (empties.InRange(55, 60))
+            //{
+            //    var engine = openingBookEngine;
+            //    return engine.Search(board, 0);
+            //}
 
             var pattern = board.Draw(ownSymbol: "O", oppSymbol: "X", emptySymbol: "-");
             
@@ -356,7 +356,7 @@ namespace MonkeyOthello.Engines.X
                 .ToArray();
             var move = rs[1].Substring(5).ToIndex();
             var score = (int)double.Parse(rs[4].Substring(1).Split(' ')[0]);
-            var nodes = int.Parse(rs[6].Substring(5));
+            var nodes = ulong.Parse(rs[6].Substring(5));
             var time = rs[rs.Length - 1];
 
             return new SearchResult

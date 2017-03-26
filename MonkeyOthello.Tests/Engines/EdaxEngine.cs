@@ -98,7 +98,7 @@ namespace MonkeyOthello.Tests.Engines
                 .ToArray();
             var move = rs[1].Substring(5).ToIndex();
             var score = (int) double.Parse(rs[4].Substring(1).Split(' ')[0]);
-            var nodes = int.Parse(rs[6].Substring(5));
+            var nodes = ulong.Parse(rs[6].Substring(5));
 
             return new SearchResult
             {
