@@ -17,11 +17,19 @@ namespace MonkeyOthello.Engines
             }
         }
 
+        private static readonly IEngine openingBookEngine = new OpeningBookEngine();
+        //private static readonly IEngine deepLearningEngine = new OpeningBookEngine();
+
         public override SearchResult Search(BitBoard board, int depth)
         {
             IEngine engine;
             var empties = board.EmptyPiecesCount();
-            if (empties.InRange(40, 60))
+            if (empties.InRange(55, 60))
+            {
+                engine = openingBookEngine;
+                depth = 8;
+            }
+            else if (empties.InRange(40, 54))
             {
                 engine = new MonkeyOpeningEngine();
                 depth = 8;

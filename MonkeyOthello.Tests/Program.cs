@@ -16,13 +16,14 @@ namespace MonkeyOthello.Tests
             {
                 Utils.ConsoleCopy.Create();
                 var sw = Stopwatch.StartNew();
-                Controller.Run();
+                //Test.TrainOpeningBook();
+                //Controller.Run();
                 //Test.ValidateDeepLearningResult();
                 //DeepLearning.Test();
                 //DeepLearningDemo.Run();
                 //Test.TestEndGameEngine();
                 //Test.GenerateKnowledge();
-                //Test.Fight();
+                Test.Fight();
                 //Test.TestBitBoard();
                 //Test.TestLinkedList();
                 //Test.GenTestData();

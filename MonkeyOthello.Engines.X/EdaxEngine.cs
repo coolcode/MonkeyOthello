@@ -20,6 +20,7 @@ namespace MonkeyOthello.Engines.X
         /// </summary>
         public int Timeout { get; set; } = 30;
 
+        private static readonly IEngine openingBookEngine = new OpeningBookEngine();
 
         public EdaxEngine()
         {
@@ -28,10 +29,16 @@ namespace MonkeyOthello.Engines.X
 
         public override SearchResult Search(BitBoard board, int depth)
         {
-            var pattern = board.Draw(ownSymbol: "O", oppSymbol: "X", emptySymbol: "-");
-
             var empties = board.EmptyPiecesCount();
 
+            if (empties.InRange(55, 60))
+            {
+                var engine = openingBookEngine;
+                return engine.Search(board, 0);
+            }
+
+            var pattern = board.Draw(ownSymbol: "O", oppSymbol: "X", emptySymbol: "-");
+            
             var r = (empties <= WinLoseDepth && empties > EndGameDepth ? CallEdax("endgame-search", pattern, -1, 1, empties) :
                 (empties <= EndGameDepth ? CallEdax("endgame-search", pattern, -64, 64, empties) :
                 (CallEdax("midgame-search", pattern, -64, 64, depth)))

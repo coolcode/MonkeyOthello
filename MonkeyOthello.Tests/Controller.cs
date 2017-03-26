@@ -14,8 +14,10 @@ namespace MonkeyOthello.Tests
     {
         public static void Run()
         {
-            var start = 38;
-            var span = 4;
+            //var start = 38;
+            //var span = 4;
+            var start = 54;
+            var span = 1;
             for (var x = start; x <= 54; x += span)
             {
                 CloseColosseumPlatforms();
@@ -30,7 +32,7 @@ namespace MonkeyOthello.Tests
                     try
                     {
                         Console.WriteLine($"waited {i++} minute(s)");
-                        Thread.Sleep(60000);
+                        Thread.Sleep(2000);
                         Console.WriteLine("check...");
                         var counts = CheckColosseumItemsCount(Enumerable.Range(x, span).ToArray());
 
@@ -48,7 +50,7 @@ namespace MonkeyOthello.Tests
 
                 //awake
                 Console.WriteLine($"Begin learning {x}");
-                Learning(x, x + 3);
+                Learning(x, x + span-1);
                 Console.WriteLine($"Done learning {x}");
 
                 //backup last results

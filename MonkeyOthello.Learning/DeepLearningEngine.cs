@@ -19,8 +19,23 @@ namespace MonkeyOthello.Learning
             Window = new PurningWindow(-1, 1);
         }
 
+        private static readonly IEngine openingBookEngine = new OpeningBookEngine();
+
         public override SearchResult Search(BitBoard board, int depth)
         {
+            var empties = board.EmptyPiecesCount();
+
+            if (empties.InRange(55, 60))
+            {
+                var engine = openingBookEngine; 
+                return engine.Search(board, 0);
+            }
+            else if (empties.InRange(0, 20))
+            {
+                var engine = new MonkeyEndEngine();
+                return engine.Search(board, empties);
+            }
+
             var emptiesDepthMap = new Dictionary<int, int>
             {
                 {26, 4 },
@@ -35,7 +50,6 @@ namespace MonkeyOthello.Learning
                 //{35, 8 },
             };
 
-            var empties = board.EmptyPiecesCount();
             var newDepth = 0;
 
             if(!emptiesDepthMap.TryGetValue(empties, out newDepth))

@@ -10,6 +10,7 @@ using System.IO;
 using System.Configuration;
 using MonkeyOthello.Learning;
 using MonkeyOthello.Engines.V2;
+using MonkeyOthello.OpeningBook;
 
 namespace MonkeyOthello.Tests
 {
@@ -138,6 +139,18 @@ namespace MonkeyOthello.Tests
             };
         #endregion
 
+        public static void TrainOpeningBook()
+        {
+            var engine = new MonkeyOthello.Engines.X.EdaxEngine
+            {
+                Timeout = 60,
+                UpdateProgress = (r) => Console.WriteLine(r)
+            };
+
+            var trainer = new Trainer(engine);
+            trainer.Train(2);
+        }
+
         public static void ValidateDeepLearningResult()
         {
             var engine = new MonkeyOthello.Engines.X.EdaxEngine
@@ -158,12 +171,12 @@ namespace MonkeyOthello.Tests
                 var eval = int.Parse(sp[2]);
                 var bb = new BitBoard(ownp, oppp);
                 var r = engine.Search(bb, 16);
-                
-                if(eval>=0 && r.Score>=0 || eval < 0 && r.Score < 0)
+
+                if (eval >= 0 && r.Score >= 0 || eval < 0 && r.Score < 0)
                 {
                     correct++;
                 }
-                 
+
                 if ((i + 1) % 10 == 0)
                 {
                     Console.WriteLine("Correct " + correct + "/" + (i + 1) + ", " + Math.Round(((double)correct / (double)(i + 1) * 100), 2) + "%");
@@ -174,8 +187,8 @@ namespace MonkeyOthello.Tests
 
         public static void Fight()
         {
-            // Pilot, MonkeyV2Engine, EdaxEngine, DeepLearningEngine
-            var engines = new IEngine[] { new EdaxEngine(), new MonkeyV2Engine() };
+            // EdaxEngine, MonkeyV2Engine, Pilot, DeepLearningEngine
+            var engines = new IEngine[] { new Pilot(), new MonkeyV2Engine() };
             IColosseum game = new Colosseum();
             game.Fight(engines);
         }
