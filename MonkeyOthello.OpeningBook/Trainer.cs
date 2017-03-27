@@ -137,7 +137,7 @@ namespace MonkeyOthello.OpeningBook
                      var moves = Rule.FindMoves(board);
                      if (moves.Length == 0)
                      {
-                         //board = board.Switch();
+                         // board = board.Switch();
                          return;
                      }
 
@@ -153,6 +153,11 @@ namespace MonkeyOthello.OpeningBook
                          if (!Rule.CanMove(oppboard))
                          {
                              oppboard = oppboard.Switch();
+
+                             if (!Rule.CanMove(oppboard))
+                             {
+                                 continue;
+                             }
                              own = true;
                          }
 
