@@ -19,14 +19,14 @@ namespace MonkeyOthello.Tests
                 //Console.WriteLine(int.MaxValue);
                 //Console.WriteLine(ulong.MaxValue);
                 //Parallel.For(0, 1, Console.WriteLine);
-                Test.TrainOpeningBook();
+                //Test.TrainOpeningBook();
                 //Controller.Run();
                 //Test.ValidateDeepLearningResult();
                 //DeepLearning.Test();
                 //DeepLearningDemo.Run();
                 //Test.TestEndGameEngine();
                 //Test.GenerateKnowledge();
-                //Test.Fight();
+               Test.Fight();
                 //Test.TestBitBoard();
                 //Test.TestLinkedList();
                 //Test.GenTestData();

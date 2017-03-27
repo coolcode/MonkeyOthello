@@ -38,7 +38,7 @@ namespace MonkeyOthello.Learning
             //    return engine.Search(board, empties);
             //}
 
-            if (empties.InRange(30, 38))
+            if (empties.InRange(32, 38))
             {
                 var emptiesDepthMap = new Dictionary<int, int>
                 {
@@ -82,6 +82,105 @@ namespace MonkeyOthello.Learning
             {
                 return base.Search(board, newDepth);
             }*/
+        }
+
+        protected override int FastestFirstSolve(BitBoard board, int alpha, int beta, int depth, bool prevmove = true)
+        {
+            searchResult.Nodes++;
+
+            //game over
+            if (board.IsFull)
+            {
+                return EndGameEvaluation.Eval(board);
+            }
+
+            //leaf node
+            if (depth == 0)
+            {
+                return Evaluation.Eval(board);
+            }
+
+            var moves = Rule.FindMoves(board);
+
+            if (moves.Length == 0)
+            {
+                if (!prevmove)
+                {
+                    //END
+                    return EndGameEvaluation.Eval(board);
+                }
+                else
+                {
+                    var oppBoard = board.Switch();
+                    //TODO: should it be +, not -?
+                    return GetCachedScore(oppBoard, depth, () => -FastestFirstSolve(oppBoard, -beta, -alpha, depth, false));
+                }
+            }
+
+            var score = minimumScore;
+            var foundPv = false;
+
+            //moves = moves.OrderBy(i => squareDict[i]).ToArray();
+
+            var orderedMoves = OrderMovesByMobility(moves, board);
+            var breakBeta = false;
+            var evlist = new List<int>();
+            foreach (var pos in orderedMoves)
+            {
+                var eval = 0;
+
+                var oppBoard = Rule.MoveSwitch(board, pos);
+
+                if (foundPv)
+                {
+                    //zero window
+                    eval = GetCachedScore(oppBoard, depth, () => -FastestFirstSolve(oppBoard, -alpha - 1, -alpha, depth - 1));
+                    if ((eval > alpha) && (eval < beta))
+                    {
+                        eval = -FastestFirstSolve(oppBoard, -beta, -eval, depth - 1);
+                    }
+                }
+                else
+                {
+                    eval = GetCachedScore(oppBoard, depth, () => -FastestFirstSolve(oppBoard, -beta, -alpha, depth - 1));
+                }
+
+                //reback?
+
+                evlist.Add(eval);
+                if (eval >= score)
+                {
+                    score = eval;
+
+                    if (eval >= alpha)
+                    {
+                        if (eval >= beta)
+                        {
+                            if (breakBeta)
+                            {
+                                //pruning
+                                return score;
+                            }
+
+                            breakBeta = true;
+                        }
+
+                        alpha = eval;
+                        foundPv = true;
+                    }
+                }
+            }
+
+            if (evlist.Count(x => x > 0) >= 2)
+            {
+                score = 64;
+            }
+            else
+            {
+                score = (int)evlist.Average();
+            }
+
+            return score;
         }
     }
 
