@@ -357,6 +357,7 @@ namespace MonkeyOthello.Learning
         {
             //>=0 win, otherwise lose
             return int.Parse(text) >= 0 ? new[] { 1.0 } : new[] { 0.0 };
+            /*
             var eval = int.Parse(text);
             if (eval == 0)
             {
@@ -370,7 +371,7 @@ namespace MonkeyOthello.Learning
             {
                 return eval < -20 ? new[] { 0.0, 0.0, 0.1 } : new[] { 0.0, 1.0, 0.0 };
             }
-
+            */
             //data range:[-64,64] total: 129, belongs to(2^7,2^8) so use 8 bits array to store outputs
             //0: -64, 1:-63 ... 64:128
             /*var eval = int.Parse(text) + 64;

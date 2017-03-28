@@ -71,6 +71,7 @@
     <Compile Include="Core\Constants.cs" />
     <Compile Include="Core\Empties.cs" />
     <Compile Include="Core\Enums.cs" />
+    <Compile Include="EGEngineNativeMethods.cs" />
     <Compile Include="MonkeyV2Engine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="V2Engine.cs" />
